@@ -2,6 +2,7 @@
   jstone25@uco.edu
   This file implements the PCodeLine class defined in pcodeline.h
   ***/
+#include <ostream>
 #include <string>
 
 #include "pcodeline.h"
@@ -41,6 +42,8 @@ std::string PCodeLine::trim ( std::string & s ) {
       start != s.end() && std::isspace(*start);
       ++ start );
 
+  if ( start == s.end() ) return std::string();
+
   for ( end = s.rbegin();
       end != s.rend() && std::isspace(*end);
       ++ end );
@@ -62,5 +65,13 @@ std::string PCodeLine::getOp1() {
 
 std::string PCodeLine::getOp2() {
   return op2;
+}
+
+void PCodeLine::print(std::ostream & os) {
+  os << "'" << label
+    << "', '" << opcode
+    << "', '" << op1
+    << "', '" << op2
+    << "'\n";
 }
 

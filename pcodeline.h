@@ -23,6 +23,8 @@ class PCodeLine {
     std::string getOp2();
 
     bool isValid();
+
+    void print(std::ostream &);
 };
 
 #endif // _PCODELINE_H
