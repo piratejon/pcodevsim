@@ -10,6 +10,9 @@
 class PCodeLine {
   private:
     std::string label, opcode, op1, op2;
+    bool valid;
+
+    std::string trim ( std::string & );
 
   public:
     PCodeLine(std::string &);
@@ -18,6 +21,8 @@ class PCodeLine {
     std::string getOpcode();
     std::string getOp1();
     std::string getOp2();
+
+    bool isValid();
 };
 
 #endif // _PCODELINE_H
