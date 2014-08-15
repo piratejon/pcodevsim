@@ -22,7 +22,7 @@ pcodeprogram.o: pcodeprogram.cpp pcodeprogram.h
 pcodeline.o: pcodeline.cpp pcodeline.h
 
 clean:
-	- rm -f pcodevsim $(OBJECTS) tests/test_main
+	- rm -f pcodevsim $(OBJECTS) tests/test_main vg.*
 
 test: LDFLAGS=-lstdc++ -lpthread googletest/make/gtest_main.a $(OBJECTS)
 test: CXXFLAGS=$(BASE_FLAGS) -Igoogletest/include
