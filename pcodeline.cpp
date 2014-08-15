@@ -13,7 +13,7 @@
 L00004    ent       sp        L00005    
   ***/
 PCodeLine::PCodeLine(std::string & line) {
-  if ( line.length() == 40 ) {
+  if ( line.length() > 30 ) {
     std::string s;
     valid = true;
 
@@ -73,5 +73,9 @@ void PCodeLine::print(std::ostream & os) {
     << "', '" << op1
     << "', '" << op2
     << "'\n";
+}
+
+bool PCodeLine::isValid() {
+  return valid;
 }
 
