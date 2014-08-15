@@ -148,27 +148,41 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
   dt = data_store.rbegin();
 
   for ( int i = 0; i < table_height; ++ i ) {
-    if ( table_height > program_listing.size() || table_height - i <= program_listing.size() ) {
+    if ( it != program_listing.end()
+        && (
+          table_height > program_listing.size()
+          || table_height - i <= program_listing.size()
+          )
+       ) {
       o << "|"
         << std::setw(9) << it - program_listing.begin() << "|"
         << std::setw(8) << it->getOpcode() << "|"
         << std::setw(11) << it->getOp1() << "|"
         << std::setw(11) << it->getOp2() << "|";
+      ++ it;
+    } else {
+        o << "|         |        |           |           |";
     }
 
     // figure out what subprogram we are in lol
     o << std::setw(12) << " subprogram |";
 
-    if ( table_height > data_store.size() || table_height - i <= data_store.size() ) {
+    if ( dt != data_store.rend() && (
+          table_height > data_store.size()
+          || table_height - i <= data_store.size()
+          )
+       ) {
       o << std::setw(9) << data_store.size() - (dt - data_store.rbegin()) << "|"
         << std::setw(4) << dt->id << "|"
         << std::setw(6) << dt->type << "|"
-        << std::setw(7) << dt->value << "|\n";
+        << std::setw(7) << dt->value << "|";
+      ++ dt;
+    } else {
+      o << "         |    |      |       |";
     }
-
-    ++ it;
-    ++ dt;
+    o << "\n";
   }
+  o << "|=====================================================================================|\n";
 }
 
 void PCodeProgram::initialize_execution_environment ( ) {
