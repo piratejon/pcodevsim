@@ -13,16 +13,16 @@ CXXFLAGS=$(BASE_FLAGS)
 OBJECTS=pcodeprogram.o pcodeline.o
 LDFLAGS=-lstdc++
 
-all: pcd2bin
+all: pcodevsim
 
-pcd2bin: pcd2bin.cpp $(OBJECTS)
+pcodevsim: pcodevsim.cpp $(OBJECTS)
 
 pcodeprogram.o: pcodeprogram.cpp pcodeprogram.h
 
 pcodeline.o: pcodeline.cpp pcodeline.h
 
 clean:
-	- rm -f pcd2bin $(OBJECTS) tests/test_main
+	- rm -f pcodevsim $(OBJECTS) tests/test_main
 
 test: LDFLAGS=-lstdc++ -lpthread googletest/make/gtest_main.a $(OBJECTS)
 test: CXXFLAGS=$(BASE_FLAGS) -Igoogletest/include

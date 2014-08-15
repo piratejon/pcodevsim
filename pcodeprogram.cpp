@@ -12,7 +12,7 @@ void PCodeProgram::insert_label ( const std::string & label, int offset ) {
   } else {
     std::ostringstream o;
     o << "Attempted to redefine " << label << "(" << labels.at(label) << ") as " << offset;
-    throw(o.str());
+    throw(o.str().c_str());
   }
 }
 
@@ -31,24 +31,27 @@ void PCodeProgram::input_file ( std::istream & in ) {
       std::getline(in, line);
       ++ lines_read ) {
     PCodeLine pl(line);
-    if ( pl.isValid() ) {
-      if ( pl.definesLabel() ) {
-        // explicitly defined label: "#define", "Lxxxx", "9001", ""
-        int label_value;
-        std::istringstream(pl.getOp1()) >> label_value;
-        insert_label(pl.getOpcode(), label_value);
-      } else if ( pl.getLabel() != "" ) {
-        // implicitly defined label: "LXXXX", opcode, op1, op2
-        int label_value = insert_instruction(pl);
-        insert_label(pl.getLabel(), label_value);
+    // skip blank lines
+    if ( line.length() > 0 ) {
+      if ( pl.isValid() ) {
+        if ( pl.definesLabel() ) {
+          // explicitly defined label: "#define", "Lxxxx", "9001", ""
+          int label_value;
+          std::istringstream(pl.getOp1()) >> label_value;
+          insert_label(pl.getOpcode(), label_value);
+        } else if ( pl.getLabel() != "" ) {
+          // implicitly defined label: "LXXXX", opcode, op1, op2
+          int label_value = insert_instruction(pl);
+          insert_label(pl.getLabel(), label_value);
+        } else {
+          // normal instruction
+          insert_instruction(pl);
+        }
       } else {
-        // normal instruction
-        insert_instruction(pl);
+        std::ostringstream o;
+        o << "Invalid instruction after " << lines_read << " lines.";
+        throw(o.str().c_str());
       }
-    } else {
-      std::ostringstream o;
-      o << "Invalid instruction after " << lines_read << " lines.";
-      throw(o.str());
     }
   }
 }
@@ -72,5 +75,31 @@ bool PCodeProgram::hasLabel ( const std::string & l ) {
 int PCodeProgram::getLabel ( const std::string & l ) {
   std::map<std::string, int>::iterator it = labels.find(l);
   return it == labels.end() ? -1 : it->second;
+}
+
+void PCodeProgram::instruction_listing_format ( std::ostream & o, PCodeLine & pl ) {
+  o << pl.getOpcode() << "\t";
+
+  if ( hasLabel(pl.getOp1()) ) {
+    o << labels[pl.getOp1()] << "\t";
+  } else {
+    o << pl.getOp1() << "\t";
+  }
+
+  if ( hasLabel(pl.getOp2()) ) {
+    o << labels[pl.getOp2()] << "\t";
+  } else {
+    o << pl.getOp2() << "\t";
+  }
+}
+
+void PCodeProgram::print_instruction_store ( std::ostream & o ) {
+  std::vector<PCodeLine>::iterator it;
+
+  for ( it = program_listing.begin(); it != program_listing.end(); ++ it ) {
+    o << it - program_listing.begin() << "\t";
+    instruction_listing_format(o, *it);
+    o << "\n";
+  }
 }
 

@@ -12,6 +12,10 @@
 
 #include "pcodeline.h"
 
+struct registers {
+  int pc, sp, mp, np, ep;
+};
+
 class PCodeProgram {
   private:
     std::vector<PCodeLine> program_listing;
@@ -23,12 +27,17 @@ class PCodeProgram {
 
     int lines_read;
 
+    struct registers R;
+
   public:
-    PCodeProgram (std::istream & );
+    PCodeProgram ( std::istream & );
     int getLinesRead();
     int getLabelCount();
     bool hasLabel ( const std::string & );
     int getLabel ( const std::string & );
+
+    void print_instruction_store ( std::ostream & );
+    void instruction_listing_format ( std::ostream &, PCodeLine & );
 };
 
 #endif // _PCODEPROGRAM_H
