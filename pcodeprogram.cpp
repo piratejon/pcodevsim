@@ -7,7 +7,7 @@
 #include "pcodeline.h"
 
 void PCodeProgram::insert_label ( const std::string & label, int offset ) {
-  if ( labels.find(label) == labels.end() ) {
+  if ( ! hasLabel(label) ) {
     labels.insert(std::pair<std::string, int>(label, offset));
   } else {
     std::ostringstream o;
@@ -60,3 +60,17 @@ PCodeProgram::PCodeProgram ( std::istream & in ) {
 int PCodeProgram::getLinesRead() {
   return lines_read;
 }
+
+int PCodeProgram::getLabelCount() {
+  return labels.size();
+}
+
+bool PCodeProgram::hasLabel ( const std::string & l ) {
+  return labels.find(l) != labels.end();
+}
+
+int PCodeProgram::getLabel ( const std::string & l ) {
+  std::map<std::string, int>::iterator it = labels.find(l);
+  return it == labels.end() ? -1 : it->second;
+}
+

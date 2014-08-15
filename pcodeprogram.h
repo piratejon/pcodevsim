@@ -24,8 +24,11 @@ class PCodeProgram {
     int lines_read;
 
   public:
-    PCodeProgram(std::istream &);
+    PCodeProgram (std::istream & );
     int getLinesRead();
+    int getLabelCount();
+    bool hasLabel ( const std::string & );
+    int getLabel ( const std::string & );
 };
 
 #endif // _PCODEPROGRAM_H
