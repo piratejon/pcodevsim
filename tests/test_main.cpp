@@ -112,6 +112,16 @@ namespace {
     ASSERT_EQ(pl->getOp1(), "sp");
     ASSERT_EQ(pl->getOp2(), "L00005    12345");
     delete pl;
+
+    s = "#define   L00005    6                   ";
+    pl = new PCodeLine(s);
+    ASSERT_EQ(pl->isValid(), true);
+    ASSERT_EQ(pl->definesLabel(), true);
+    ASSERT_EQ(pl->getLabel(), "#define");
+    ASSERT_EQ(pl->getOpcode(), "L00005");
+    ASSERT_EQ(pl->getOp1(), "6");
+    ASSERT_EQ(pl->getOp2(), "");
+    delete pl;
   }
 }
 
