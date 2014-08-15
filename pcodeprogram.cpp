@@ -108,3 +108,16 @@ void PCodeProgram::print_instruction_store ( std::ostream & o ) {
   }
 }
 
+int PCodeProgram::getEntryPoint ( ) {
+  // defined as the "mst" with the greatest address
+  for ( std::vector<PCodeLine>::reverse_iterator it = program_listing.rbegin();
+      it != program_listing.rend();
+      ++ it ) {
+    if ( it->getOpcode() == "mst" ) {
+      return program_listing.size() - (it - program_listing.rbegin()) - 1;
+    }
+  }
+
+  return -1;
+}
+

@@ -31,10 +31,11 @@ class PCodeProgram {
 
   public:
     PCodeProgram ( std::istream & );
-    int getLinesRead();
-    int getLabelCount();
+    int getLinesRead ( );
+    int getLabelCount ( );
     bool hasLabel ( const std::string & );
     int getLabel ( const std::string & );
+    int getEntryPoint ( );
 
     void print_instruction_store ( std::ostream & );
     void instruction_listing_format ( std::ostream &, PCodeLine & );

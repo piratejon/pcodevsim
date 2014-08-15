@@ -70,14 +70,16 @@ namespace {
     ASSERT_EQ(p->getLinesRead(), 41);
     ASSERT_EQ(p->hasLabel("L00000"), false);
     ASSERT_EQ(p->getLabel("L00000"), -1);
-    ASSERT_EQ(p->getLabel("L00001"), 21);
+    ASSERT_EQ(p->getLabel("L00001"), 19);
     ASSERT_EQ(p->getLabel("L00002"), 6);
     ASSERT_EQ(p->getLabel("L00003"), 14);
     ASSERT_EQ(p->getLabel("L00004"), 0);
     ASSERT_EQ(p->getLabel("L00005"), 6);
     ASSERT_EQ(p->getLabel("L00006"), 15);
     ASSERT_EQ(p->getLabel("L00007"), 10);
-    ASSERT_EQ(p->getLabel("L00008"), 19);
+    ASSERT_EQ(p->getLabel("L00008"), 18);
+
+    ASSERT_EQ(p->getEntryPoint(), 32);
 
     delete p;
   }
