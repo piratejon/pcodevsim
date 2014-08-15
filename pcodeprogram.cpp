@@ -41,7 +41,12 @@ void PCodeProgram::input_file ( std::istream & in ) {
           insert_label(pl.getOpcode(), label_value);
         } else if ( pl.getLabel() != "" ) {
           // implicitly defined label: "LXXXX", opcode, op1, op2
-          int label_value = insert_instruction(pl);
+          int label_value;
+          if ( pl.getOpcode() == "" && pl.getOp1() == "" && pl.getOp2() == "" ) {
+            label_value = program_listing.size();
+          } else {
+            label_value = insert_instruction(pl);
+          }
           insert_label(pl.getLabel(), label_value);
         } else {
           // normal instruction
