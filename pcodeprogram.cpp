@@ -19,14 +19,14 @@ void PCodeProgram::insert_label ( const std::string & label, int offset ) {
 }
 
 int PCodeProgram::insert_instruction ( PCodeLine & pl ) {
-  program_listing.push_back(pl);
-  return program_listing.size() - 1;
+  istore.push_back(pl);
+  return istore.size() - 1;
 }
 
 void PCodeProgram::input_file ( std::istream & in ) {
   std::string line;
 
-  program_listing.clear();
+  istore.clear();
   labels.clear();
 
   for ( lines_read = 0;
@@ -45,7 +45,7 @@ void PCodeProgram::input_file ( std::istream & in ) {
           // implicitly defined label: "LXXXX", opcode, op1, op2
           int label_value;
           if ( pl.getOpcode() == "" && pl.getOp1() == "" && pl.getOp2() == "" ) {
-            label_value = program_listing.size();
+            label_value = istore.size();
           } else {
             label_value = insert_instruction(pl);
           }
@@ -103,8 +103,8 @@ void PCodeProgram::instruction_listing_format ( std::ostream & o, PCodeLine & pl
 void PCodeProgram::print_instruction_store ( std::ostream & o ) {
   std::vector<PCodeLine>::iterator it;
 
-  for ( it = program_listing.begin(); it != program_listing.end(); ++ it ) {
-    o << it - program_listing.begin() << "\t";
+  for ( it = istore.begin(); it != istore.end(); ++ it ) {
+    o << it - istore.begin() << "\t";
     instruction_listing_format(o, *it);
     o << "\n";
   }
@@ -112,11 +112,11 @@ void PCodeProgram::print_instruction_store ( std::ostream & o ) {
 
 int PCodeProgram::getEntryPoint ( ) {
   // defined as the "mst" with the greatest address
-  for ( std::vector<PCodeLine>::reverse_iterator it = program_listing.rbegin();
-      it != program_listing.rend();
+  for ( std::vector<PCodeLine>::reverse_iterator it = istore.rbegin();
+      it != istore.rend();
       ++ it ) {
     if ( it->getOpcode() == "mst" ) {
-      return program_listing.size() - (it - program_listing.rbegin()) - 1;
+      return istore.size() - (it - istore.rbegin()) - 1;
     }
   }
 
@@ -142,21 +142,21 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
   o << "| Address | Opcode | Operand 1 | Operand 2 | Subprogram | Address | Id | Type | Value |\n";
   o << "|-------------------------------------------------------------------------------------|\n";
 
-  table_height = std::max(program_listing.size(), data_store.size());
+  table_height = std::max(istore.size(), dstore.size());
 
-  it = program_listing.begin();
-  dt = data_store.rbegin();
+  it = istore.begin();
+  dt = dstore.rbegin();
 
   for ( int i = 0; i < table_height; ++ i ) {
-    if ( it != program_listing.end()
+    if ( it != istore.end()
         && (
-          table_height > program_listing.size()
-          || table_height - i <= program_listing.size()
+          table_height > istore.size()
+          || table_height - i <= istore.size()
           )
        ) {
       o << "|"
-        << std::setfill( ((it - program_listing.begin()) == R.pc) ? '*' : ' ' )
-        << std::setw(9) << it - program_listing.begin() << "|"
+        << std::setfill( ((it - istore.begin()) == R.pc) ? '*' : ' ' )
+        << std::setw(9) << it - istore.begin() << "|"
         << std::setw(8) << it->getOpcode() << "|"
         << std::setw(11) << it->getOp1() << "|"
         << std::setw(11) << it->getOp2() << "|";
@@ -168,12 +168,12 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
     // figure out what subprogram we are in lol
     o << std::setw(12) << " subprogram |";
 
-    if ( dt != data_store.rend() && (
-          table_height > data_store.size()
-          || table_height - i <= data_store.size()
+    if ( dt != dstore.rend() && (
+          table_height > dstore.size()
+          || table_height - i <= dstore.size()
           )
        ) {
-      o << std::setw(9) << data_store.size() - (dt - data_store.rbegin()) << "|"
+      o << std::setw(9) << dstore.size() - (dt - dstore.rbegin()) << "|"
         << std::setw(4) << dt->id << "|"
         << std::setw(6) << dt->type << "|"
         << std::setw(7) << dt->value << "|";
@@ -190,6 +190,6 @@ void PCodeProgram::initialize_execution_environment ( ) {
   R.pc = getEntryPoint();
   R.mp = R.sp = R.ep = R.np = 0;
 
-  data_store.clear();
+  dstore.clear();
 }
 

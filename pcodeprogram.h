@@ -24,8 +24,8 @@ struct DataCell {
 
 class PCodeProgram {
   private:
-    std::vector<PCodeLine> program_listing;
-    std::vector<DataCell> data_store;
+    std::vector<PCodeLine> istore;
+    std::vector<DataCell> dstore;
     std::map<std::string, int> labels;
 
     void insert_label ( const std::string &, int );
