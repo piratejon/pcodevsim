@@ -1,6 +1,8 @@
 
+#include <algorithm>
 #include <sstream>
 #include <istream>
+#include <iomanip>
 #include <vector>
 
 #include "pcodeprogram.h"
@@ -119,5 +121,55 @@ int PCodeProgram::getEntryPoint ( ) {
   }
 
   return -1;
+}
+
+void PCodeProgram::display_execution_state ( std::ostream & o ) {
+
+  int table_height;
+
+  std::vector<PCodeLine>::iterator it;
+  std::vector<DataCell>::reverse_iterator dt;
+
+  o << "|=====================================================================================|\n";
+  o << "|                                     Registers                                       |\n";
+  o << "|-------------------------------------------------------------------------------------|\n";
+  o << "|      pc        |       mp       |       sp       |       ep       |       np        |\n";
+  o << "|-------------------------------------------------------------------------------------|\n";
+  o << "|" << std::setw(8) << R.pc << std::setw(9) << "|" << std::setw(8) << R.mp << std::setw(9) << "|" << std::setw(8) << R.sp << std::setw(9) << "|" << std::setw(8) << R.ep << std::setw(9) << "|" << std::setw(8) << R.np << std::setw(11) << "|\n";
+  o << "|=====================================================================================|\n";
+  o << "|             Instruction Store            |                 Data Store               |\n";
+  o << "|-------------------------------------------------------------------------------------|\n";
+  o << "| Address | Opcode | Operand 1 | Operand 2 | Subprogram | Address | Id | Type | Value |\n";
+  o << "|-------------------------------------------------------------------------------------|\n";
+
+  table_height = std::max(instruction_store.size(), data_store.size());
+
+  it = instruction_store.begin();
+  dt = data_store.rbegin();
+
+  for ( int i = 0; i < table_height; ++ i ) {
+    if ( table_height > instruction_store.size() ) {
+      if ( table_height - i <= instruction_store.size() ) {
+        print_instruction_store();
+      }
+    } else {
+      print_instruction_store();
+    }
+
+    if ( table_height > data_store.size() ) {
+      if ( table_height - i <= data_store.size() ) {
+        print_data_store();
+      }
+    } else {
+      print_data_store();
+    }
+  }
+}
+
+void PCodeProgram::initialize_execution_environment ( ) {
+  R.pc = getEntryPoint();
+  R.mp = R.sp = R.ep = R.np = 0;
+
+  data_store.clear();
 }
 

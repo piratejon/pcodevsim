@@ -16,9 +16,16 @@ struct registers {
   int pc, sp, mp, np, ep;
 };
 
+struct DataCell {
+  std::string id;
+  std::string type;
+  int value;
+};
+
 class PCodeProgram {
   private:
     std::vector<PCodeLine> program_listing;
+    std::vector<DataCell> data_store;
     std::map<std::string, int> labels;
 
     void insert_label ( const std::string &, int );
@@ -39,6 +46,8 @@ class PCodeProgram {
 
     void print_instruction_store ( std::ostream & );
     void instruction_listing_format ( std::ostream &, PCodeLine & );
+    void display_execution_state ( std::ostream & );
+    void initialize_execution_environment ( );
 };
 
 #endif // _PCODEPROGRAM_H
