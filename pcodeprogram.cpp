@@ -22,15 +22,14 @@ int PCodeProgram::insert_instruction ( PCodeLine & pl ) {
 }
 
 void PCodeProgram::input_file ( std::istream & in ) {
-  int line_counter;
   std::string line;
 
   program_listing.clear();
   labels.clear();
 
-  for ( line_counter = 0;
+  for ( lines_read = 0;
       std::getline(in, line);
-      ++ line_counter ) {
+      ++ lines_read ) {
     PCodeLine pl(line);
     if ( pl.isValid() ) {
       if ( pl.definesLabel() ) {
@@ -48,7 +47,7 @@ void PCodeProgram::input_file ( std::istream & in ) {
       }
     } else {
       std::ostringstream o;
-      o << "Invalid instruction after " << line_counter << " lines.";
+      o << "Invalid instruction after " << lines_read << " lines.";
       throw(o.str());
     }
   }
@@ -58,3 +57,6 @@ PCodeProgram::PCodeProgram ( std::istream & in ) {
   input_file ( in );
 }
 
+int PCodeProgram::getLinesRead() {
+  return lines_read;
+}

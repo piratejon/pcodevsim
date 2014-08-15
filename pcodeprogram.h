@@ -21,8 +21,11 @@ class PCodeProgram {
     int insert_instruction ( PCodeLine & );
     void input_file ( std::istream & );
 
+    int lines_read;
+
   public:
     PCodeProgram(std::istream &);
+    int getLinesRead();
 };
 
 #endif // _PCODEPROGRAM_H

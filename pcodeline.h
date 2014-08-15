@@ -12,10 +12,13 @@ class PCodeLine {
     std::string label, opcode, op1, op2;
     bool valid;
 
-    std::string trim ( std::string & );
+    std::string trim ( const std::string & );
+
+    void fill_me_up ( const std::string &, const std::string &, const std::string &, const std::string & );
 
   public:
-    PCodeLine(std::string &);
+    PCodeLine ( const std::string & );
+    PCodeLine ( const std::string &, const std::string &, const std::string &, const std::string & );
 
     std::string getLabel();
     std::string getOpcode();

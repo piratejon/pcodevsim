@@ -12,31 +12,34 @@
   sensitive.
 L00004    ent       sp        L00005    
   ***/
-PCodeLine::PCodeLine(std::string & line) {
+PCodeLine::PCodeLine ( const std::string & line ) {
+  valid = false;
+
   if ( line.length() > 30 ) {
-    std::string s;
+    fill_me_up(line.substr(0,10), line.substr(10,10), line.substr(20,10), line.substr(30, line.length() - 30));
     valid = true;
-
-    s = line.substr(0,10);
-    label = trim(s);
-
-    s = line.substr(10,10);
-    opcode = trim(s);
-
-    s = line.substr(20,10);
-    op1 = trim(s);
-
-    s = line.substr(30, line.length() - 30);
-    op2 = trim(s);
   } else {
     // ("Line '" + line + "' has length " + line.length());
     valid = false;
   }
 }
 
-std::string PCodeLine::trim ( std::string & s ) {
-  std::string::iterator start;
-  std::string::reverse_iterator end;
+PCodeLine::PCodeLine ( const std::string & _label, const std::string & _opcode, const std::string & _op1, const std::string & _op2 ) {
+  valid = false;
+  fill_me_up(_label, _opcode, _op1, _op2);
+  valid = true;
+}
+
+void PCodeLine::fill_me_up ( const std::string & _label, const std::string & _opcode, const std::string & _op1, const std::string & _op2 ) {
+  label = trim(_label);
+  opcode = trim(_opcode);
+  op1 = trim(_op1);
+  op2 = trim(_op2);
+}
+
+std::string PCodeLine::trim ( const std::string & s ) {
+  std::string::const_iterator start;
+  std::string::const_reverse_iterator end;
 
   for ( start = s.begin();
       start != s.end() && std::isspace(*start);
