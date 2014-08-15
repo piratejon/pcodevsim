@@ -79,3 +79,7 @@ bool PCodeLine::isValid() {
   return valid;
 }
 
+bool PCodeLine::definesLabel() {
+  return label == "#define";
+}
+

@@ -22,8 +22,8 @@ class PCodeLine {
     std::string getOp1();
     std::string getOp2();
 
+    bool definesLabel();
     bool isValid();
-
     void print(std::ostream &);
 };
 

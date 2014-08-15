@@ -7,10 +7,20 @@
 #define _PCODEPROGRAM_H
 
 #include <istream>
+#include <vector>
+#include <map>
+
+#include "pcodeline.h"
 
 class PCodeProgram {
   private:
-    std::list<PCodeLine*> instructions;
+    std::vector<PCodeLine> program_listing;
+    std::map<std::string, int> labels;
+
+    void insert_label ( const std::string &, int );
+    int insert_instruction ( PCodeLine & );
+    void input_file ( std::istream & );
+
   public:
     PCodeProgram(std::istream &);
 };
