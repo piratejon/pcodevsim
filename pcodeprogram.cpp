@@ -33,12 +33,12 @@ void PCodeProgram::input_file ( std::istream & in ) {
     PCodeLine pl(line);
     if ( pl.isValid() ) {
       if ( pl.definesLabel() ) {
-        // explicitly defined "#define", "Lxxxx", "9001"
+        // explicitly defined label: "#define", "Lxxxx", "9001", ""
         int label_value;
         std::istringstream(pl.getOp1()) >> label_value;
         insert_label(pl.getOpcode(), label_value);
       } else if ( pl.getLabel() != "" ) {
-        // implicitly defined label
+        // implicitly defined label: "LXXXX", opcode, op1, op2
         int label_value = insert_instruction(pl);
         insert_label(pl.getLabel(), label_value);
       } else {

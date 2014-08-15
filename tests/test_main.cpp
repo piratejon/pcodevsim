@@ -20,7 +20,8 @@ namespace {
 
   TEST_F(PCodeVSim, test_pcodeprogram) {
     PCodeProgram * p = NULL;
-    std::istringstream i(
+
+    std::istringstream i( // this is gcd.pcd
 "L00004    ent       sp        L00005    \n"
 "          ent       ep        L00006    \n"
 "          lvi       0         6         \n"
