@@ -149,7 +149,8 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
 
   for ( int i = 0; i < table_height; ++ i ) {
     if ( table_height > program_listing.size() || table_height - i <= program_listing.size() ) {
-      o << std::setw(9) << it - program_listing.begin() << "|"
+      o << "|"
+        << std::setw(9) << it - program_listing.begin() << "|"
         << std::setw(8) << it->getOpcode() << "|"
         << std::setw(11) << it->getOp1() << "|"
         << std::setw(11) << it->getOp2() << "|";
