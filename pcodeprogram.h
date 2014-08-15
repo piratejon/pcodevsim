@@ -27,8 +27,10 @@ class PCodeProgram {
     std::vector<PCodeLine> istore;
     std::vector<DataCell> dstore;
     std::map<std::string, int> labels;
+    std::map<int, std::string> reverse_labels;
 
     void insert_label ( const std::string &, int );
+    void insert_reverse_label ( int, const std::string & );
     int insert_instruction ( PCodeLine & );
     void input_file ( std::istream & );
 
@@ -43,7 +45,8 @@ class PCodeProgram {
     int getLinesRead ( );
     int getLabelCount ( );
     bool hasLabel ( const std::string & );
-    int getLabel ( const std::string & );
+    int lookupLabel ( const std::string & );
+    const std::string lookupLine ( int );
     int getEntryPoint ( );
 
     void print_instruction_store ( std::ostream & );

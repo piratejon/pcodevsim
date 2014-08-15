@@ -69,15 +69,27 @@ namespace {
 
     ASSERT_EQ(p->getLinesRead(), 41);
     ASSERT_EQ(p->hasLabel("L00000"), false);
-    ASSERT_EQ(p->getLabel("L00000"), -1);
-    ASSERT_EQ(p->getLabel("L00001"), 19);
-    ASSERT_EQ(p->getLabel("L00002"), 6);
-    ASSERT_EQ(p->getLabel("L00003"), 14);
-    ASSERT_EQ(p->getLabel("L00004"), 0);
-    ASSERT_EQ(p->getLabel("L00005"), 6);
-    ASSERT_EQ(p->getLabel("L00006"), 15);
-    ASSERT_EQ(p->getLabel("L00007"), 10);
-    ASSERT_EQ(p->getLabel("L00008"), 18);
+    ASSERT_EQ(p->lookupLabel("L00000"), -1);
+    ASSERT_EQ(p->lookupLabel("L00001"), 19);
+    ASSERT_EQ(p->lookupLabel("L00002"), 6);
+    ASSERT_EQ(p->lookupLabel("L00003"), 14);
+    ASSERT_EQ(p->lookupLabel("L00004"), 0);
+    ASSERT_EQ(p->lookupLabel("L00005"), 6);
+    ASSERT_EQ(p->lookupLabel("L00006"), 15);
+    ASSERT_EQ(p->lookupLabel("L00007"), 10);
+    ASSERT_EQ(p->lookupLabel("L00008"), 18);
+
+    ASSERT_NE(p->lookupLine(999999), "horses");
+    ASSERT_EQ(p->lookupLine(99999), "");
+
+    ASSERT_EQ(p->lookupLine(19), "L00001");
+    ASSERT_EQ(p->lookupLine(14), "");
+    ASSERT_EQ(p->lookupLine(0), "L00004");
+    ASSERT_EQ(p->lookupLine(6), "");
+    ASSERT_EQ(p->lookupLine(15), "");
+    ASSERT_EQ(p->lookupLine(10), "L00007");
+    ASSERT_EQ(p->lookupLine(18), "L00008");
+
 
     ASSERT_EQ(p->getEntryPoint(), 32);
 

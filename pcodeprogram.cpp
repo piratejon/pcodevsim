@@ -18,6 +18,16 @@ void PCodeProgram::insert_label ( const std::string & label, int offset ) {
   }
 }
 
+void PCodeProgram::insert_reverse_label ( int offset, const std::string & label ) {
+  if ( lookupLine(offset) == "" ) {
+    reverse_labels.insert(std::pair<int, std::string>(offset, label));
+  } else {
+    std::ostringstream o;
+    o << "Attempted to assign label " << label << " to line " << offset << " with label " << lookupLine(offset);
+    throw(o.str().c_str());
+  }
+}
+
 int PCodeProgram::insert_instruction ( PCodeLine & pl ) {
   istore.push_back(pl);
   return istore.size() - 1;
@@ -28,6 +38,7 @@ void PCodeProgram::input_file ( std::istream & in ) {
 
   istore.clear();
   labels.clear();
+  reverse_labels.clear();
 
   for ( lines_read = 0;
       std::getline(in, line);
@@ -50,6 +61,7 @@ void PCodeProgram::input_file ( std::istream & in ) {
             label_value = insert_instruction(pl);
           }
           insert_label(pl.getLabel(), label_value);
+          insert_reverse_label(label_value, pl.getLabel());
         } else {
           // normal instruction
           insert_instruction(pl);
@@ -80,9 +92,14 @@ bool PCodeProgram::hasLabel ( const std::string & l ) {
   return labels.find(l) != labels.end();
 }
 
-int PCodeProgram::getLabel ( const std::string & l ) {
+int PCodeProgram::lookupLabel ( const std::string & l ) {
   std::map<std::string, int>::iterator it = labels.find(l);
   return it == labels.end() ? -1 : it->second;
+}
+
+const std::string PCodeProgram::lookupLine ( int line ) {
+  std::map<int, std::string>::iterator it = reverse_labels.find(line);
+  return it == reverse_labels.end() ? "" : it->second;
 }
 
 void PCodeProgram::instruction_listing_format ( std::ostream & o, PCodeLine & pl ) {
@@ -201,6 +218,7 @@ bool PCodeProgram::isHalted ( ) {
 }
 
 void PCodeProgram::step ( ) {
-  halted = true;
+  // get the next instruction
+  // take action
 }
 
