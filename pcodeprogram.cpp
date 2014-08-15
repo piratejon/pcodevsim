@@ -142,27 +142,31 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
   o << "| Address | Opcode | Operand 1 | Operand 2 | Subprogram | Address | Id | Type | Value |\n";
   o << "|-------------------------------------------------------------------------------------|\n";
 
-  table_height = std::max(instruction_store.size(), data_store.size());
+  table_height = std::max(program_listing.size(), data_store.size());
 
-  it = instruction_store.begin();
+  it = program_listing.begin();
   dt = data_store.rbegin();
 
   for ( int i = 0; i < table_height; ++ i ) {
-    if ( table_height > instruction_store.size() ) {
-      if ( table_height - i <= instruction_store.size() ) {
-        print_instruction_store();
-      }
-    } else {
-      print_instruction_store();
+    if ( table_height > program_listing.size() || table_height - i <= program_listing.size() ) {
+      o << std::setw(9) << it - program_listing.begin() << "|"
+        << std::setw(8) << it->getOpcode() << "|"
+        << std::setw(11) << it->getOp1() << "|"
+        << std::setw(11) << it->getOp2() << "|";
     }
 
-    if ( table_height > data_store.size() ) {
-      if ( table_height - i <= data_store.size() ) {
-        print_data_store();
-      }
-    } else {
-      print_data_store();
+    // figure out what subprogram we are in lol
+    o << std::setw(12) << " subprogram |";
+
+    if ( table_height > data_store.size() || table_height - i <= data_store.size() ) {
+      o << std::setw(9) << data_store.size() - (dt - data_store.rbegin()) << "|"
+        << std::setw(4) << dt->id << "|"
+        << std::setw(6) << dt->type << "|"
+        << std::setw(7) << dt->value << "|\n";
     }
+
+    ++ it;
+    ++ dt;
   }
 }
 
