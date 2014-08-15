@@ -64,6 +64,7 @@ void PCodeProgram::input_file ( std::istream & in ) {
 }
 
 PCodeProgram::PCodeProgram ( std::istream & in ) {
+  halted = true;
   input_file ( in );
 }
 
@@ -190,6 +191,16 @@ void PCodeProgram::initialize_execution_environment ( ) {
   R.pc = getEntryPoint();
   R.mp = R.sp = R.ep = R.np = 0;
 
+  halted = false;
+
   dstore.clear();
+}
+
+bool PCodeProgram::isHalted ( ) {
+  return halted;
+}
+
+void PCodeProgram::step ( ) {
+  halted = true;
 }
 

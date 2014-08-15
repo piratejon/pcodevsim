@@ -36,6 +36,8 @@ class PCodeProgram {
 
     struct registers R;
 
+    bool halted;
+
   public:
     PCodeProgram ( std::istream & );
     int getLinesRead ( );
@@ -48,6 +50,9 @@ class PCodeProgram {
     void instruction_listing_format ( std::ostream &, PCodeLine & );
     void display_execution_state ( std::ostream & );
     void initialize_execution_environment ( );
+
+    bool isHalted ( );
+    void step ( );
 };
 
 #endif // _PCODEPROGRAM_H
