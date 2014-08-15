@@ -155,6 +155,7 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
           )
        ) {
       o << "|"
+        << std::setfill( ((it - program_listing.begin()) == R.pc) ? '*' : ' ' )
         << std::setw(9) << it - program_listing.begin() << "|"
         << std::setw(8) << it->getOpcode() << "|"
         << std::setw(11) << it->getOp1() << "|"
