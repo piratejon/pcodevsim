@@ -40,6 +40,10 @@ class PCodeProgram {
 
     bool halted;
 
+    // instructions
+    void mst ( std::string & );
+    void hlt ( );
+
   public:
     PCodeProgram ( std::istream & );
     int getLinesRead ( );

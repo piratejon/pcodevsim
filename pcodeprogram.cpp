@@ -219,6 +219,31 @@ bool PCodeProgram::isHalted ( ) {
 
 void PCodeProgram::step ( ) {
   // get the next instruction
+  PCodeLine p = istore[R.pc];
+
+  std::string o = p.getOpcode();
+  std::string o1 = p.getOp1();
+  std::string o2 = p.getOp2();
+
+  if ( o == "stp" ) {
+    hlt();
+  } else if ( o == "mst" ) {
+    mst(o1);
+    ++ R.pc;
+  } else {
+    std::ostringstream err;
+    err << "unrecognized opcode "  <<  o  <<  " at "  <<  R.pc;
+    throw(err.str().c_str());
+  }
+
   // take action
+}
+
+void PCodeProgram::mst ( std::string & level ) {
+  // not really sure what to do with level just yet
+}
+
+void PCodeProgram::hlt ( ) {
+  halted = true;
 }
 
