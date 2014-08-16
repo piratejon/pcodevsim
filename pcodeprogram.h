@@ -19,8 +19,7 @@ struct registers {
 
 struct DataCell {
   std::string id;
-  std::string type;
-  int value;
+  Value v;
 };
 
 class PCodeProgram {
@@ -41,11 +40,14 @@ class PCodeProgram {
 
     bool halted;
 
+    int int_from_string ( const std::string & );
+
     void dstore_push ( std::string &, Value & );
 
     // instructions
-    void mst ( std::string & );
+    void mst ( const std::string & );
     void hlt ( );
+    void cup ( const std::string &, const std::string & );
 
   public:
     PCodeProgram ( std::istream & );

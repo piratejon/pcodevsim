@@ -27,7 +27,9 @@ class Value {
     int type;
 
   public:
-    Value ( int, std::string & );
+    Value ( );
+    Value ( const Value & );
+    Value ( int, const std::string & );
 
     int getType();
     std::string & getRawValue();

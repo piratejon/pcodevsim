@@ -194,8 +194,8 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
        ) {
       o << std::setw(9) << dstore.size() - (dt - dstore.rbegin()) << "|"
         << std::setw(4) << dt->id << "|"
-        << std::setw(6) << dt->type << "|"
-        << std::setw(7) << dt->value << "|";
+        << std::setw(6) << dt->v.getType() << "|"
+        << std::setw(7) << dt->v.value_as_string() << "|";
       ++ dt;
     } else {
       o << "         |    |      |       |";
@@ -207,7 +207,11 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
 
 void PCodeProgram::initialize_execution_environment ( ) {
   R.pc = getEntryPoint();
-  R.mp = R.sp = R.ep = R.np = -1;
+
+  R.mp = 0;
+  R.sp = 0;
+  R.ep = 0;
+  R.np = 32767; // hmm?
 
   halted = false;
 
@@ -233,9 +237,8 @@ void PCodeProgram::step ( ) {
     hlt();
   } else if ( o == "mst" ) {
     mst(o1);
-    R.mp = dstore.size();
-    ++ R.pc;
   } else if ( o == "cup" ) {
+    cup(o1, o2);
   } else {
     std::ostringstream err;
     err << "unrecognized opcode "  <<  o  <<  " at "  <<  R.pc;
@@ -245,11 +248,35 @@ void PCodeProgram::step ( ) {
   // take action
 }
 
-void PCodeProgram::mst ( std::string & level ) {
+int PCodeProgram::int_from_string ( const std::string & s ) {
+  int i;
+  std::istringstream ss(s);
+  ss >> i;
+  return i;
+}
+
+void PCodeProgram::mst ( const std::string & level ) {
   // not really sure what to do with level just yet
+  R.mp = dstore.size();
+  ++ R.pc;
 }
 
 void PCodeProgram::hlt ( ) {
   halted = true;
+}
+
+void PCodeProgram::cup ( const std::string & argsize, const std::string & iaddr ) {
+
+  DataCell d = {};
+
+  int p = int_from_string ( argsize );
+  int q = int_from_string ( iaddr );
+
+  // R.mp = R.sp - ( p + 4 );
+  d.id = "rv";
+  d.v = Value(t_integer, "");
+  dstore.push_back(d);
+
+  R.pc = q;
 }
 

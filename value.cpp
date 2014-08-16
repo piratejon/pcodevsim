@@ -4,9 +4,19 @@
 
 #include "value.h"
 
-Value::Value ( int t, std::string & s ) {
+Value::Value ( ) {
+  type = t_integer;
+  raw_value = "";
+}
+
+Value::Value ( int t, const std::string & s ) {
   type = t;
   raw_value = s;
+}
+
+Value::Value ( const Value & v ) {
+  type = v.type;
+  raw_value = v.raw_value;
 }
 
 int Value::getType() {
