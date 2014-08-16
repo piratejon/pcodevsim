@@ -184,6 +184,8 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
         o << "|         |        |           |           |";
     }
 
+    o << std::setfill(' ');
+
     // figure out what subprogram we are in lol
     o << std::setw(12) << "            |";
 
@@ -192,7 +194,7 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
           || table_height - i <= dstore.size()
           )
        ) {
-      o << std::setw(9) << dstore.size() - (dt - dstore.rbegin()) << "|"
+      o << std::setw(9) << dstore.size() - (dt - dstore.rbegin()) - 1 << "|"
         << std::setw(4) << dt->id << "|"
         << std::setw(6) << dt->v.getType() << "|"
         << std::setw(7) << dt->v.value_as_string() << "|";
@@ -222,7 +224,11 @@ bool PCodeProgram::isHalted ( ) {
   return halted;
 }
 
-void PCodeProgram::dstore_push ( std::string & id, Value & v ) {
+void PCodeProgram::dstore_push ( const std::string & id, int type, const std::string & r ) {
+  Value v(type, r);
+  DataCell d = { id, v };
+  dstore.push_back(d);
+  ++ R.sp;
 }
 
 void PCodeProgram::step ( ) {
@@ -255,8 +261,32 @@ int PCodeProgram::int_from_string ( const std::string & s ) {
   return i;
 }
 
+std::string PCodeProgram::string_from_int ( int i ) {
+  std::ostringstream ss;
+  ss << i;
+  return ss.str();
+}
+
+int PCodeProgram::base ( int level, int offset ) {
+  if ( level == 0 ) return offset;
+  else return base ( level - 1, dstore[offset+1].v.value_as_integer() );
+}
+
 void PCodeProgram::mst ( const std::string & level ) {
-  // not really sure what to do with level just yet
+
+  // R.sp + 0 is return value
+  dstore_push ( "rv", t_integer, "" );
+
+  // R.sp + 1 is static link
+  dstore_push ( "sl", t_integer, string_from_int ( base ( int_from_string(level), R.mp ) ) );
+  // R.sp + 2 is dynamic link
+  dstore_push ( "dl", t_integer, string_from_int ( R.mp ) );
+  // R.sp + 3 is extreme pointer
+  dstore_push ( "ep", t_integer, string_from_int ( R.ep ) );
+  // R.sp + 4 is return address
+
+  // R.sp + 5 is where we start the parameters if any and then the locals
+
   R.mp = dstore.size();
   ++ R.pc;
 }
@@ -266,16 +296,12 @@ void PCodeProgram::hlt ( ) {
 }
 
 void PCodeProgram::cup ( const std::string & argsize, const std::string & iaddr ) {
-
-  DataCell d = {};
-
   int p = int_from_string ( argsize );
   int q = int_from_string ( iaddr );
 
-  // R.mp = R.sp - ( p + 4 );
-  d.id = "rv";
-  d.v = Value(t_integer, "");
-  dstore.push_back(d);
+  R.mp = R.sp - ( p + 4 );
+
+  dstore_push ( "ra", t_integer, string_from_int ( R.pc + 1 ) );
 
   R.pc = q;
 }

@@ -41,8 +41,11 @@ class PCodeProgram {
     bool halted;
 
     int int_from_string ( const std::string & );
+    std::string string_from_int ( int );
 
     void dstore_push ( std::string &, Value & );
+    void dstore_push ( const std::string &, int, const std::string & );
+    int base ( int level, int offset );
 
     // instructions
     void mst ( const std::string & );
