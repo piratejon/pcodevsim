@@ -11,6 +11,7 @@
 #include <map>
 
 #include "pcodeline.h"
+#include "value.h"
 
 struct registers {
   int pc, sp, mp, np, ep;
@@ -39,6 +40,8 @@ class PCodeProgram {
     struct registers R;
 
     bool halted;
+
+    void dstore_push ( std::string &, Value & );
 
     // instructions
     void mst ( std::string & );

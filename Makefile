@@ -10,7 +10,7 @@
 CXX=clang
 BASE_FLAGS=-std=c++98 -Wall -pedantic -I. -g3
 CXXFLAGS=$(BASE_FLAGS)
-OBJECTS=pcodeprogram.o pcodeline.o input_processor.o
+OBJECTS=pcodeprogram.o pcodeline.o input_processor.o value.o
 LDFLAGS=-lstdc++
 
 all: pcodevsim
@@ -20,6 +20,8 @@ pcodevsim: pcodevsim.cpp $(OBJECTS)
 pcodeprogram.o: pcodeprogram.cpp pcodeprogram.h
 
 pcodeline.o: pcodeline.cpp pcodeline.h
+
+value.o: value.cpp value.h
 
 input_processor.o: input_processor.cpp input_processor.h
 

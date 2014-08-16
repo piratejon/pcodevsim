@@ -7,6 +7,7 @@
 
 #include "pcodeprogram.h"
 #include "pcodeline.h"
+#include "value.h"
 
 void PCodeProgram::insert_label ( const std::string & label, int offset ) {
   if ( ! hasLabel(label) ) {
@@ -184,7 +185,7 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
     }
 
     // figure out what subprogram we are in lol
-    o << std::setw(12) << " subprogram |";
+    o << std::setw(12) << "            |";
 
     if ( dt != dstore.rend() && (
           table_height > dstore.size()
@@ -206,7 +207,7 @@ void PCodeProgram::display_execution_state ( std::ostream & o ) {
 
 void PCodeProgram::initialize_execution_environment ( ) {
   R.pc = getEntryPoint();
-  R.mp = R.sp = R.ep = R.np = 0;
+  R.mp = R.sp = R.ep = R.np = -1;
 
   halted = false;
 
@@ -215,6 +216,9 @@ void PCodeProgram::initialize_execution_environment ( ) {
 
 bool PCodeProgram::isHalted ( ) {
   return halted;
+}
+
+void PCodeProgram::dstore_push ( std::string & id, Value & v ) {
 }
 
 void PCodeProgram::step ( ) {
@@ -229,7 +233,9 @@ void PCodeProgram::step ( ) {
     hlt();
   } else if ( o == "mst" ) {
     mst(o1);
+    R.mp = dstore.size();
     ++ R.pc;
+  } else if ( o == "cup" ) {
   } else {
     std::ostringstream err;
     err << "unrecognized opcode "  <<  o  <<  " at "  <<  R.pc;
