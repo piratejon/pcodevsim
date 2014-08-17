@@ -47,12 +47,17 @@ class PCodeProgram {
     void dstore_push ( const std::string &, int, const std::string & );
     int parent_frame_pointer ( int, int );
     int get_frame_index ( int, const std::string & );
+    int get_frame_value ( int, const std::string & );
+    int get_frame_index ( const std::string & );
+    int get_frame_value ( const std::string & );
 
     // instructions
     void mst ( const std::string & );
     void hlt ( );
     void cup ( const std::string &, const std::string & );
     void ent ( const std::string &, const std::string & );
+    void lv ( const std::string &, const std::string &, const std::string & );
+    void rtn ( );
 
   public:
     PCodeProgram ( std::istream & );
@@ -66,6 +71,7 @@ class PCodeProgram {
     void print_instruction_store ( std::ostream & );
     void instruction_listing_format ( std::ostream &, PCodeLine & );
     void display_execution_state ( std::ostream & );
+    void print_labels ( std::ostream & );
     void initialize_execution_environment ( );
 
     bool isHalted ( );

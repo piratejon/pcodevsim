@@ -142,6 +142,15 @@ int PCodeProgram::getEntryPoint ( ) {
   return -1;
 }
 
+void PCodeProgram::print_labels ( std::ostream & o ) {
+  o << "Labels:\n";
+  for ( std::map<std::string,int>::iterator it = labels.begin();
+      it != labels.end();
+      ++ it ) {
+    o << it->first << ": " << it->second << "\n";
+  }
+}
+
 void PCodeProgram::display_execution_state ( std::ostream & o ) {
 
   int table_height;
@@ -247,6 +256,10 @@ void PCodeProgram::step ( ) {
     cup(o1, o2);
   } else if ( o == "ent" ) {
     ent(o1, o2);
+  } else if ( o == "rtn" ) {
+    rtn();
+  } else if ( o == "lvi" ) {
+    lv("i", o1, o2);
   } else {
     std::ostringstream err;
     err << "unrecognized opcode "  <<  o  <<  " at "  <<  R.pc;
@@ -280,16 +293,28 @@ int PCodeProgram::parent_frame_pointer ( int level, int _mp ) {
   }
 }
 
-int PCodeProgram::get_frame_index ( int frame_index, const std::string & label ) {
-  if ( label == "rv" ) return frame_index;
-  if ( label == "sl" ) return frame_index + 1;
-  if ( label == "dl" ) return frame_index + 2;
-  if ( label == "ep" ) return frame_index + 3;
-  if ( label == "ra" ) return frame_index + 4;
+int PCodeProgram::get_frame_index ( int frame, const std::string & label ) {
+  if ( label == "rv" ) return frame;
+  if ( label == "sl" ) return frame + 1;
+  if ( label == "dl" ) return frame + 2;
+  if ( label == "ep" ) return frame + 3;
+  if ( label == "ra" ) return frame + 4;
 
   std::ostringstream o;
-  o << "Requested non-label " << label << " for frame " << frame_index;
+  o << "Requested non-label " << label << " for frame at " << frame;
   throw(o.str().c_str());
+}
+
+int PCodeProgram::get_frame_value ( int frame, const std::string & label ) {
+  return dstore[get_frame_index ( frame, label )].v.value_as_integer();
+}
+
+int PCodeProgram::get_frame_index ( const std::string & label ) {
+  return get_frame_index ( R.mp, label );
+}
+
+int PCodeProgram::get_frame_value ( const std::string & label ) {
+  return get_frame_value ( R.mp, label );
 }
 
 void PCodeProgram::mst ( const std::string & level ) {
@@ -342,5 +367,13 @@ void PCodeProgram::ent ( const std::string & reg, const std::string & str_amt ) 
   } else {
     throw(9);
   }
+}
+
+void PCodeProgram::rtn ( ) {
+  // kill the stack frame, basically undoing the mst prior to the cup
+  R.sp = R.mp - 1;
+}
+
+void PCodeProgram::lv ( const std::string & type, const std::string & level, const std::string & offset ) {
 }
 

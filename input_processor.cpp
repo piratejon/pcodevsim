@@ -22,6 +22,7 @@ int InputProcessor::retrieve_action ( ) {
     last_command = command;
     if ( command == "q" || command == "quit" ) return pc_quit;
     if ( command == "s" || command == "step" ) return pc_step;
+    if ( command == "l" || command == "label" ) return pc_label;
     // if ( command == "h" || command == "?" || command == "help" ) return pc_help;
 
     if ( command != "" ) *out << "unrecognized command\n";

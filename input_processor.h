@@ -13,6 +13,7 @@
 enum ProcessControl {
   pc_step,
   pc_quit,
+  pc_label,
   pc_help
 };
 
