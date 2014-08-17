@@ -45,12 +45,14 @@ class PCodeProgram {
 
     void dstore_push ( std::string &, Value & );
     void dstore_push ( const std::string &, int, const std::string & );
-    int base ( int level, int offset );
+    int parent_frame_pointer ( int, int );
+    int get_frame_index ( int, const std::string & );
 
     // instructions
     void mst ( const std::string & );
     void hlt ( );
     void cup ( const std::string &, const std::string & );
+    void ent ( const std::string &, const std::string & );
 
   public:
     PCodeProgram ( std::istream & );

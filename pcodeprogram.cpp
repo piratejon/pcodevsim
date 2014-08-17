@@ -245,6 +245,8 @@ void PCodeProgram::step ( ) {
     mst(o1);
   } else if ( o == "cup" ) {
     cup(o1, o2);
+  } else if ( o == "ent" ) {
+    ent(o1, o2);
   } else {
     std::ostringstream err;
     err << "unrecognized opcode "  <<  o  <<  " at "  <<  R.pc;
@@ -267,27 +269,49 @@ std::string PCodeProgram::string_from_int ( int i ) {
   return ss.str();
 }
 
-int PCodeProgram::base ( int level, int offset ) {
-  if ( level == 0 ) return offset;
-  else return base ( level - 1, dstore[offset+1].v.value_as_integer() );
+int PCodeProgram::parent_frame_pointer ( int level, int _mp ) {
+  if ( level == 0 ) {
+    // the caller was in the enclosing block (static link == dynamic link)
+    return _mp;
+  } else {
+    // follow the dynamic links backward through this block until the caller
+    // was the enclosing block
+    return parent_frame_pointer ( level - 1, dstore[get_frame_index(_mp, "dl")].v.value_as_integer() );
+  }
+}
+
+int PCodeProgram::get_frame_index ( int frame_index, const std::string & label ) {
+  if ( label == "rv" ) return frame_index;
+  if ( label == "sl" ) return frame_index + 1;
+  if ( label == "dl" ) return frame_index + 2;
+  if ( label == "ep" ) return frame_index + 3;
+  if ( label == "ra" ) return frame_index + 4;
+
+  std::ostringstream o;
+  o << "Requested non-label " << label << " for frame " << frame_index;
+  throw(o.str().c_str());
 }
 
 void PCodeProgram::mst ( const std::string & level ) {
 
-  // R.sp + 0 is return value
+  // return value is space for this function's return value, if any
   dstore_push ( "rv", t_integer, "" );
 
-  // R.sp + 1 is static link
-  dstore_push ( "sl", t_integer, string_from_int ( base ( int_from_string(level), R.mp ) ) );
-  // R.sp + 2 is dynamic link
+  // static link points to stack frame of enclosing source block
+  dstore_push ( "sl", t_integer, string_from_int ( parent_frame_pointer ( int_from_string(level), R.mp ) ) );
+
+  // dynamic link points to this frame's caller's stack frame
   dstore_push ( "dl", t_integer, string_from_int ( R.mp ) );
-  // R.sp + 3 is extreme pointer
+
+  // extreme pointer, value of EP prior to call
   dstore_push ( "ep", t_integer, string_from_int ( R.ep ) );
-  // R.sp + 4 is return address
 
-  // R.sp + 5 is where we start the parameters if any and then the locals
+  // return address set by cup; contains PC assumed on rtn
 
-  R.mp = dstore.size();
+  // EP is the top of the enclosing scope's stack frame, so ours starts there
+  R.mp = R.ep;
+
+  // increment the program counter, we haven't called/jmp'd yet
   ++ R.pc;
 }
 
@@ -304,5 +328,19 @@ void PCodeProgram::cup ( const std::string & argsize, const std::string & iaddr 
   dstore_push ( "ra", t_integer, string_from_int ( R.pc + 1 ) );
 
   R.pc = q;
+}
+
+void PCodeProgram::ent ( const std::string & reg, const std::string & str_amt ) {
+  int amt = hasLabel(str_amt) ? lookupLabel(str_amt) : int_from_string(str_amt);
+
+  if ( reg == "ep" ) {
+    R.ep = R.mp + amt;
+    ++ R.pc;
+  } else if ( reg == "sp" ) {
+    R.sp = R.mp + amt;
+    ++ R.pc;
+  } else {
+    throw(9);
+  }
 }
 
