@@ -345,8 +345,8 @@ void PCodeProgram::hlt ( ) {
 }
 
 void PCodeProgram::cup ( const std::string & argsize, const std::string & iaddr ) {
-  int p = int_from_string ( argsize );
-  int q = int_from_string ( iaddr );
+  int p = hasLabel(argsize) ? lookupLabel(argsize) : int_from_string ( argsize );
+  int q = hasLabel(iaddr) ? lookupLabel(iaddr) : int_from_string ( iaddr );
 
   R.mp = R.sp - ( p + 4 );
 
