@@ -375,5 +375,11 @@ void PCodeProgram::rtn ( ) {
 }
 
 void PCodeProgram::lv ( const std::string & type, const std::string & level, const std::string & offset ) {
+
+  // lookup address of offset from level and push onto stack
+  int address = parent_frame_pointer ( int_from_string ( level ), R.mp ) + int_from_string ( offset );
+  dstore_push ( "", type_from_string ( type ), string_from_int ( address ) );
+
+  ++ R.pc;
 }
 

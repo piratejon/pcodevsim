@@ -43,7 +43,7 @@ class PCodeProgram {
     int int_from_string ( const std::string & );
     std::string string_from_int ( int );
 
-    void dstore_push ( std::string &, Value & );
+    void dstore_push ( const std::string &, Value & );
     void dstore_push ( const std::string &, int, const std::string & );
     int parent_frame_pointer ( int, int );
     int get_frame_index ( int, const std::string & );

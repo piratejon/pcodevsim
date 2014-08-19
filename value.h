@@ -45,5 +45,7 @@ class Value {
     // dontcare?
 };
 
+int type_from_string ( const std::string & s );
+
 #endif // _PCODE_VALUE
 

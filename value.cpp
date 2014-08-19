@@ -59,3 +59,16 @@ std::string & Value::value_as_string() {
   return raw_value;
 }
 
+int type_from_string ( const std::string & s ) {
+  if ( s == "a" ) return t_address;
+  if ( s == "b" ) return t_boolean;
+  if ( s == "c" ) return t_character;
+  if ( s == "i" ) return t_integer;
+  if ( s == "r" ) return t_real;
+  if ( s == "s" ) return t_string;
+  if ( s == "t" ) return t_set;
+  if ( s == "p" ) return t_procedure;
+  if ( s == "x" ) return t_dontcare;
+  throw("Unrecognized type character " + s);
+}
+
