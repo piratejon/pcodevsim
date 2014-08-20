@@ -350,7 +350,7 @@ void PCodeProgram::cup ( const std::string & argsize, const std::string & iaddr 
 
   R.mp = R.sp - ( p + 4 );
 
-  dstore_push ( "ra", t_integer, string_from_int ( R.pc + 1 ) );
+  dstore_push ( "ra", t_integer, string_from_int ( R.pc ) );
 
   R.pc = q;
 }
@@ -381,5 +381,41 @@ void PCodeProgram::lv ( const std::string & type, const std::string & level, con
   dstore_push ( "", type_from_string ( type ), string_from_int ( address ) );
 
   ++ R.pc;
+}
+
+Value PCodeProgram::dstore_pop ( ) {
+  Value v = dstore.back().v;
+  dstore.pop();
+  -- R.sp;
+  return v;
+}
+
+void PCodeProgram::sfn_read ( int type ) {
+  int dest_addr = dstore_pop ( ).value_as_integer();
+
+  bool b;
+  char c;
+  int i;
+  double r;
+
+  switch ( type ) {
+    case t_boolean:
+    case t_character:
+    case t_integer:
+//      user_input_stream >> i;
+//      address_store
+    case t_real:
+      break;
+    default:
+      throw("Attempted to read type " + string_from_int ( type ));
+  }
+}
+
+void PCodeProgram::csp ( const std::string & sfn ) {
+  if ( sfn == "rdb" || sfn == "rdc" || sfn == "rdi" || sfn == "rdr" ) {
+    sfn_read ( type_from_string ( sfn[2] ) );
+  } else {
+    throw("Unrecognized standard function " + sfn);
+  }
 }
 

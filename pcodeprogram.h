@@ -45,6 +45,7 @@ class PCodeProgram {
 
     void dstore_push ( const std::string &, Value & );
     void dstore_push ( const std::string &, int, const std::string & );
+    Value dstore_pop ( );
     int parent_frame_pointer ( int, int );
     int get_frame_index ( int, const std::string & );
     int get_frame_value ( int, const std::string & );
@@ -58,6 +59,7 @@ class PCodeProgram {
     void ent ( const std::string &, const std::string & );
     void lv ( const std::string &, const std::string &, const std::string & );
     void rtn ( );
+    void csp ( const std::string & );
 
   public:
     PCodeProgram ( std::istream & );
