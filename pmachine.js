@@ -5,6 +5,11 @@ var pmachine = (function () {
 
     var G;
 
+    function alter_register(g, reg, val) {
+        g.old_R[reg] = g.R[reg];
+        g.R[reg] = val;
+    }
+
     function datastore_push(id, type, value) {
         G.dstore.push({id: id, type: type, value: value});
     }
@@ -19,13 +24,13 @@ var pmachine = (function () {
         return parseInt(level, 10) + 1;
     }
 
-    function insn_mst(insn) {
+    function insn_mst(g, insn) {
         datastore_push("rv", "int", 0);
         datastore_push("sl", "int", base(insn.op1));
         datastore_push("dl", "int", 0);
-        datastore_push("ep", "int", G.R.ep);
+        datastore_push("ep", "int", g.R.ep);
 
-        G.R.pc += 1;
+        g.R.pc += 1;
     }
 
     /*
@@ -173,42 +178,42 @@ var pmachine = (function () {
         return istore;
     }
 
-    function instruction_table_row(insn, g) {
-        var tr, td;
+    function render_static_istore_elements(g) {
+        var insn, insn_table_row;
 
-        tr = document.createElement('tr');
-        if (insn.address === g.R.pc) {
-            tr.id = "pc_row";
-            g.form.pc_row = tr;
-        }
+        insn_table_row = function (insn) {
+            var tr, insn_table_cell;
 
-        td = document.createElement('td');
-        td.innerHTML = insn.address;
-        tr.appendChild(td);
+            tr = document.createElement('tr');
 
-        td = document.createElement('td');
-        td.innerHTML = insn.opcode === undefined ? '' : insn.opcode;
-        tr.appendChild(td);
+            insn_table_cell = function (v) {
+                var td = document.createElement('td');
+                td.innerHTML = v === undefined ? '' : v;
+                return td;
+            };
 
-        td = document.createElement('td');
-        td.innerHTML = insn.op1 === undefined ? '' : insn.op1;
-        tr.appendChild(td);
+            tr.appendChild(insn_table_cell(insn.address));
+            tr.appendChild(insn_table_cell(insn.opcode));
+            tr.appendChild(insn_table_cell(insn.op1));
+            tr.appendChild(insn_table_cell(insn.op2));
 
-        td = document.createElement('td');
-        td.innerHTML = insn.op2 === undefined ? '' : insn.op2;
-        tr.appendChild(td);
-
-        return tr;
-    }
-
-    function render_istore(g) {
-        var insn;
+            return tr;
+        };
 
         for (insn in g.istore) {
             if (g.istore.hasOwnProperty(insn)) {
-                g.form.istore.appendChild(instruction_table_row(g.istore[insn], g));
+                g.form.istore.appendChild(insn_table_row(g.istore[insn], g));
             }
         }
+    }
+
+    function render_dynamic_istore_elements(g) {
+        console.log(g.old_R.pc);
+        console.log(g.R.pc);
+        if (g.old_R !== undefined && g.old_R.pc !== undefined) {
+            g.form.istore.childNodes[g.old_R.pc].removeAttribute('id');
+        }
+        g.form.istore.childNodes[g.R.pc].id = 'pc_row';
     }
 
     function render_registers(g) {
@@ -223,7 +228,6 @@ var pmachine = (function () {
                 } else {
                     elt.classList.add('just_changed');
                 }
-                g.old_R[reg] = g.R[reg];
             }
         }
     }
@@ -319,12 +323,13 @@ var pmachine = (function () {
 
     function render_static_visual_elements(g) {
         render_labels(g);
-        render_istore(g);
+        render_static_istore_elements(g);
     }
 
     function render_dynamic_visual_elements(g) {
         render_dstore(g);
         render_registers(g);
+        render_dynamic_istore_elements(g);
     }
 
     function reset() {
@@ -338,12 +343,23 @@ var pmachine = (function () {
         render_dynamic_visual_elements(G);
     }
 
+    function preserve_old_state(g) {
+        var reg;
+        for(reg in g.R) {
+            if (g.R.hasOwnProperty(reg)) {
+                g.old_R[reg] = g.R[reg];
+            }
+        }
+    }
+
     function step() {
         var insn;
 
+        preserve_old_state(G);
+
         insn = G.istore[G.R.pc];
 
-        G.opcode_dispatch[insn.opcode](insn);
+        G.opcode_dispatch[insn.opcode](G, insn);
 
         render_dynamic_visual_elements(G);
     }
