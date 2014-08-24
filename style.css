@@ -53,3 +53,28 @@
   display: inline;
 }
 
+#reg_pc, #val_pc, #pc_row {
+  background-color: #fff79a;
+}
+
+#reg_sp, #val_sp, #sp_row {
+  background-color: #ffc8e3;
+}
+
+#reg_mp, #val_mp, #mp_row {
+  background-color: #a8a8ff;
+}
+
+#reg_np, #val_np, #np_row {
+  background-color: #a3feba;
+}
+
+#reg_ep, #val_ep, #ep_row {
+  background-color: #ffbd82;
+}
+
+.just_changed {
+  color: red;
+  font-weight: bold;
+}
+

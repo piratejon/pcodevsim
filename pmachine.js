@@ -72,6 +72,7 @@ var pmachine = (function () {
     function init() {
         G = {};
         G.R = {};
+        G.old_R = {};
         G.istore = {};
         G.dstore = [];
         G.line_labels = {};
@@ -205,11 +206,19 @@ var pmachine = (function () {
         }
     }
 
-    function render_registers(r) {
-        var reg;
-        for (reg in r) {
-            if (r.hasOwnProperty(reg)) {
-                document.getElementById('val_' + reg).innerHTML = r[reg];
+    function render_registers(g) {
+        var reg, elt;
+        for (reg in G.R) {
+            if (G.R.hasOwnProperty(reg)) {
+                elt = document.getElementById('val_' + reg);
+                elt.innerHTML = G.R[reg];
+                if (G.R[reg] === G.old_R[reg]) {
+                    // http://stackoverflow.com/questions/195951/change-an-elements-css-class-with-javascript
+                    elt.classList.remove('just_changed');
+                } else {
+                    elt.classList.add('just_changed');
+                }
+                G.old_R[reg] = G.R[reg];
             }
         }
     }
@@ -291,7 +300,7 @@ var pmachine = (function () {
         G.opcode_dispatch[insn.opcode](insn);
 
         render_istore(G);
-        // render_dstore(G);
+        render_dstore(G);
         render_registers(G.R);
     }
 
