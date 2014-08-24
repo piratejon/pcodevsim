@@ -65,7 +65,6 @@ var pmachine = (function () {
         datastore_push("ra", "int", "");
 
         // g.R.mp = g.R.ep;
-        g.R.sp += 5;
         g.R.pc += 1;
     }
 
