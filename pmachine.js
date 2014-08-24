@@ -57,27 +57,6 @@ var pmachine = (function () {
         return follow_link(level - 1, G.dstore[get_frame_pointer(mp, frame_element)].value, frame_element);
     }
 
-    function insn_mst(g, insn) {
-        datastore_push("rv", "int", 0);
-        datastore_push("sl", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
-        datastore_push("dl", "int", g.R.mp); // the dynamic link points to the callee's stack frame
-        datastore_push("ep", "int", g.R.ep);
-        datastore_push("ra", "int", "");
-
-        // g.R.mp = g.R.ep;
-        g.R.pc += 1;
-    }
-
-    function insn_cup(g, insn) {
-        // lookup ra of the current frame and set it
-        // datastore_push("ra", "int", g.R.pc + 1);
-        set_frame_element(g.R.mp, "ra", g.R.pc + 1);
-
-        g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
-
-        g.R.pc = int_from_label(insn.op2);
-    }
-
     function insn_stp(g, insn) {
         g.form.step.disabled = true;
     }
@@ -124,7 +103,7 @@ var pmachine = (function () {
         case "wrs":
             // no typechecking is done LOL
             // TODO strip off the enclosing quotes
-            write_to_stdout();
+            write_to_stdout(datastore_pop().value);
             break;
         case "wri":
             break;
@@ -202,7 +181,7 @@ var pmachine = (function () {
         G.constants = [];
         G.implicit_label_matcher = /^(L\d+)/;
         G.explicit_label_matcher = /^#define[ \t]+(L\d+)[ \t]+(\d+)/;
-        G.instruction_matcher = /^([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9' \t]*)/;
+        G.instruction_matcher = /^([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*(.*)/;
         // G.log = console.log;
         G.log = function () { };
         G.form = {
@@ -216,8 +195,25 @@ var pmachine = (function () {
         };
 
         G.opcode_dispatch = {
-            "mst": insn_mst,
-            "cup": insn_cup,
+            "mst": function (g, insn) {
+                datastore_push("rv", "int", 0);
+                datastore_push("sl", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
+                datastore_push("dl", "int", g.R.mp); // the dynamic link points to the callee's stack frame
+                datastore_push("ep", "int", g.R.ep);
+                datastore_push("ra", "int", "");
+
+                // g.R.mp = g.R.ep;
+                g.R.pc += 1;
+            },
+            "cup": function (g, insn) {
+                // lookup ra of the current frame and set it
+                // datastore_push("ra", "int", g.R.pc + 1);
+                set_frame_element(g.R.mp, "ra", g.R.pc + 1);
+
+                g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
+
+                g.R.pc = int_from_label(insn.op2);
+            },
             "stp": insn_stp,
             "ent": insn_ent,
             "rtn": insn_rtn,
