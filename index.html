@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>pcode virtual machine simulator</title>
+    <script src="pmachine.js"></script>
+  </head>
+  <body id="body" onload="pmachine.init()">
+    <p id="about">This browser app simulates the execution of p-code in a visual way meant to illustrate the inner workings and state changes of one possible p-machine for demonstrative or educational purposes.
+    <div id="input">
+      <p>pcode: <input type="button" onclick="pmachine.load(); return 0;" value="Load Program" />
+        <div>
+          <textarea id="pcode" cols=40 rows=40>L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         6         
+          ldc       i         0         
+          equ       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          mst       1                   
+          lvi       0         6         
+          lvi       0         5         
+          lvi       0         6         
+          mod                           
+          cup       2         L00004    
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    15                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lvi       0         5         
+          csp                 rdi       
+          lvi       0         6         
+          csp                 rdi       
+          mst       0                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          ldc       i         5         
+          csp                 wri       
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    14                  
+          mst       0                   
+          cup       0         L00001    
+          stp</textarea>
+        </div>
+      </div>
+      <div id="labels">
+        <table id="label_table">
+          <thead>
+            <tr><th>Label<th>Value
+          <tbody id="label_body">
+        </table>
+      </div>
+    </div>
+    <div id="pmachine">
+      <div id="state">
+        <table id="registers">
+          <tr class="register_header"><th colspan=5>Registers
+          <tr class="register_labels"><th id="reg_pc">PC<th id="reg_sp">SP<th id="reg_mp">MP<th id="reg_np">NP<th id="reg_ep">EP
+          <tr class="register_values"><td id="val_pc"><td id="val_sp"><td id="val_mp"><td id="val_np"><td id="val_ep">
+        </table>
+      </div>
+      <div id="instruction_div">
+        <table id="instructions">
+          <thead>
+            <tr><th colspan=4>Instructions
+            <tr><th>Address<th>Opcode<th>Op1<th>Op2
+          <tbody id="istore_body">
+        </table>
+      </div>
+      <div id="stack_div">
+        <table id="stack">
+          <thead>
+            <tr><th colspan=4>Data Store
+            <tr><th>Address<th>Id<th>Type<th>Value
+          <tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <textarea id="logger"></textarea>
+    </div>
+  </body>
+</html>
+
