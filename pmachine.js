@@ -273,10 +273,10 @@ var pmachine = (function () {
         }
     }
 
-    function render_dstore(address, g) {
+    function render_dstore(g) {
         var tbody, cell, wrap;
 
-        wrap = function (c) {
+        wrap = function (address, c) {
             var tr, wrap2;
 
             wrap2 = function (d) {
@@ -294,12 +294,10 @@ var pmachine = (function () {
             return tr;
         };
 
-        tbody = document.getElementById('#stack_body');
+        tbody = document.getElementById('dstore_body');
 
-        for (cell in g.dstore) {
-            if (g.dstore.hasOwnProperty(cell)) {
-                tbody.appendChild(wrap(cell, g.dstore[cell]));
-            }
+        for (cell = g.dstore.length - 1; cell >= 0; cell -= 1) {
+            tbody.appendChild(wrap(cell, g.dstore[cell]));
         }
     }
 
