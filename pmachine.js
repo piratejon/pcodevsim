@@ -233,6 +233,51 @@ var pmachine = (function () {
 
                 g.R.pc += 1;
             },
+
+            "neq": function (g, insn) {
+                var a, b;
+
+                a = datastore_pop();
+                b = datastore_pop();
+
+                datastore_push("", "b", b.value !== a.value);
+
+                g.R.pc += 1;
+            },
+
+            "grt": function (g, insn) {
+                var a, b;
+
+                a = datastore_pop();
+                b = datastore_pop();
+
+                datastore_push("", "b", b.value > a.value);
+
+                g.R.pc += 1;
+            },
+
+            "leq": function (g, insn) {
+                var a, b;
+
+                a = datastore_pop();
+                b = datastore_pop();
+
+                datastore_push("", "b", b.value <= a.value);
+
+                g.R.pc += 1;
+            },
+
+            "geq": function (g, insn) {
+                var a, b;
+
+                a = datastore_pop();
+                b = datastore_pop();
+
+                datastore_push("", "b", b.value >= a.value);
+
+                g.R.pc += 1;
+            },
+
         };
     }
 
