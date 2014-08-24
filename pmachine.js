@@ -5,9 +5,30 @@ var pmachine = (function () {
 
     var G;
 
-    function insn_mst(insn) {
+    function datastore_push(id, type, value) {
+        G.dstore.push({id: id, type: type, value: value});
     }
 
+    function datastore_pop() {
+        var popee = G.dstore[G.dstore.length - 1];
+        G.dstore.pop();
+        return popee;
+    }
+
+    function base(level) {
+        return level + 1;
+    }
+
+    function insn_mst(insn) {
+        datastore_push("rv", "int", 0);
+        datastore_push("sl", "int", base(insn.op1));
+        datastore_push("dl", "int", 0);
+        datastore_push("ep", "int", G.R.ep);
+
+        G.R.pc += 1;
+    }
+
+    /*
     function insn_cup(insn) {
     }
 
@@ -46,12 +67,13 @@ var pmachine = (function () {
 
     function insn_ujp(insn) {
     }
+    */
 
     function init() {
         G = {};
         G.R = {};
         G.istore = {};
-        G.dstore = {};
+        G.dstore = [];
         G.line_labels = {};
         G.line_labels_rev = {};
         G.data_labels = {};
@@ -64,7 +86,7 @@ var pmachine = (function () {
         G.form = {}; // where we track the web view
 
         G.opcode_dispatch = {
-            "mst": insn_mst,
+            "mst": insn_mst/*,
             "cup": insn_cup,
             "stp": insn_stp,
             "ent": insn_ent,
@@ -78,6 +100,7 @@ var pmachine = (function () {
             "equ": insn_equ,
             "fjp": insn_fjp,
             "ujp": insn_ujp
+            */
         };
     }
 
@@ -241,6 +264,9 @@ var pmachine = (function () {
         }
     }
 
+    function render_dstore(g) {
+    }
+
     function initialize_registers(g) {
         g.R.pc = infer_initial_program_counter(g.istore);
         g.R.sp = 0;
@@ -256,13 +282,17 @@ var pmachine = (function () {
         render_registers(G.R);
         render_labels(G);
     }
-    
+ 
     function step() {
         var insn;
 
         insn = G.istore[G.R.pc];
 
         G.opcode_dispatch[insn.opcode](insn);
+
+        render_istore(G);
+        // render_dstore(G);
+        render_registers(G.R);
     }
 
     return { 'init': init, 'reset': reset, 'step': step };
