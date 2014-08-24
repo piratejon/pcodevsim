@@ -1,0 +1,26 @@
+/* adjacent float:left came from
+ * <http://www.barelyfitz.com/screencast/html-training/css/positioning/>
+ */
+#input {
+  float: left;
+  /* inline-block tip came from
+   * <http://stackoverflow.com/questions/450903/make-div-width-equal-to-child-contents>
+   */
+  display: inline-block;
+}
+
+#pmachine {
+  float: left;
+  display: inline-block;
+}
+
+#instruction_div {
+  float: left;
+  display: inline-block;
+}
+
+#stack-div {
+  float: left;
+  display: inline-block;
+}
+
