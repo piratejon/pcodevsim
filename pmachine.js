@@ -208,17 +208,17 @@ var pmachine = (function () {
 
     function render_registers(g) {
         var reg, elt;
-        for (reg in G.R) {
-            if (G.R.hasOwnProperty(reg)) {
+        for (reg in g.R) {
+            if (g.R.hasOwnProperty(reg)) {
                 elt = document.getElementById('val_' + reg);
-                elt.innerHTML = G.R[reg];
-                if (G.R[reg] === G.old_R[reg]) {
+                elt.innerHTML = g.R[reg];
+                if (g.R[reg] === g.old_R[reg]) {
                     // http://stackoverflow.com/questions/195951/change-an-elements-css-class-with-javascript
                     elt.classList.remove('just_changed');
                 } else {
                     elt.classList.add('just_changed');
                 }
-                G.old_R[reg] = G.R[reg];
+                g.old_R[reg] = g.R[reg];
             }
         }
     }
@@ -273,7 +273,34 @@ var pmachine = (function () {
         }
     }
 
-    function render_dstore(g) {
+    function render_dstore(address, g) {
+        var tbody, cell, wrap;
+
+        wrap = function (c) {
+            var tr, wrap2;
+
+            wrap2 = function (d) {
+                var td = document.createElement('td');
+                td.innerHTML = d;
+                return td;
+            };
+
+            tr = document.createElement('tr');
+            tr.appendChild(wrap2(address));
+            tr.appendChild(wrap2(c.id));
+            tr.appendChild(wrap2(c.type));
+            tr.appendChild(wrap2(c.value));
+
+            return tr;
+        };
+
+        tbody = document.getElementById('#stack_body');
+
+        for (cell in g.dstore) {
+            if (g.dstore.hasOwnProperty(cell)) {
+                tbody.appendChild(wrap(cell, g.dstore[cell]));
+            }
+        }
     }
 
     function initialize_registers(g) {
@@ -291,7 +318,7 @@ var pmachine = (function () {
         render_registers(G.R);
         render_labels(G);
     }
- 
+
     function step() {
         var insn;
 
