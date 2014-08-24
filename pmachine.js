@@ -211,7 +211,28 @@ var pmachine = (function () {
 
             "ujp": function (g, insn) {
                 g.R.pc = int_from_label(insn.op1);
-            }
+            },
+
+            "lvr": function (g, insn) {
+                var offset;
+
+                offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
+
+                datastore_push("", "r", g.dstore[offset].value);
+
+                g.R.pc += 1;
+            },
+
+            "les": function (g, insn) {
+                var a, b;
+
+                a = datastore_pop();
+                b = datastore_pop();
+
+                datastore_push("", "b", b.value < a.value);
+
+                g.R.pc += 1;
+            },
         };
     }
 
