@@ -9,9 +9,8 @@
   <body id="body" onload="pmachine.init()">
     <p id="about">This browser app simulates the execution of p-code in a visual way meant to illustrate the inner workings and state changes of one possible p-machine for demonstrative or educational purposes.
     <div id="input">
-      <p>pcode: <input type="button" onclick="pmachine.load(); return 0;" value="Load Program" />
-        <div>
-          <textarea id="pcode" cols=40 rows=40>L00004    ent       sp        L00005    
+      <div>
+        <textarea id="pcode" cols=40 rows=40>L00004    ent       sp        L00005    
           ent       ep        L00006    
           lvi       0         6         
           ldc       i         0         
@@ -52,7 +51,6 @@ L00001    ent       sp        L00002
           mst       0                   
           cup       0         L00001    
           stp</textarea>
-        </div>
       </div>
       <div id="labels">
         <table id="label_table">
@@ -69,6 +67,11 @@ L00001    ent       sp        L00002
           <tr class="register_labels"><th id="reg_pc">PC<th id="reg_sp">SP<th id="reg_mp">MP<th id="reg_np">NP<th id="reg_ep">EP
           <tr class="register_values"><td id="val_pc"><td id="val_sp"><td id="val_mp"><td id="val_np"><td id="val_ep">
         </table>
+        <ul id="control">
+          <li><input type="button" onclick="pmachine.reset(); return 0;" value="Reset" />
+          <li><input type="button" onclick="pmachine.step(); return 0;" value="Step" />
+          <li><input type="button" onclick="pmachine.go(); return 0;" value="Go" />
+        </ul>
       </div>
       <div id="instruction_div">
         <table id="instructions">
@@ -86,9 +89,6 @@ L00001    ent       sp        L00002
           <tbody>
         </table>
       </div>
-    </div>
-    <div>
-      <textarea id="logger"></textarea>
     </div>
   </body>
 </html>

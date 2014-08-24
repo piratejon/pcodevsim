@@ -24,3 +24,32 @@
   display: inline-block;
 }
 
+#pc_row > td {
+  background-color: #fff79a;
+}
+
+#label_body > tr > td {
+  font-family: monospace;
+}
+
+.register_values > td {
+  font-family: monospace;
+}
+
+#istore_body > tr > td {
+  font-family: monospace;
+}
+
+#dstore_body > tr > td {
+  font-family: monospace;
+}
+
+#control {
+  /*border: 1px solid red;*/
+}
+
+#control > li {
+  list-style-type: none;
+  display: inline;
+}
+

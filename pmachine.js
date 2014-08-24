@@ -3,39 +3,11 @@
 var pmachine = (function () {
     "use strict";
 
-    var G, Logger;
+    var G;
 
-    Logger = (function () {
-        var H;
-
-        function log(entry) {
-            H.target_buffer.value += '\n' + entry;
-        }
-
-        function reset() {
-            // H.target_buffer.value = "";
-        }
-
-        function init() {
-            H = {};
-            H.target_buffer = document.getElementById('logger');
-            reset();
-        }
-
-        init();
-
-        return { 'reset': reset, 'init': init, 'log': log };
-    }());
-
-    function init(logger) {
+    function init() {
         G = {};
-        G.R = {
-            pc: 0,
-            sp: 0,
-            mp: 0,
-            np: 0,
-            ep: 0
-        };
+        G.R = {};
         G.istore = {};
         G.dstore = {};
         G.line_labels = {};
@@ -45,7 +17,9 @@ var pmachine = (function () {
         G.implicit_label_matcher = /^(L\d+)/;
         G.explicit_label_matcher = /^#define[ \t]+(L\d+)[ \t]+(\d+)/;
         G.instruction_matcher = /^([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]*)?[ \t]*$/;
-        G.log = console.log;
+        // G.log = console.log;
+        G.log = function () { };
+        G.form = {}; // where we track the web view
     }
 
     function defines_explicit_label(line) {
@@ -106,10 +80,14 @@ var pmachine = (function () {
         return istore;
     }
 
-    function instruction_table_row(insn) {
+    function instruction_table_row(insn, g) {
         var tr, td;
 
         tr = document.createElement('tr');
+        if (insn.address === g.R.pc) {
+            tr.id = "pc_row";
+            g.form.pc_row = tr;
+        }
 
         td = document.createElement('td');
         td.innerHTML = insn.address;
@@ -130,7 +108,7 @@ var pmachine = (function () {
         return tr;
     }
 
-    function render_istore(istore) {
+    function render_istore(g) {
         var istore_table, insn;
 
         istore_table = document.getElementById('istore_body');
@@ -138,9 +116,9 @@ var pmachine = (function () {
             istore_table.removeChild(istore_table.lastChild);
         }
 
-        for (insn in istore) {
-            if (istore.hasOwnProperty(insn)) {
-                istore_table.appendChild(instruction_table_row(istore[insn]));
+        for (insn in g.istore) {
+            if (g.istore.hasOwnProperty(insn)) {
+                istore_table.appendChild(instruction_table_row(g.istore[insn], g));
             }
         }
     }
@@ -160,9 +138,7 @@ var pmachine = (function () {
         i = istore.length - 1;
 
         for (i = istore.length - 1; i >= 0; i -= 1) {
-            console.log(i);
             if (istore[i] !== undefined) {
-                console.log(istore[i].opcode);
                 if (istore[i].opcode === "mst") {
                     return i;
                 }
@@ -204,16 +180,24 @@ var pmachine = (function () {
                 tbody.appendChild(wrap(label, g.data_labels[label]));
             }
         }
-     }
+    }
 
-    function load() {
+    function initialize_registers(g) {
+        g.R.pc = infer_initial_program_counter(g.istore);
+        g.R.sp = 0;
+        g.R.mp = 0;
+        g.R.np = 0;
+        g.R.ep = 0;
+    }
+
+    function reset() {
         G.istore = instruction_array_from_pcode();
-        G.R.pc = infer_initial_program_counter(G.istore);
-        render_istore(G.istore);
+        initialize_registers(G);
+        render_istore(G);
         render_registers(G.R);
         render_labels(G);
     }
 
-    return { 'init': init, 'load': load };
+    return { 'init': init, 'reset': reset };
 }());
 
