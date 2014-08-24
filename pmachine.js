@@ -359,7 +359,11 @@ var pmachine = (function () {
             tr.appendChild(td);
 
             td = document.createElement('td');
-            td.innerHTML = v;
+            td.innerHTML = v.type;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.innerHTML = v.value;
             tr.appendChild(td);
 
             return tr;
@@ -415,6 +419,7 @@ var pmachine = (function () {
         clear_children(g.form.istore);
         clear_children(g.form.dstore);
         clear_children(g.form.labels);
+        clear_children(g.form.constants);
     }
 
     function render_static_visual_elements(g) {
