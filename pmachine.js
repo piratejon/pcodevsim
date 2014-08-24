@@ -84,7 +84,12 @@ var pmachine = (function () {
         G.instruction_matcher = /^([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]*)?[ \t]*$/;
         // G.log = console.log;
         G.log = function () { };
-        G.form = {}; // where we track the web view
+        G.form = {
+            labels: document.getElementById('label_body'),
+            istore: document.getElementById('istore_body'),
+            dstore: document.getElementById('dstore_body'),
+            pcode: document.getElementById('pcode')
+        }; // where we track the web view
 
         G.opcode_dispatch = {
             "mst": insn_mst/*,
@@ -103,6 +108,12 @@ var pmachine = (function () {
             "ujp": insn_ujp
             */
         };
+    }
+
+    function clear_children(p) {
+        while (p.hasChildNodes()) {
+            p.removeChild(p.lastChild);
+        }
     }
 
     function defines_explicit_label(line) {
@@ -134,10 +145,9 @@ var pmachine = (function () {
         };
     }
 
-    function instruction_array_from_pcode() {
-        var line, pcode, istore, actual_line_number, insn;
+    function instruction_array_from_pcode(pcode) {
+        var line, istore, actual_line_number, insn;
 
-        pcode = document.getElementById('pcode').value.split("\n");
         istore = new Array(pcode.length); // so a hard-coded length is ok? :(
 
         actual_line_number = 0;
@@ -192,16 +202,11 @@ var pmachine = (function () {
     }
 
     function render_istore(g) {
-        var istore_table, insn;
-
-        istore_table = document.getElementById('istore_body');
-        while (istore_table.hasChildNodes()) {
-            istore_table.removeChild(istore_table.lastChild);
-        }
+        var insn;
 
         for (insn in g.istore) {
             if (g.istore.hasOwnProperty(insn)) {
-                istore_table.appendChild(instruction_table_row(g.istore[insn], g));
+                g.form.istore.appendChild(instruction_table_row(g.istore[insn], g));
             }
         }
     }
@@ -240,7 +245,7 @@ var pmachine = (function () {
     }
 
     function render_labels(g) {
-        var wrap, tbody, label;
+        var wrap, label;
 
         wrap = function (l, v) {
             var tr, td;
@@ -258,23 +263,21 @@ var pmachine = (function () {
             return tr;
         };
 
-        tbody = document.getElementById('label_body');
-
         for (label in g.line_labels) {
             if (g.line_labels.hasOwnProperty(label)) {
-                tbody.appendChild(wrap(label, g.line_labels[label]));
+                g.form.labels.appendChild(wrap(label, g.line_labels[label]));
             }
         }
 
         for (label in g.data_labels) {
             if (g.data_labels.hasOwnProperty(label)) {
-                tbody.appendChild(wrap(label, g.data_labels[label]));
+                g.form.labels.appendChild(wrap(label, g.data_labels[label]));
             }
         }
     }
 
     function render_dstore(g) {
-        var tbody, cell, wrap;
+        var cell, wrap;
 
         wrap = function (address, c) {
             var tr, wrap2;
@@ -294,14 +297,13 @@ var pmachine = (function () {
             return tr;
         };
 
-        tbody = document.getElementById('dstore_body');
-
         for (cell = g.dstore.length - 1; cell >= 0; cell -= 1) {
-            tbody.appendChild(wrap(cell, g.dstore[cell]));
+            g.form.dstore.appendChild(wrap(cell, g.dstore[cell]));
         }
     }
 
     function initialize_registers(g) {
+        g.old_R = {};
         g.R.pc = infer_initial_program_counter(g.istore);
         g.R.sp = 0;
         g.R.mp = 0;
@@ -309,13 +311,31 @@ var pmachine = (function () {
         g.R.ep = 0;
     }
 
+    function reset_visual_elements(g) {
+        clear_children(g.form.istore);
+        clear_children(g.form.dstore);
+        clear_children(g.form.labels);
+    }
+
+    function render_static_visual_elements(g) {
+        render_labels(g);
+        render_istore(g);
+    }
+
+    function render_dynamic_visual_elements(g) {
+        render_dstore(g);
+        render_registers(g.R);
+    }
+
     function reset() {
         init();
-        G.istore = instruction_array_from_pcode();
+
+        G.istore = instruction_array_from_pcode(G.form.pcode.value.split('\n'));
         initialize_registers(G);
-        render_istore(G);
-        render_registers(G.R);
-        render_labels(G);
+
+        reset_visual_elements(G);
+        render_static_visual_elements(G);
+        render_dynamic_visual_elements(G);
     }
 
     function step() {
@@ -325,9 +345,7 @@ var pmachine = (function () {
 
         G.opcode_dispatch[insn.opcode](insn);
 
-        render_istore(G);
-        render_dstore(G);
-        render_registers(G.R);
+        render_dynamic_visual_elements(G);
     }
 
     return { 'init': init, 'reset': reset, 'step': step };
