@@ -93,16 +93,42 @@ var pmachine = (function () {
     function insn_lda(g, insn) {
         // possibly overwrites parts of the stack frame!
         datastore_push("", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl") + parseInt(insn.op2, 10));
+
+        g.R.pc += 1;
+    }
+
+    function insn_ldc(g, insn) {
+        if (insn.op1 === "c" || insn.op1 === "b") {
+            datastore_push("", insn.op1, insn.op2);
+        } else {
+            datastore_push("", insn.op1, g.constants[insn.op2].value);
+        }
+
+        g.R.pc += 1;
+    }
+
+    function write_to_stdout(item) {
+        G.form.stdout.value += item.toString();
+    }
+
+    function insn_csp(g, insn) {
+        var cell;
+
+        switch (insn.op1) {
+        case "wrs":
+            // no typechecking is done LOL
+            // strip off the enclosing quotes
+            write_to_stdout();
+            break;
+        case "wri":
+            break;
+        }
+
+        g.R.pc += 1;
     }
 
     /*
     function insn_lvi(g, insn) {
-    }
-
-    function insn_csp(g, insn) {
-    }
-
-    function insn_ldc(g, insn) {
     }
 
     function insn_mod(g, insn) {
@@ -140,6 +166,7 @@ var pmachine = (function () {
         G.log = function () { };
         G.form = {
             constants: document.getElementById('constants_body'),
+            stdout: document.getElementById('stdout'),
             labels: document.getElementById('label_body'),
             istore: document.getElementById('istore_body'),
             dstore: document.getElementById('dstore_body'),
@@ -153,10 +180,10 @@ var pmachine = (function () {
             "stp": insn_stp,
             "ent": insn_ent,
             "rtn": insn_rtn,
-            "lda": insn_lda/*
-            "lvi": insn_lvi,
-            "csp": insn_csp,
+            "lda": insn_lda,
             "ldc": insn_ldc,
+            "csp": insn_csp/*
+            "lvi": insn_lvi,
             "mod": insn_mod,
             "sti": insn_sti,
             "equ": insn_equ,
@@ -420,6 +447,7 @@ var pmachine = (function () {
         clear_children(g.form.dstore);
         clear_children(g.form.labels);
         clear_children(g.form.constants);
+        g.form.stdout.value = '';
     }
 
     function render_static_visual_elements(g) {
