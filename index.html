@@ -5,12 +5,16 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <title>pcode virtual machine simulator</title>
     <script src="pmachine.js"></script>
+    <script src="programs.js"></script>
   </head>
-  <body id="body" onload="pmachine.init()">
+  <body id="body" onload="pmachine.init(); return 0;">
     <p id="about">This browser app simulates the execution of p-code in a visual way meant to illustrate the inner workings and state changes of one possible p-machine for demonstrative or educational purposes.
     <div id="input">
       <div>
-        <textarea id="pcode" cols=40 rows=40>L00004    ent       sp        L00005    
+        <p>Pick a program:
+        <p><select id="installed_programs" onchange="pmachine.new_program(); return 0;">
+<option value="
+L00004    ent       sp        L00005    
           ent       ep        L00006    
           lvi       0         6         
           ldc       i         0         
@@ -50,13 +54,2832 @@ L00001    ent       sp        L00002
 #define   L00003    14                  
           mst       0                   
           cup       0         L00001    
-          stp</textarea>
+          stp                           ">gcd.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p001_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p002_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p003_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p004_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p005_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p006_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p007_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p008_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p009_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p010_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    6                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p011_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    6                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p012_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    14                  
+#define   L00003    14                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p013_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    6                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p014_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    6                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p015_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    18                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p016_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    18                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p017_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    26                  
+#define   L00011    38                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p018_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    18                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p019_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          ldc       s         'Hello, I love you.'
+          csp                 wln       
+          rtn       p                   
+#define   L00005    4                   
+#define   L00006    5                   
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          cup       0         L00004    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    9                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p020_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    18                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p021_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    18                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p022_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    18                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p023_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p024_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    4                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p025_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p026_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p027_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p028_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p029_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p030_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          ldc       s         'How much cash do you have? '
+          csp                 wrs       
+          lvr       0         5         
+          csp                 rdr       
+          csp                 rln       
+          lvr       0         5         
+          ldc       r         100.0     
+          les       r                   
+          fjp                 L00004    
+          ldc       s         'You wicked and slothful person.'
+          csp                 wrs       
+          csp                 wln       
+          ldc       s         'I''d never go out with you.'
+          csp                 wrs       
+          csp                 wln       
+          ujp                 L00005    
+L00004                                  
+          ldc       s         'Come on, honey, let''s have a good time tonight!'
+          csp                 wrs       
+          csp                 wln       
+L00005                                  
+          ldc       s         'See you later!'
+          csp                 wrs       
+          csp                 wln       
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p031_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          ldc       s         'How much cash do you have? '
+          csp                 wrs       
+          lvr       0         5         
+          csp                 rdr       
+          csp                 rln       
+          lvr       0         5         
+          ldc       r         100.0     
+          les       r                   
+          fjp                 L00004    
+          ldc       s         'You wicked and slothful person.'
+          csp                 wrs       
+          csp                 wln       
+          ldc       s         'I''d never go out with you.'
+          csp                 wrs       
+          csp                 wln       
+          ujp                 L00005    
+L00004                                  
+          ldc       s         'Come on, honey, let''s have a good time tonight!'
+          csp                 wrs       
+          csp                 wln       
+L00005                                  
+          ldc       s         'See you later!'
+          csp                 wrs       
+          csp                 wln       
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p032_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         10        
+          sti       i                   
+L00004                                  
+          lvi       0         5         
+          ldc       i         0         
+          geq       i                   
+          fjp                 L00005    
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ', '      
+          csp                 wrs       
+          lda       0         5         
+          lvi       0         5         
+          ldc       i         1         
+          sbi                           
+          sti       i                   
+          ujp                 L00004    
+L00005                                  
+          ldc       s         'Blast off!'
+          csp                 wrs       
+          csp                 wln       
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    8                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p033_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         10        
+          sti       i                   
+L00004                                  
+          lvi       0         5         
+          ldc       i         0         
+          geq       i                   
+          fjp                 L00005    
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ', '      
+          csp                 wrs       
+          lda       0         5         
+          lvi       0         5         
+          ldc       i         1         
+          sbi                           
+          sti       i                   
+          ujp                 L00004    
+L00005                                  
+          ldc       s         'Blast off!'
+          csp                 wrs       
+          csp                 wln       
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    8                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p034_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         14        
+          ldc       i         2         
+          ldc       i         1         
+          sbi                           
+          ixa                 1         
+          ldc       i         10        
+          sti       i                   
+          rtn       p                   
+#define   L00002    14                  
+#define   L00003    17                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p035_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          ldc       s         'Hello, I love you.'
+          csp                 wln       
+          rtn       p                   
+#define   L00005    4                   
+#define   L00006    5                   
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          cup       0         L00004    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    9                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p036_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p037_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p038_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          csp                 wrs       
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ' and '   
+          csp                 wrs       
+          lvi       0         6         
+          csp                 wri       
+          ldc       s         ' is '    
+          csp                 wrs       
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    13                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p039_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p040_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p041_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p042_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p043_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p044_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p045_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p046_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p047_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       b         0         
+          sti       b                   
+          lda       0         9         
+          ldc       b         1         
+          sti       b                   
+          lda       0         10        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         8         
+          lvb       0         9         
+          lvb       0         10        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    10                  
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p048_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         11        
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         12        
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         13        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         8         
+          ldc       b         0         
+          sti       b                   
+          lda       0         9         
+          ldc       b         1         
+          sti       b                   
+          lda       0         10        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         11        
+          lvr       0         12        
+          sti       r                   
+          lda       0         11        
+          lvr       0         12        
+          ngr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         11        
+          lvi       0         5         
+          flt                           
+          lvr       0         13        
+          adr                           
+          sti       r                   
+          lda       0         11        
+          lvr       0         12        
+          lvi       0         7         
+          flt                           
+          adr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         11        
+          lvi       0         5         
+          flt                           
+          lvr       0         13        
+          sbr                           
+          sti       r                   
+          lda       0         11        
+          lvr       0         12        
+          lvi       0         7         
+          flt                           
+          sbr                           
+          sti       r                   
+          lda       0         8         
+          lvb       0         9         
+          lvb       0         10        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p049_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         11        
+          ldc       b         0         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         8         
+          lvi       0         6         
+          flt                           
+          lvr       0         10        
+          adr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvi       0         7         
+          flt                           
+          adr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          adr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         8         
+          lvi       0         6         
+          flt                           
+          lvr       0         10        
+          sbr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvi       0         7         
+          flt                           
+          sbr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          sbr                           
+          sti       r                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p050_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       b         0         
+          sti       b                   
+          lda       0         9         
+          ldc       b         1         
+          sti       b                   
+          lda       0         10        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         8         
+          lvb       0         9         
+          lvb       0         10        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    10                  
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p051_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       b         0         
+          sti       b                   
+          lda       0         9         
+          ldc       b         1         
+          sti       b                   
+          lda       0         10        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         8         
+          lvb       0         9         
+          lvb       0         10        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    10                  
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p052_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       b         0         
+          sti       b                   
+          lda       0         9         
+          ldc       b         1         
+          sti       b                   
+          lda       0         10        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         8         
+          lvb       0         9         
+          lvb       0         10        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    10                  
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p053_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       b         0         
+          sti       b                   
+          lda       0         9         
+          ldc       b         1         
+          sti       b                   
+          lda       0         10        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         8         
+          lvb       0         9         
+          lvb       0         10        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    10                  
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p054_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       b         0         
+          sti       b                   
+          lda       0         9         
+          ldc       b         1         
+          sti       b                   
+          lda       0         10        
+          ldc       b         0         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          ngi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          adi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          sbi                           
+          sti       i                   
+          lda       0         8         
+          lvb       0         9         
+          lvb       0         10        
+          ior                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    10                  
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p055_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p056_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvi       0         6         
+          flt                           
+          lvr       0         10        
+          mpr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvi       0         7         
+          flt                           
+          mpr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          mpr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p057_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p058_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p059_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p060_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvr       0         9         
+          lvi       0         7         
+          flt                           
+          mpr                           
+          sti       r                   
+          lda       0         8         
+          lvi       0         6         
+          flt                           
+          lvr       0         10        
+          mpr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          mpr                           
+          sti       r                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p060_001.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p061_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         11        
+          ldc       b         1         
+          sti       b                   
+          lda       0         12        
+          ldc       b         1         
+          sti       b                   
+          lda       0         13        
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       i         1         
+          sti       i                   
+          lda       0         6         
+          ldc       i         2         
+          sti       i                   
+          lda       0         7         
+          ldc       i         3         
+          sti       i                   
+          lda       0         8         
+          ldc       r         1.0       
+          sti       r                   
+          lda       0         9         
+          ldc       r         2.0       
+          sti       r                   
+          lda       0         10        
+          ldc       r         3.0       
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mpi                           
+          sti       i                   
+          lda       0         8         
+          lvr       0         9         
+          lvr       0         10        
+          dvr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          dvi                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          mod                           
+          sti       i                   
+          lda       0         11        
+          lvb       0         12        
+          lvb       0         13        
+          and                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    13                  
+#define   L00003    16                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p062_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          ldc       b         0         
+          sti       b                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p063_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          lvb       0         6         
+          sti       b                   
+          lda       0         7         
+          lvc       0         8         
+          sti       c                   
+          lda       0         9         
+          lvi       0         10        
+          sti       i                   
+          lda       0         11        
+          lvr       0         12        
+          sti       r                   
+          rtn       p                   
+#define   L00002    12                  
+#define   L00003    14                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p063_001.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lda       0         0         
+          ldc       r         6.022e23  
+          sti       r                   
+          rtn       r                   
+#define   L00005    4                   
+#define   L00006    6                   
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          mst       0                   
+          cup       0         L00004    
+          sti       r                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p063_002.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          lvr       0         6         
+          sti       r                   
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    8                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p063_003.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         14        
+          ldc       i         2         
+          ldc       i         1         
+          sbi                           
+          ixa                 1         
+          ldc       r         3.14159   
+          sti       r                   
+          lda       0         15        
+          lda       0         14        
+          ldc       i         2         
+          ldc       i         1         
+          sbi                           
+          ixa                 1         
+          ind       r                   
+          sti       r                   
+          rtn       p                   
+#define   L00002    15                  
+#define   L00003    19                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p064_000.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          mst       0                   
+          ldc       i         3         
+          ldc       i         4         
+          cup       2         L00004    
+          sti       i                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p065_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         2         
+          sti       i                   
+          lda       0         5         
+          lvi       0         5         
+          inc                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         5         
+          dec                           
+          sti       i                   
+          lda       0         6         
+          ldc       r         3.14159   
+          sti       r                   
+          lda       0         5         
+          lvr       0         6         
+          rnd                           
+          sti       i                   
+          lda       0         7         
+          ldc       c         'b'       
+          sti       c                   
+          lda       0         6         
+          lvr       0         6         
+          sqt                           
+          sti       r                   
+          lda       0         6         
+          lvi       0         5         
+          sqt                           
+          sti       r                   
+          lda       0         6         
+          lvr       0         6         
+          abr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         5         
+          abi                           
+          sti       i                   
+          lda       0         5         
+          lvr       0         6         
+          trc                           
+          sti       i                   
+          lda       0         7         
+          ldc       i         97        
+          chr                           
+          sti       c                   
+          lda       0         5         
+          ldc       c         'b'       
+          ord                           
+          sti       i                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    9                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p065_001.pcd
+</option>
+<option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lda       0         0         
+          ldc       i         5         
+          flt                           
+          lvr       0         5         
+          ldc       i         32        
+          flt                           
+          sbr                           
+          mpr                           
+          ldc       r         9.0       
+          dvr                           
+          sti       r                   
+          rtn       r                   
+#define   L00005    5                   
+#define   L00006    9                   
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          mst       0                   
+          ldc       i         77        
+          cup       1         L00004    
+          sti       r                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    12                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p066_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          not                           
+          sti       b                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p067_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         68        
+          sti       i                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p068_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       r         3.14159   
+          sti       r                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p069_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       c         'h'       
+          sti       c                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p070_000.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          ldc       s         'don''t'  
+          csp                 wrs       
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    5                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p070_001.pcd
+</option>
+<option value="
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       c         ''''      
+          sti       c                   
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">p070_002.pcd
+</option>
+        </select>
+        <p>Or type your own:
+        <p><textarea id="pcode" cols=40 rows=40></textarea>
       </div>
       <div id="labels">
         <table id="label_table">
           <thead>
             <tr><th>Label<th>Value
           <tbody id="label_body">
+        </table>
+        <table id="constants_table">
+          <thead>
+            <tr><th>Constant<th>Value
+          <tbody id="constants_body">
         </table>
       </div>
     </div>
