@@ -28,6 +28,14 @@ var pmachine = (function () {
         return mp + offset_map[v];
     }
 
+    function get_frame_element(mp, v) {
+        return G.dstore[get_frame_pointer(mp, v)];
+    }
+
+    function set_frame_element(mp, elt, value) {
+        G.dstore[get_frame_pointer(mp, elt)].value = value;
+    }
+
     // try to resolve l into a label or assume it's an address
     function int_from_label(l) {
         if (G.line_labels.hasOwnProperty(l)) {
@@ -46,7 +54,7 @@ var pmachine = (function () {
             return mp;
         }
 
-        return follow_link(level - 1, G.dstore[get_frame_pointer(mp, frame_element)], frame_element);
+        return follow_link(level - 1, G.dstore[get_frame_pointer(mp, frame_element)].value, frame_element);
     }
 
     function insn_mst(g, insn) {
@@ -54,14 +62,17 @@ var pmachine = (function () {
         datastore_push("sl", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
         datastore_push("dl", "int", g.R.mp); // the dynamic link points to the callee's stack frame
         datastore_push("ep", "int", g.R.ep);
+        datastore_push("ra", "int", "");
 
-        g.R.mp = g.R.ep;
+        // g.R.mp = g.R.ep;
         g.R.sp += 5;
         g.R.pc += 1;
     }
 
     function insn_cup(g, insn) {
-        datastore_push("ra", "int", g.R.pc + 1);
+        // lookup ra of the current frame and set it
+        // datastore_push("ra", "int", g.R.pc + 1);
+        set_frame_element(g.R.mp, "ra", g.R.pc + 1);
 
         g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
 
@@ -117,7 +128,7 @@ var pmachine = (function () {
         switch (insn.op1) {
         case "wrs":
             // no typechecking is done LOL
-            // strip off the enclosing quotes
+            // TODO strip off the enclosing quotes
             write_to_stdout();
             break;
         case "wri":
@@ -127,25 +138,61 @@ var pmachine = (function () {
         g.R.pc += 1;
     }
 
-    /*
-    function insn_lvi(g, insn) {
-    }
-
-    function insn_mod(g, insn) {
-    }
-
     function insn_sti(g, insn) {
+        var value, address;
+
+        value = datastore_pop();
+        address = datastore_pop();
+
+        g.dstore[address.value] = value;
+
+        g.R.pc += 1;
+    }
+
+    function insn_lvi(g, insn) {
+        var offset;
+
+        offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
+
+        datastore_push("", "i", g.dstore[offset].value);
+
+        g.R.pc += 1;
     }
 
     function insn_equ(g, insn) {
+        var a, b;
+
+        a = datastore_pop();
+        b = datastore_pop();
+
+        datastore_push("", "b", a.type === b.type && a.value === b.value);
+
+        g.R.pc += 1;
     }
 
     function insn_fjp(g, insn) {
+        if (datastore_pop().value === false) {
+            g.R.pc = int_from_label(insn.op1);
+        } else {
+            g.R.pc += 1;
+        }
+    }
+
+    function insn_mod(g, insn) {
+        var a, b;
+
+        a = datastore_pop();
+        b = datastore_pop();
+
+        console.log(b.value + " mod " + a.value);
+        datastore_push("", "i", (b.value % a.value).toString());
+
+        g.R.pc += 1;
     }
 
     function insn_ujp(g, insn) {
+        g.R.pc = int_from_label(insn.op1);
     }
-    */
 
     function init() {
         G = {};
@@ -182,14 +229,13 @@ var pmachine = (function () {
             "rtn": insn_rtn,
             "lda": insn_lda,
             "ldc": insn_ldc,
-            "csp": insn_csp/*
-            "lvi": insn_lvi,
-            "mod": insn_mod,
+            "csp": insn_csp,
             "sti": insn_sti,
+            "lvi": insn_lvi,
             "equ": insn_equ,
             "fjp": insn_fjp,
+            "mod": insn_mod,
             "ujp": insn_ujp
-            */
         };
     }
 
@@ -510,7 +556,7 @@ var pmachine = (function () {
 
         insn = G.istore[G.R.pc];
 
-        console.log("Executing " + insn);
+        // console.log("Executing " + insn);
         G.opcode_dispatch[insn.opcode](G, insn);
 
         render_dynamic_visual_elements(G);

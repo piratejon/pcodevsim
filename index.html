@@ -39,6 +39,49 @@ L00008
 #define   L00006    15                  
 L00001    ent       sp        L00002    
           ent       ep        L00003    
+          lda       0         5         
+          ldc       i         96        
+          sti       i                   
+          lda       0         6         
+          ldc       i         36        
+          sti       i                   
+          mst       0                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wri       
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    13                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           ">gcd2.pcd</option>
+          <option value="
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         6         
+          ldc       i         0         
+          equ       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          mst       1                   
+          lvi       0         6         
+          lvi       0         5         
+          lvi       0         6         
+          mod                           
+          cup       2         L00004    
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    15                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
           lvi       0         5         
           csp                 rdi       
           lvi       0         6         
@@ -54,8 +97,7 @@ L00001    ent       sp        L00002
 #define   L00003    14                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">gcd.pcd
-</option>
+          stp                           ">gcd.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -64,8 +106,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p001_000.pcd
-</option>
+          stp                           ">p001_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -74,8 +115,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p002_000.pcd
-</option>
+          stp                           ">p002_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -84,8 +124,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p003_000.pcd
-</option>
+          stp                           ">p003_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -94,8 +133,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p004_000.pcd
-</option>
+          stp                           ">p004_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -104,8 +142,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p005_000.pcd
-</option>
+          stp                           ">p005_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -114,8 +151,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p006_000.pcd
-</option>
+          stp                           ">p006_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -124,8 +160,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p007_000.pcd
-</option>
+          stp                           ">p007_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -134,8 +169,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p008_000.pcd
-</option>
+          stp                           ">p008_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -144,8 +178,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p009_000.pcd
-</option>
+          stp                           ">p009_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -154,8 +187,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p010_000.pcd
-</option>
+          stp                           ">p010_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -164,8 +196,7 @@ L00001    ent       sp        L00002
 #define   L00003    6                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p011_000.pcd
-</option>
+          stp                           ">p011_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -174,8 +205,7 @@ L00001    ent       sp        L00002
 #define   L00003    6                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p012_000.pcd
-</option>
+          stp                           ">p012_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -184,8 +214,7 @@ L00001    ent       sp        L00002
 #define   L00003    14                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p013_000.pcd
-</option>
+          stp                           ">p013_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -194,8 +223,7 @@ L00001    ent       sp        L00002
 #define   L00003    6                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p014_000.pcd
-</option>
+          stp                           ">p014_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -204,8 +232,7 @@ L00001    ent       sp        L00002
 #define   L00003    6                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p015_000.pcd
-</option>
+          stp                           ">p015_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -251,8 +278,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p016_000.pcd
-</option>
+          stp                           ">p016_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -298,8 +324,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p017_000.pcd
-</option>
+          stp                           ">p017_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -345,8 +370,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p018_000.pcd
-</option>
+          stp                           ">p018_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -392,8 +416,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p019_000.pcd
-</option>
+          stp                           ">p019_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -411,8 +434,7 @@ L00001    ent       sp        L00002
 #define   L00003    9                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p020_000.pcd
-</option>
+          stp                           ">p020_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -458,8 +480,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p021_000.pcd
-</option>
+          stp                           ">p021_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -505,8 +526,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p022_000.pcd
-</option>
+          stp                           ">p022_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -552,8 +572,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p023_000.pcd
-</option>
+          stp                           ">p023_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -605,8 +624,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p024_000.pcd
-</option>
+          stp                           ">p024_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -615,8 +633,7 @@ L00001    ent       sp        L00002
 #define   L00003    4                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p025_000.pcd
-</option>
+          stp                           ">p025_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -668,8 +685,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p026_000.pcd
-</option>
+          stp                           ">p026_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -721,8 +737,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p027_000.pcd
-</option>
+          stp                           ">p027_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -774,8 +789,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p028_000.pcd
-</option>
+          stp                           ">p028_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -827,8 +841,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p029_000.pcd
-</option>
+          stp                           ">p029_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -880,8 +893,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p030_000.pcd
-</option>
+          stp                           ">p030_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -914,8 +926,7 @@ L00005
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p031_000.pcd
-</option>
+          stp                           ">p031_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -948,8 +959,7 @@ L00005
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p032_000.pcd
-</option>
+          stp                           ">p032_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -980,8 +990,7 @@ L00005
 #define   L00003    8                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p033_000.pcd
-</option>
+          stp                           ">p033_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1012,8 +1021,7 @@ L00005
 #define   L00003    8                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p034_000.pcd
-</option>
+          stp                           ">p034_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1029,8 +1037,7 @@ L00001    ent       sp        L00002
 #define   L00003    17                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p035_000.pcd
-</option>
+          stp                           ">p035_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -1048,8 +1055,7 @@ L00001    ent       sp        L00002
 #define   L00003    9                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p036_000.pcd
-</option>
+          stp                           ">p036_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -1101,8 +1107,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p037_000.pcd
-</option>
+          stp                           ">p037_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -1154,8 +1159,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p038_000.pcd
-</option>
+          stp                           ">p038_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -1207,8 +1211,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p039_000.pcd
-</option>
+          stp                           ">p039_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1250,8 +1253,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p040_000.pcd
-</option>
+          stp                           ">p040_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1293,8 +1295,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p041_000.pcd
-</option>
+          stp                           ">p041_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1336,8 +1337,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p042_000.pcd
-</option>
+          stp                           ">p042_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1379,8 +1379,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p043_000.pcd
-</option>
+          stp                           ">p043_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1422,8 +1421,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p044_000.pcd
-</option>
+          stp                           ">p044_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1465,8 +1463,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p045_000.pcd
-</option>
+          stp                           ">p045_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1508,8 +1505,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p046_000.pcd
-</option>
+          stp                           ">p046_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1551,8 +1547,7 @@ L00001    ent       sp        L00002
 #define   L00003    10                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p047_000.pcd
-</option>
+          stp                           ">p047_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1601,8 +1596,7 @@ L00001    ent       sp        L00002
 #define   L00003    13                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p048_000.pcd
-</option>
+          stp                           ">p048_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1691,8 +1685,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p049_000.pcd
-</option>
+          stp                           ">p049_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1784,8 +1777,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p050_000.pcd
-</option>
+          stp                           ">p050_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1834,8 +1826,7 @@ L00001    ent       sp        L00002
 #define   L00003    13                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p051_000.pcd
-</option>
+          stp                           ">p051_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1884,8 +1875,7 @@ L00001    ent       sp        L00002
 #define   L00003    13                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p052_000.pcd
-</option>
+          stp                           ">p052_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1934,8 +1924,7 @@ L00001    ent       sp        L00002
 #define   L00003    13                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p053_000.pcd
-</option>
+          stp                           ">p053_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -1984,8 +1973,7 @@ L00001    ent       sp        L00002
 #define   L00003    13                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p054_000.pcd
-</option>
+          stp                           ">p054_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2034,8 +2022,7 @@ L00001    ent       sp        L00002
 #define   L00003    13                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p055_000.pcd
-</option>
+          stp                           ">p055_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2096,8 +2083,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p056_000.pcd
-</option>
+          stp                           ">p056_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2175,8 +2161,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p057_000.pcd
-</option>
+          stp                           ">p057_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2237,8 +2222,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p058_000.pcd
-</option>
+          stp                           ">p058_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2299,8 +2283,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p059_000.pcd
-</option>
+          stp                           ">p059_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2361,8 +2344,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p060_000.pcd
-</option>
+          stp                           ">p060_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2440,8 +2422,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p060_001.pcd
-</option>
+          stp                           ">p060_001.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2502,8 +2483,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p061_000.pcd
-</option>
+          stp                           ">p061_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2564,8 +2544,7 @@ L00001    ent       sp        L00002
 #define   L00003    16                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p062_000.pcd
-</option>
+          stp                           ">p062_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2580,8 +2559,7 @@ L00001    ent       sp        L00002
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p063_000.pcd
-</option>
+          stp                           ">p063_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2602,8 +2580,7 @@ L00001    ent       sp        L00002
 #define   L00003    14                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p063_001.pcd
-</option>
+          stp                           ">p063_001.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -2624,8 +2601,7 @@ L00001    ent       sp        L00002
 #define   L00003    11                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p063_002.pcd
-</option>
+          stp                           ">p063_002.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2637,8 +2613,7 @@ L00001    ent       sp        L00002
 #define   L00003    8                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p063_003.pcd
-</option>
+          stp                           ">p063_003.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2662,8 +2637,7 @@ L00001    ent       sp        L00002
 #define   L00003    19                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p064_000.pcd
-</option>
+          stp                           ">p064_000.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -2696,8 +2670,7 @@ L00001    ent       sp        L00002
 #define   L00003    13                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p065_000.pcd
-</option>
+          stp                           ">p065_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2755,8 +2728,7 @@ L00001    ent       sp        L00002
 #define   L00003    9                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p065_001.pcd
-</option>
+          stp                           ">p065_001.pcd</option>
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -2786,8 +2758,7 @@ L00001    ent       sp        L00002
 #define   L00003    12                  
           mst       0                   
           cup       0         L00001    
-          stp                           ">p066_000.pcd
-</option>
+          stp                           ">p066_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2800,8 +2771,7 @@ L00001    ent       sp        L00002
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p067_000.pcd
-</option>
+          stp                           ">p067_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2813,8 +2783,7 @@ L00001    ent       sp        L00002
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p068_000.pcd
-</option>
+          stp                           ">p068_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2826,8 +2795,7 @@ L00001    ent       sp        L00002
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p069_000.pcd
-</option>
+          stp                           ">p069_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2839,8 +2807,7 @@ L00001    ent       sp        L00002
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p070_000.pcd
-</option>
+          stp                           ">p070_000.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2851,8 +2818,7 @@ L00001    ent       sp        L00002
 #define   L00003    5                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p070_001.pcd
-</option>
+          stp                           ">p070_001.pcd</option>
 <option value="
 L00001    ent       sp        L00002    
           ent       ep        L00003    
@@ -2864,8 +2830,7 @@ L00001    ent       sp        L00002
 #define   L00003    7                   
           mst       0                   
           cup       0         L00001    
-          stp                           ">p070_002.pcd
-</option>
+          stp                           ">p070_002.pcd</option>
         </select>
         <p>Or type your own:
         <p><textarea id="pcode" cols=40 rows=40></textarea>
