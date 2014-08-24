@@ -5,11 +5,6 @@ var pmachine = (function () {
 
     var G;
 
-    function alter_register(g, reg, val) {
-        g.old_R[reg] = g.R[reg];
-        g.R[reg] = val;
-    }
-
     function datastore_push(id, type, value) {
         G.dstore.push({id: id, type: type, value: value});
     }
@@ -21,7 +16,7 @@ var pmachine = (function () {
     }
 
     function base(level) {
-        return parseInt(level, 10) + 1;
+        return parseInt(level, 10);
     }
 
     function insn_mst(g, insn) {
@@ -33,44 +28,52 @@ var pmachine = (function () {
         g.R.pc += 1;
     }
 
+    function insn_cup(g, insn) {
+        datastore_push("ra", "int", g.R.pc + 1);
+
+        if (g.line_labels.hasOwnProperty(insn.op2)) {
+            g.R.pc = g.line_labels[insn.op2];
+        } else {
+            g.R.pc = insn.op2;
+        }
+    }
+
+    function insn_stp(g, insn) {
+        g.form.step.disabled = true;
+    }
+
     /*
-    function insn_cup(insn) {
+    function insn_ent(g, insn) {
     }
 
-    function insn_stp(insn) {
+    function insn_lvi(g, insn) {
     }
 
-    function insn_ent(insn) {
+    function insn_csp(g, insn) {
     }
 
-    function insn_lvi(insn) {
+    function insn_ldc(g, insn) {
     }
 
-    function insn_csp(insn) {
+    function insn_rtn(g, insn) {
     }
 
-    function insn_ldc(insn) {
+    function insn_lda(g, insn) {
     }
 
-    function insn_rtn(insn) {
+    function insn_mod(g, insn) {
     }
 
-    function insn_lda(insn) {
+    function insn_sti(g, insn) {
     }
 
-    function insn_mod(insn) {
+    function insn_equ(g, insn) {
     }
 
-    function insn_sti(insn) {
+    function insn_fjp(g, insn) {
     }
 
-    function insn_equ(insn) {
-    }
-
-    function insn_fjp(insn) {
-    }
-
-    function insn_ujp(insn) {
+    function insn_ujp(g, insn) {
     }
     */
 
@@ -80,6 +83,7 @@ var pmachine = (function () {
         G.old_R = {};
         G.istore = {};
         G.dstore = [];
+        G.old_dstore = [];
         G.line_labels = {};
         G.line_labels_rev = {};
         G.data_labels = {};
@@ -93,12 +97,13 @@ var pmachine = (function () {
             labels: document.getElementById('label_body'),
             istore: document.getElementById('istore_body'),
             dstore: document.getElementById('dstore_body'),
-            pcode: document.getElementById('pcode')
-        }; // where we track the web view
+            pcode: document.getElementById('pcode'),
+            step: document.getElementById('step')
+        };
 
         G.opcode_dispatch = {
-            "mst": insn_mst/*,
-            "cup": insn_cup,
+            "mst": insn_mst,
+            "cup": insn_cup/*,
             "stp": insn_stp,
             "ent": insn_ent,
             "lvi": insn_lvi,
@@ -208,8 +213,6 @@ var pmachine = (function () {
     }
 
     function render_dynamic_istore_elements(g) {
-        console.log(g.old_R.pc);
-        console.log(g.R.pc);
         if (g.old_R !== undefined && g.old_R.pc !== undefined) {
             g.form.istore.childNodes[g.old_R.pc].removeAttribute('id');
         }
@@ -280,10 +283,12 @@ var pmachine = (function () {
         }
     }
 
-    function render_dstore(g) {
+    function render_dynamic_dstore_elements(g) {
         var cell, wrap;
 
-        wrap = function (address, c) {
+        clear_children(g.form.dstore);
+
+        wrap = function (address, c, is_old) {
             var tr, wrap2;
 
             wrap2 = function (d) {
@@ -298,11 +303,15 @@ var pmachine = (function () {
             tr.appendChild(wrap2(c.type));
             tr.appendChild(wrap2(c.value));
 
+            if (!is_old) {
+                tr.classList.add('just_changed');
+            }
+
             return tr;
         };
 
         for (cell = g.dstore.length - 1; cell >= 0; cell -= 1) {
-            g.form.dstore.appendChild(wrap(cell, g.dstore[cell]));
+            g.form.dstore.appendChild(wrap(cell, g.dstore[cell], g.old_dstore.hasOwnProperty(cell)));
         }
     }
 
@@ -324,12 +333,13 @@ var pmachine = (function () {
     function render_static_visual_elements(g) {
         render_labels(g);
         render_static_istore_elements(g);
+        // render_static_dstore_elements(g);
     }
 
     function render_dynamic_visual_elements(g) {
-        render_dstore(g);
         render_registers(g);
         render_dynamic_istore_elements(g);
+        render_dynamic_dstore_elements(g);
     }
 
     function reset() {
@@ -341,14 +351,32 @@ var pmachine = (function () {
         reset_visual_elements(G);
         render_static_visual_elements(G);
         render_dynamic_visual_elements(G);
+
+        G.form.step.disabled = false;
+    }
+
+    function copy_dstore_cell(cell) {
+        var c, r = {};
+        for (c in cell) {
+            if (cell.hasOwnProperty(c)) {
+                r[c] = cell[c];
+            }
+        }
+
+        return r;
     }
 
     function preserve_old_state(g) {
-        var reg;
-        for(reg in g.R) {
+        var reg, i;
+        for (reg in g.R) {
             if (g.R.hasOwnProperty(reg)) {
                 g.old_R[reg] = g.R[reg];
             }
+        }
+
+        g.old_dstore = [];
+        for (i = 0; i < g.dstore.length; i += 1) {
+            g.old_dstore[i] = copy_dstore_cell(g.dstore[i]);
         }
     }
 
@@ -359,6 +387,7 @@ var pmachine = (function () {
 
         insn = G.istore[G.R.pc];
 
+        console.log('"' + insn.opcode + '"');
         G.opcode_dispatch[insn.opcode](G, insn);
 
         render_dynamic_visual_elements(G);
