@@ -75,11 +75,7 @@ var pmachine = (function () {
 
         g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
 
-        if (g.line_labels.hasOwnProperty(insn.op2)) {
-            g.R.pc = g.line_labels[insn.op2];
-        } else {
-            g.R.pc = insn.op2;
-        }
+        g.R.pc = int_from_label(insn.op2);
     }
 
     function insn_stp(g, insn) {
@@ -97,7 +93,7 @@ var pmachine = (function () {
     }
 
     function insn_rtn(g, insn) {
-        g.R.pc = datastore_pop().value;
+        g.R.pc = parseInt(datastore_pop().value, 10);
     }
 
     function insn_lda(g, insn) {
@@ -183,7 +179,6 @@ var pmachine = (function () {
         a = datastore_pop();
         b = datastore_pop();
 
-        console.log(b.value + " mod " + a.value);
         datastore_push("", "i", (b.value % a.value).toString());
 
         g.R.pc += 1;
@@ -451,30 +446,44 @@ var pmachine = (function () {
 
         clear_children(g.form.dstore);
 
-        wrap = function (address, c, is_old) {
-            var tr, wrap2;
+        wrap = function (g, address) {
+            var tr, wrap2, c, o;
 
-            wrap2 = function (d) {
+            c = g.dstore[address];
+            o = g.old_dstore[address] || {};
+
+            wrap2 = function (d, old) {
                 var td = document.createElement('td');
                 td.innerHTML = d;
+                if (d !== old) {
+                    td.classList.add('just_changed');
+                }
                 return td;
             };
 
             tr = document.createElement('tr');
-            tr.appendChild(wrap2(address));
-            tr.appendChild(wrap2(c.id));
-            tr.appendChild(wrap2(c.type));
-            tr.appendChild(wrap2(c.value));
+            tr.appendChild(wrap2(address, address));
+            tr.appendChild(wrap2(c.id, o.id));
+            tr.appendChild(wrap2(c.type, o.type));
+            tr.appendChild(wrap2(c.value, o.value));
 
-            if (!is_old) {
-                tr.classList.add('just_changed');
+            if (address === g.R.sp) {
+                tr.id = 'sp_row';
+            }
+
+            if (address === g.R.ep) {
+                tr.id = 'ep_row';
+            }
+
+            if (address === g.R.mp) {
+                tr.id = 'mp_row';
             }
 
             return tr;
         };
 
         for (cell = g.dstore.length - 1; cell >= 0; cell -= 1) {
-            g.form.dstore.appendChild(wrap(cell, g.dstore[cell], g.old_dstore.hasOwnProperty(cell)));
+            g.form.dstore.appendChild(wrap(g, cell));
         }
     }
 
@@ -555,7 +564,7 @@ var pmachine = (function () {
 
         insn = G.istore[G.R.pc];
 
-        // console.log("Executing " + insn);
+        console.log("Executing " + JSON.stringify(insn));
         G.opcode_dispatch[insn.opcode](G, insn);
 
         render_dynamic_visual_elements(G);
