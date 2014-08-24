@@ -324,7 +324,7 @@ var pmachine = (function () {
 
     function render_dynamic_visual_elements(g) {
         render_dstore(g);
-        render_registers(g.R);
+        render_registers(g);
     }
 
     function reset() {
