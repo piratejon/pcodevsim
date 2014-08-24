@@ -16,7 +16,7 @@ var pmachine = (function () {
     }
 
     function base(level) {
-        return level + 1;
+        return parseInt(level, 10) + 1;
     }
 
     function insn_mst(insn) {
@@ -310,6 +310,7 @@ var pmachine = (function () {
     }
 
     function reset() {
+        init();
         G.istore = instruction_array_from_pcode();
         initialize_registers(G);
         render_istore(G);
