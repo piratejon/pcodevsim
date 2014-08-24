@@ -5,6 +5,48 @@ var pmachine = (function () {
 
     var G;
 
+    function insn_mst(insn) {
+    }
+
+    function insn_cup(insn) {
+    }
+
+    function insn_stp(insn) {
+    }
+
+    function insn_ent(insn) {
+    }
+
+    function insn_lvi(insn) {
+    }
+
+    function insn_csp(insn) {
+    }
+
+    function insn_ldc(insn) {
+    }
+
+    function insn_rtn(insn) {
+    }
+
+    function insn_lda(insn) {
+    }
+
+    function insn_mod(insn) {
+    }
+
+    function insn_sti(insn) {
+    }
+
+    function insn_equ(insn) {
+    }
+
+    function insn_fjp(insn) {
+    }
+
+    function insn_ujp(insn) {
+    }
+
     function init() {
         G = {};
         G.R = {};
@@ -20,6 +62,23 @@ var pmachine = (function () {
         // G.log = console.log;
         G.log = function () { };
         G.form = {}; // where we track the web view
+
+        G.opcode_dispatch = {
+            "mst": insn_mst,
+            "cup": insn_cup,
+            "stp": insn_stp,
+            "ent": insn_ent,
+            "lvi": insn_lvi,
+            "csp": insn_csp,
+            "ldc": insn_ldc,
+            "rtn": insn_rtn,
+            "lda": insn_lda,
+            "mod": insn_mod,
+            "sti": insn_sti,
+            "equ": insn_equ,
+            "fjp": insn_fjp,
+            "ujp": insn_ujp
+        };
     }
 
     function defines_explicit_label(line) {
@@ -197,7 +256,15 @@ var pmachine = (function () {
         render_registers(G.R);
         render_labels(G);
     }
+    
+    function step() {
+        var insn;
 
-    return { 'init': init, 'reset': reset };
+        insn = G.istore[G.R.pc];
+
+        G.opcode_dispatch[insn.opcode](insn);
+    }
+
+    return { 'init': init, 'reset': reset, 'step': step };
 }());
 
