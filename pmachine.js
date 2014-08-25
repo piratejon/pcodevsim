@@ -5,14 +5,22 @@ var pmachine = (function () {
 
     var G;
 
+    function datastore_store_by_offset(i, id, type, value) {
+        G.dstore[i] = {id: id, type: type, value: value};
+    }
+
+    function datastore_fetch_by_offset(i) {
+        return G.dstore[i].value;
+    }
+
     function datastore_push(id, type, value) {
-        G.dstore.push({id: id, type: type, value: value});
-        G.R.sp = G.dstore.length - 1;
+        G.R.sp += 1;
+        datastore_store_by_offset(G.R.sp, id, type, value);
     }
 
     function datastore_pop() {
-        var popee = G.dstore[G.dstore.length - 1];
-        G.dstore.pop();
+        var popee = datastore_fetch_by_offset(G.R.sp);
+        G.R.sp -= 1;
         return popee;
     }
 
@@ -61,6 +69,17 @@ var pmachine = (function () {
         G.form.stdout.value += item.toString();
     }
 
+    function base(level) {
+        var ad = G.R.mp;
+
+        while (level > 0) {
+            ad = datastore_fetch_by_offset(ad, 1).value;
+            level -= 1;
+        }
+
+        return ad;
+    }
+
     function init() {
         G = {};
         G.R = {};
@@ -90,20 +109,17 @@ var pmachine = (function () {
 
         G.opcode_dispatch = {
             "mst": function (g, insn) {
-                datastore_push("rv", "int", 0);
-                datastore_push("sl", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
-                datastore_push("dl", "int", g.R.mp); // the dynamic link points to the callee's stack frame
-                datastore_push("ep", "int", g.R.ep);
-                datastore_push("ra", "int", "");
+                datastore_store_by_offset(g.R.sp + 2, "sl", "i", base(g.R.mp, parseInt(insn.op1, 10)));
+                datastore_store_by_offset(g.R.sp + 3, "dl", "i", g.R.mp);
+                datastore_store_by_offset(g.R.sp + 4, "ep", "i", g.R.ep);
+                g.R.sp += 5;
 
                 g.R.pc += 1;
             },
 
             "cup": function (g, insn) {
-                set_frame_element(g.R.mp, "ra", g.R.pc + 1);
-
                 g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
-
+                datastore_store_by_offset(g.R.mp + 4, "ra", "i", g.R.pc + 1);
                 g.R.pc = int_from_label(insn.op2);
             },
 
@@ -112,23 +128,38 @@ var pmachine = (function () {
             },
 
             "ent": function (g, insn) {
+                var l = int_from_label(insn.op2);
+
                 if (insn.op1 === "sp") {
-                    g.R.sp = g.R.mp + int_from_label(insn.op2);
+                    g.R.sp = g.R.mp + l;
                 } else if (insn.op1 === "ep") {
-                    g.R.ep = g.R.mp + int_from_label(insn.op2);
+                    g.R.ep = g.R.sp + l;
                 }
 
                 g.R.pc += 1;
             },
 
             "rtn": function (g, insn) {
-                g.R.pc = parseInt(datastore_pop().value, 10);
+                switch (parseInt(insn.op1, 10)) {
+                case 0:
+                    g.R.sp = g.R.mp - 1;
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    g.R.sp = g.R.mp;
+                    break;
+                }
+                g.R.pc = parseInt(datastore_fetch_by_offset(g.R.mp + 4).value, 10);
+                g.R.ep = parseInt(datastore_fetch_by_offset(g.R.mp + 3).value, 10);
+                g.R.mp = parseInt(datastore_fetch_by_offset(g.R.mp + 2).value, 10);
             },
 
             "lda": function (g, insn) {
-                // possibly overwrites parts of the stack frame!
-                datastore_push("", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl") + parseInt(insn.op2, 10));
-
+                g.R.sp += 1;
+                datastore_store_by_offset(g.R.sp, "", "i", base(parseInt(insn.op1, 10)) + parseInt(insn.op2, 10));
                 g.R.pc += 1;
             },
 
@@ -143,8 +174,6 @@ var pmachine = (function () {
             },
 
             "csp": function (g, insn) {
-                var cell;
-
                 switch (insn.op1) {
                 case "wrs":
                     // no typechecking is done LOL
@@ -511,9 +540,12 @@ var pmachine = (function () {
 
             tr = document.createElement('tr');
             tr.appendChild(wrap2(address, address));
-            tr.appendChild(wrap2(c.id, o.id));
-            tr.appendChild(wrap2(c.type, o.type));
-            tr.appendChild(wrap2(c.value, o.value));
+
+            if (c !== undefined) {
+                tr.appendChild(wrap2(c.id, o.id));
+                tr.appendChild(wrap2(c.type, o.type));
+                tr.appendChild(wrap2(c.value, o.value));
+            }
 
             if (address === g.R.sp) {
                 tr.id = 'sp_row';
@@ -538,10 +570,10 @@ var pmachine = (function () {
     function initialize_registers(g) {
         g.old_R = {};
         g.R.pc = infer_initial_program_counter(g.istore);
-        g.R.sp = 0;
+        g.R.sp = -1;
         g.R.mp = 0;
-        g.R.np = 0;
-        g.R.ep = 0;
+        g.R.np = 9999;
+        g.R.ep = 5;
     }
 
     function reset_visual_elements(g) {
