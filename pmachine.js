@@ -335,7 +335,7 @@ var pmachine = (function () {
     function instruction_array_from_pcode(pcode) {
         var line, istore, actual_line_number, insn;
 
-        istore = new Array(pcode.length); // so a hard-coded length is ok? :(
+        istore = [];
 
         actual_line_number = 0;
         for (line in pcode) {
@@ -350,7 +350,7 @@ var pmachine = (function () {
                     }
 
                     if (insn.opcode !== undefined) {
-                        istore[actual_line_number] = insn;
+                        istore.push(insn);
                         actual_line_number += 1;
                     }
                 }
@@ -538,10 +538,11 @@ var pmachine = (function () {
     function initialize_registers(g) {
         g.old_R = {};
         g.R.pc = infer_initial_program_counter(g.istore);
-        g.R.sp = 0;
+        g.R.sp = -1;
         g.R.mp = 0;
-        g.R.np = 0;
-        g.R.ep = 0;
+        g.R.np = 32767;
+        g.R.ep = 5;
+        // g.dstore = [];
     }
 
     function reset_visual_elements(g) {
