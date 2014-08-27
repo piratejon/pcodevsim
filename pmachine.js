@@ -80,6 +80,17 @@ var pmachine = (function () {
         return ad;
     }
 
+    function load_value(g, insn, t) {
+        var value, level, offset;
+
+        level = base(parseInt(insn.op1, 10));
+        offset = parseInt(insn.op2, 10);
+
+        value = datastore_fetch_by_offset(level + offset);
+
+        datastore_push("", t, value);
+    }
+
     function init() {
         G = {};
         G.R = {};
@@ -87,6 +98,7 @@ var pmachine = (function () {
         G.istore = {};
         G.dstore = [];
         G.old_dstore = [];
+        G.max_stack = 32767;
         G.line_labels = {};
         G.line_labels_rev = {};
         G.data_labels = {};
@@ -109,16 +121,24 @@ var pmachine = (function () {
 
         G.opcode_dispatch = {
             "mst": function (g, insn) {
-                datastore_store_by_offset(g.R.sp + 2, "sl", "i", base(g.R.mp, parseInt(insn.op1, 10)));
+                var base_addr;
+
+                base_addr = base(parseInt(insn.op1, 10));
+
+                datastore_store_by_offset(g.R.sp + 2, "sl", "i", base_addr);
                 datastore_store_by_offset(g.R.sp + 3, "dl", "i", g.R.mp);
                 datastore_store_by_offset(g.R.sp + 4, "ep", "i", g.R.ep);
+
                 g.R.sp += 5;
 
                 g.R.pc += 1;
             },
 
             "cup": function (g, insn) {
-                g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
+                var base_addr;
+
+                base_addr = parseInt(insn.op1, 10);
+                g.R.mp = g.R.sp - (base_addr + 4);
                 datastore_store_by_offset(g.R.mp + 4, "ra", "i", g.R.pc + 1);
                 g.R.pc = int_from_label(insn.op2);
             },
@@ -128,12 +148,12 @@ var pmachine = (function () {
             },
 
             "ent": function (g, insn) {
-                var l = int_from_label(insn.op2);
+                var level = int_from_label(insn.op2);
 
                 if (insn.op1 === "sp") {
-                    g.R.sp = g.R.mp + l;
+                    g.R.sp = g.R.mp + level;
                 } else if (insn.op1 === "ep") {
-                    g.R.ep = g.R.sp + l;
+                    g.R.ep = g.R.sp + level;
                 }
 
                 g.R.pc += 1;
@@ -158,8 +178,14 @@ var pmachine = (function () {
             },
 
             "lda": function (g, insn) {
+                var base_addr, offset;
+
+                base_addr = base(parseInt(insn.op1, 10));
+                offset = parseInt(insn.op2, 10);
+
                 g.R.sp += 1;
-                datastore_store_by_offset(g.R.sp, "", "i", base(parseInt(insn.op1, 10)) + parseInt(insn.op2, 10));
+                datastore_store_by_offset(g.R.sp, "", "i", base_addr + offset);
+
                 g.R.pc += 1;
             },
 
@@ -191,30 +217,32 @@ var pmachine = (function () {
                 var value, address;
 
                 value = datastore_pop();
-                address = datastore_pop();
+                address = parseInt(datastore_pop(), 10);
 
-                g.dstore[address.value] = value;
+                datastore_store_by_offset(address, "", value.type, value.value);
 
                 g.R.pc += 1;
             },
 
             "lvi": function (g, insn) {
-                var offset;
+                load_value(g, insn, "i");
+                g.R.pc += 1;
+            },
 
-                offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
-
-                datastore_push("", "i", g.dstore[offset].value);
-
+            "lvr": function (g, insn) {
+                load_value(g, insn, "r");
                 g.R.pc += 1;
             },
 
             "equ": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                g.R.sp -= 1;
 
-                datastore_push("", "b", a.type === b.type && a.value === b.value);
+                a = datastore_fetch_by_offset(g.R.sp);
+                b = datastore_fetch_by_offset(g.R.sp + 1);
+
+                datastore_store_by_offset(g.R.sp, "", "b", a.type === b.type && a.value === b.value);
 
                 g.R.pc += 1;
             },
@@ -242,23 +270,13 @@ var pmachine = (function () {
                 g.R.pc = int_from_label(insn.op1);
             },
 
-            "lvr": function (g, insn) {
-                var offset;
-
-                offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
-
-                datastore_push("", "r", g.dstore[offset].value);
-
-                g.R.pc += 1;
-            },
-
             "les": function (g, insn) {
                 var a, b;
 
                 a = datastore_pop();
                 b = datastore_pop();
 
-                datastore_push("", "b", b.value < a.value);
+                datastore_push("", "b", b.type === a.type && b.value < a.value);
 
                 g.R.pc += 1;
             },
@@ -269,7 +287,7 @@ var pmachine = (function () {
                 a = datastore_pop();
                 b = datastore_pop();
 
-                datastore_push("", "b", b.value !== a.value);
+                datastore_push("", "b", b.type !== a.type || b.value !== a.value);
 
                 g.R.pc += 1;
             },
@@ -280,7 +298,7 @@ var pmachine = (function () {
                 a = datastore_pop();
                 b = datastore_pop();
 
-                datastore_push("", "b", b.value > a.value);
+                datastore_push("", "b", b.type === a.type && b.value > a.value);
 
                 g.R.pc += 1;
             },
@@ -291,7 +309,7 @@ var pmachine = (function () {
                 a = datastore_pop();
                 b = datastore_pop();
 
-                datastore_push("", "b", b.value <= a.value);
+                datastore_push("", "b", b.type === a.type && b.value <= a.value);
 
                 g.R.pc += 1;
             },
@@ -302,11 +320,10 @@ var pmachine = (function () {
                 a = datastore_pop();
                 b = datastore_pop();
 
-                datastore_push("", "b", b.value >= a.value);
+                datastore_push("", "b", b.type === a.type && b.value >= a.value);
 
                 g.R.pc += 1;
             },
-
         };
     }
 
@@ -570,9 +587,9 @@ var pmachine = (function () {
     function initialize_registers(g) {
         g.old_R = {};
         g.R.pc = infer_initial_program_counter(g.istore);
-        g.R.sp = -1;
+        g.R.sp = 0;
         g.R.mp = 0;
-        g.R.np = 9999;
+        g.R.np = g.max_stack + 1;
         g.R.ep = 5;
     }
 
