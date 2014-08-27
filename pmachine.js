@@ -115,7 +115,7 @@ var pmachine = (function () {
                 if (insn.op1 === "sp") {
                     g.R.sp = g.R.mp + int_from_label(insn.op2);
                 } else if (insn.op1 === "ep") {
-                    g.R.ep = g.R.mp + int_from_label(insn.op2);
+                    g.R.ep = g.R.sp + int_from_label(insn.op2);
                 }
 
                 g.R.pc += 1;
