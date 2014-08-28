@@ -96,13 +96,15 @@ var pmachine = (function () {
                 datastore_push("ep", "int", g.R.ep);
                 datastore_push("ra", "int", "");
 
+                // these pushes had the effect of incrementing 5 times
+
                 g.R.pc += 1;
             },
 
             "cup": function (g, insn) {
-                set_frame_element(g.R.mp, "ra", g.R.pc + 1);
-
                 g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
+
+                set_frame_element(g.R.mp, "ra", g.R.pc + 1);
 
                 g.R.pc = int_from_label(insn.op2);
             },
