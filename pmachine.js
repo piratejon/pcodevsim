@@ -92,10 +92,10 @@ var pmachine = (function () {
 
         G.opcode_dispatch = {
             "mst": function (g, insn) {
-                datastore_push("rv", "int", 0);
-                datastore_push("sl", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
-                datastore_push("dl", "int", g.R.mp); // the dynamic link points to the callee's stack frame
-                datastore_push("ep", "int", g.R.ep);
+                datastore_push("rv", "i", 0);
+                datastore_push("sl", "i", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
+                datastore_push("dl", "i", g.R.mp); // the dynamic link points to the callee's stack frame
+                datastore_push("ep", "i", g.R.ep);
                 datastore_push("ra", "a", "");
 
                 // these pushes had the effect of incrementing 5 times
@@ -129,12 +129,17 @@ var pmachine = (function () {
                 var old_mp = g.R.mp;
 
                 g.R.pc = get_frame_element(g.R.mp, "ra").value;
+                console.log("New pc: " + g.R.pc);
                 g.R.ep = get_frame_element(g.R.mp, "ep").value;
+                console.log("New ep: " + g.R.ep);
                 g.R.mp = get_frame_element(g.R.mp, "dl").value;
+                console.log("New mp: " + g.R.mp);
 
+                console.log("Old sp: " + g.R.sp);
                 while (g.R.sp > old_mp) {
                     datastore_pop();
                 }
+                console.log("New sp: " + g.R.sp);
             },
 
             "lda": function (g, insn) {
@@ -186,7 +191,7 @@ var pmachine = (function () {
 
                 offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
 
-                datastore_push("", "int", g.dstore[offset].value);
+                datastore_push("", "i", g.dstore[offset].value);
 
                 g.R.pc += 1;
             },
@@ -213,10 +218,10 @@ var pmachine = (function () {
             "mod": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = parseInt(datastore_pop().value, 10);
+                b = parseInt(datastore_pop().value, 10);
 
-                datastore_push("", "int", (b.value % a.value).toString());
+                datastore_push("", "i", (b % a).toString());
 
                 g.R.pc += 1;
             },
