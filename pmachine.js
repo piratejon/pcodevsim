@@ -96,7 +96,7 @@ var pmachine = (function () {
                 datastore_push("sl", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
                 datastore_push("dl", "int", g.R.mp); // the dynamic link points to the callee's stack frame
                 datastore_push("ep", "int", g.R.ep);
-                datastore_push("ra", "int", "");
+                datastore_push("ra", "a", "");
 
                 // these pushes had the effect of incrementing 5 times
 
@@ -132,14 +132,14 @@ var pmachine = (function () {
                 g.R.ep = get_frame_element(g.R.mp, "ep").value;
                 g.R.mp = get_frame_element(g.R.mp, "dl").value;
 
-                while (g.R.sp >= old_mp) {
+                while (g.R.sp > old_mp) {
                     datastore_pop();
                 }
             },
 
             "lda": function (g, insn) {
                 // possibly overwrites parts of the stack frame!
-                datastore_push("", "int", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl") + parseInt(insn.op2, 10));
+                datastore_push("", "a", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl") + parseInt(insn.op2, 10));
 
                 g.R.pc += 1;
             },
@@ -186,7 +186,7 @@ var pmachine = (function () {
 
                 offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
 
-                datastore_push("", "i", g.dstore[offset].value);
+                datastore_push("", "int", g.dstore[offset].value);
 
                 g.R.pc += 1;
             },
@@ -216,7 +216,7 @@ var pmachine = (function () {
                 a = datastore_pop();
                 b = datastore_pop();
 
-                datastore_push("", "i", (b.value % a.value).toString());
+                datastore_push("", "int", (b.value % a.value).toString());
 
                 g.R.pc += 1;
             },
