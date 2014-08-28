@@ -106,6 +106,7 @@ var pmachine = (function () {
             "cup": function (g, insn) {
                 g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
 
+                console.log("cup mp: " + g.R.mp);
                 set_frame_element(g.R.mp, "ra", g.R.pc + 1);
 
                 g.R.pc = int_from_label(insn.op2);
@@ -113,6 +114,8 @@ var pmachine = (function () {
 
             "stp": function (g, insn) {
                 g.form.step.disabled = true;
+                // this signals 
+                g.R.pc = -1;
             },
 
             "ent": function (g, insn) {
@@ -406,10 +409,12 @@ var pmachine = (function () {
     }
 
     function render_dynamic_istore_elements(g) {
-        if (g.old_R !== undefined && g.old_R.pc !== undefined) {
-            g.form.istore.childNodes[g.old_R.pc].removeAttribute('id');
+        if (g.R.pc !== -1) {
+            if (g.old_R !== undefined && g.old_R.pc !== undefined) {
+                g.form.istore.childNodes[g.old_R.pc].removeAttribute('id');
+            }
+            g.form.istore.childNodes[g.R.pc].id = 'pc_row';
         }
-        g.form.istore.childNodes[g.R.pc].id = 'pc_row';
     }
 
     function render_registers(g) {
