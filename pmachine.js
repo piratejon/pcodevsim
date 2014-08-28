@@ -7,12 +7,14 @@ var pmachine = (function () {
 
     function datastore_push(id, type, value) {
         G.dstore.push({id: id, type: type, value: value});
-        G.R.sp = G.dstore.length - 1;
+        // G.R.sp = G.dstore.length - 1;
+        G.R.sp += 1;
     }
 
     function datastore_pop() {
         var popee = G.dstore[G.dstore.length - 1];
         G.dstore.pop();
+        G.R.sp -= 1;
         return popee;
     }
 
@@ -124,7 +126,15 @@ var pmachine = (function () {
             },
 
             "rtn": function (g, insn) {
-                g.R.pc = parseInt(datastore_pop().value, 10);
+                var old_mp = g.R.mp;
+
+                g.R.pc = get_frame_element(g.R.mp, "ra").value;
+                g.R.ep = get_frame_element(g.R.mp, "ep").value;
+                g.R.mp = get_frame_element(g.R.mp, "dl").value;
+
+                while (g.R.sp >= old_mp) {
+                    datastore_pop();
+                }
             },
 
             "lda": function (g, insn) {
