@@ -639,6 +639,12 @@ var pmachine = (function () {
         G.form.pcode.value = document.getElementById('installed_programs').value;
     }
 
-    return { 'init': init, 'reset': reset, 'step': step, 'new_program': new_program };
+    function bodyload() {
+        document.getElementById('installed_programs').children[0].selected = 'selected';
+        init();
+        new_program();
+    }
+
+    return { 'bodyload': bodyload, 'init': init, 'reset': reset, 'step': step, 'new_program': new_program };
 }());
 
