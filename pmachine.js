@@ -160,15 +160,14 @@ var pmachine = (function () {
             },
 
             "csp": function (g, insn) {
-                var cell;
-
                 switch (insn.op1) {
                 case "wrs":
+                case "wri":
                     // no typechecking is done LOL
                     // TODO strip off the enclosing quotes
                     write_to_stdout(datastore_pop().value);
                     break;
-                case "wri":
+                default:
                     break;
                 }
 
