@@ -1,5 +1,6 @@
+/*jslint browser:true */
 
-var pmachine = (function () {
+var pmachine_gui = (function () {
     "use strict";
 
     var G;
@@ -58,19 +59,36 @@ var pmachine = (function () {
         return follow_link(level - 1, G.dstore[get_frame_pointer(mp, frame_element)].value, frame_element);
     }
 
-    function write_to_stdout(g, item) {
-        g.stdout.append(item.toString());
+    function write_to_stdout(item) {
+        G.form.stdout.value += item.toString();
     }
 
-    function init(stdin, stdout) {
+    function init() {
         G = {};
-
-        G.stdin = stdin;
-        G.stdout = stdout;
-
+        G.R = {};
+        G.old_R = {};
+        G.istore = {};
+        G.dstore = [];
+        G.old_dstore = [];
+        G.line_labels = {};
+        G.line_labels_rev = {};
+        G.data_labels = {};
+        G.data_labels_rev = {};
+        G.constants = [];
         G.implicit_label_matcher = /^(L\d+)/;
         G.explicit_label_matcher = /^#define[ \t]+(L\d+)[ \t]+(\d+)/;
         G.instruction_matcher = /^([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*([A-Za-z0-9]{0,10})?[ \t]*(.*)/;
+        // G.log = console.log;
+        G.log = function () { };
+        G.form = {
+            constants: document.getElementById('constants_body'),
+            stdout: document.getElementById('stdout'),
+            labels: document.getElementById('label_body'),
+            istore: document.getElementById('istore_body'),
+            dstore: document.getElementById('dstore_body'),
+            pcode: document.getElementById('pcode'),
+            step: document.getElementById('step')
+        };
 
         G.opcode_dispatch = {
             "mst": function (g, insn) {
@@ -88,13 +106,16 @@ var pmachine = (function () {
             "cup": function (g, insn) {
                 g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
 
+                console.log("cup mp: " + g.R.mp);
                 set_frame_element(g.R.mp, "ra", g.R.pc + 1);
 
                 g.R.pc = int_from_label(insn.op2);
             },
 
             "stp": function (g, insn) {
-                g.running = false;
+                g.form.step.disabled = true;
+                // this signals 
+                g.R.pc = -1;
             },
 
             "ent": function (g, insn) {
@@ -111,12 +132,17 @@ var pmachine = (function () {
                 var old_mp = g.R.mp;
 
                 g.R.pc = get_frame_element(g.R.mp, "ra").value;
+                console.log("New pc: " + g.R.pc);
                 g.R.ep = get_frame_element(g.R.mp, "ep").value;
+                console.log("New ep: " + g.R.ep);
                 g.R.mp = get_frame_element(g.R.mp, "dl").value;
+                console.log("New mp: " + g.R.mp);
 
+                console.log("Old sp: " + g.R.sp);
                 while (g.R.sp > old_mp) {
                     datastore_pop();
                 }
+                console.log("New sp: " + g.R.sp);
             },
 
             "lda": function (g, insn) {
@@ -270,35 +296,44 @@ var pmachine = (function () {
 
                 g.R.pc += 1;
             },
+
         };
     }
 
-    function defines_explicit_label(g, line) {
-        return g.explicit_label_matcher.test(line);
+    function clear_children(p) {
+        while (p.hasChildNodes()) {
+            p.removeChild(p.lastChild);
+        }
     }
 
-    function insert_code_label(g, i, insn) {
-        var scan = g.implicit_label_matcher.exec(insn.label);
-        g.line_labels[scan[1]] = i;
-        g.line_labels_rev[i] = scan[1];
+    function defines_explicit_label(line) {
+        return G.explicit_label_matcher.test(line);
     }
 
-    function insert_explicit_label(g, line) {
-        var scan = g.explicit_label_matcher.exec(line);
-        g.data_labels[scan[1]] = scan[2];
-        g.data_labels_rev[scan[2]] = scan[1];
+    function insert_code_label(i, insn) {
+        var scan = G.implicit_label_matcher.exec(insn.label);
+        G.line_labels[scan[1]] = i;
+        G.line_labels_rev[i] = scan[1];
+        G.log("Stored code label " + scan[1] + "->" + i);
     }
 
-    function insert_constant(g, insn) {
-        var l = g.constants.length;
-        g.constants.push({type: insn.op1, value: insn.op2});
+    function insert_explicit_label(line) {
+        var scan = G.explicit_label_matcher.exec(line);
+        G.data_labels[scan[1]] = scan[2];
+        G.data_labels_rev[scan[2]] = scan[1];
+        G.log("Stored data label " + scan[1] + "->" + scan[2]);
+    }
+
+    function insert_constant(insn) {
+        var l = G.constants.length;
+        G.constants.push({type: insn.op1, value: insn.op2});
         return l.toString();
     }
 
-    function scan_instruction(g, i, line) {
+    function scan_instruction(i, line) {
         var insn, scan;
 
-        scan = g.instruction_matcher.exec(line);
+        scan = G.instruction_matcher.exec(line);
 
         insn = {
             address: i,
@@ -310,20 +345,14 @@ var pmachine = (function () {
 
         // check for and insert any constants found
         if (insn.opcode === "ldc" && insn.op1 !== "c" && insn.op1 !== "b") {
-            insn.op2 = insert_constant(g, insn);
+            insn.op2 = insert_constant(insn);
         }
 
         return insn;
     }
 
-    function instruction_array_from_pcode(g, pcode) {
+    function instruction_array_from_pcode(pcode) {
         var line, istore, actual_line_number, insn;
-
-        g.line_labels = {};
-        g.line_labels_rev = {};
-        g.data_labels = {};
-        g.data_labels_rev = {};
-        g.constants = [];
 
         istore = [];
 
@@ -350,6 +379,60 @@ var pmachine = (function () {
         return istore;
     }
 
+    function render_static_istore_elements(g) {
+        var insn, insn_table_row;
+
+        insn_table_row = function (insn) {
+            var tr, insn_table_cell;
+
+            tr = document.createElement('tr');
+
+            insn_table_cell = function (v) {
+                var td = document.createElement('td');
+                td.innerHTML = v === undefined ? '' : v;
+                return td;
+            };
+
+            tr.appendChild(insn_table_cell(insn.address));
+            tr.appendChild(insn_table_cell(insn.opcode));
+            tr.appendChild(insn_table_cell(insn.op1));
+            tr.appendChild(insn_table_cell(insn.op2));
+
+            return tr;
+        };
+
+        for (insn in g.istore) {
+            if (g.istore.hasOwnProperty(insn)) {
+                g.form.istore.appendChild(insn_table_row(g.istore[insn], g));
+            }
+        }
+    }
+
+    function render_dynamic_istore_elements(g) {
+        if (g.R.pc !== -1) {
+            if (g.old_R !== undefined && g.old_R.pc !== undefined) {
+                g.form.istore.childNodes[g.old_R.pc].removeAttribute('id');
+            }
+            g.form.istore.childNodes[g.R.pc].id = 'pc_row';
+        }
+    }
+
+    function render_registers(g) {
+        var reg, elt;
+        for (reg in g.R) {
+            if (g.R.hasOwnProperty(reg)) {
+                elt = document.getElementById('val_' + reg);
+                elt.innerHTML = g.R[reg];
+                if (g.R[reg] === g.old_R[reg]) {
+                    // http://stackoverflow.com/questions/195951/change-an-elements-css-class-with-javascript
+                    elt.classList.remove('just_changed');
+                } else {
+                    elt.classList.add('just_changed');
+                }
+            }
+        }
+    }
+
     function infer_initial_program_counter(istore) {
         var i;
 
@@ -367,20 +450,156 @@ var pmachine = (function () {
         return 0;
     }
 
+    function render_labels(g) {
+        var wrap, label;
+
+        wrap = function (l, v) {
+            var tr, td;
+
+            tr = document.createElement('tr');
+
+            td = document.createElement('td');
+            td.innerHTML = l;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.innerHTML = v;
+            tr.appendChild(td);
+
+            return tr;
+        };
+
+        for (label in g.line_labels) {
+            if (g.line_labels.hasOwnProperty(label)) {
+                g.form.labels.appendChild(wrap(label, g.line_labels[label]));
+            }
+        }
+
+        for (label in g.data_labels) {
+            if (g.data_labels.hasOwnProperty(label)) {
+                g.form.labels.appendChild(wrap(label, g.data_labels[label]));
+            }
+        }
+    }
+
+    function render_constants(g) {
+        var wrap, i;
+
+        wrap = function (l, v) {
+            var tr, td;
+
+            tr = document.createElement('tr');
+
+            td = document.createElement('td');
+            td.innerHTML = l;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.innerHTML = v.type;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.innerHTML = v.value;
+            tr.appendChild(td);
+
+            return tr;
+        };
+
+        for (i = 0; i < g.constants.length; i += 1) {
+            g.form.constants.appendChild(wrap(i, g.constants[i]));
+        }
+    }
+
+    function render_dynamic_dstore_elements(g) {
+        var cell, wrap;
+
+        clear_children(g.form.dstore);
+
+        wrap = function (g, address) {
+            var tr, wrap2, c, o;
+
+            c = g.dstore[address];
+            o = g.old_dstore[address] || {};
+
+            wrap2 = function (d, old) {
+                var td = document.createElement('td');
+                td.innerHTML = d;
+                if (d !== old) {
+                    td.classList.add('just_changed');
+                }
+                return td;
+            };
+
+            tr = document.createElement('tr');
+            tr.appendChild(wrap2(address, address));
+            tr.appendChild(wrap2(c.id, o.id));
+            tr.appendChild(wrap2(c.type, o.type));
+            tr.appendChild(wrap2(c.value, o.value));
+
+            if (address === g.R.sp) {
+                tr.id = 'sp_row';
+            }
+
+            if (address === g.R.ep) {
+                tr.id = 'ep_row';
+            }
+
+            if (address === g.R.mp) {
+                tr.id = 'mp_row';
+            }
+
+            return tr;
+        };
+
+        for (cell = g.dstore.length - 1; cell >= 0; cell -= 1) {
+            g.form.dstore.appendChild(wrap(g, cell));
+        }
+    }
+
     function initialize_registers(g) {
-        g.R = {};
+        g.old_R = {};
         g.R.pc = infer_initial_program_counter(g.istore);
         g.R.sp = -1;
         g.R.mp = 0;
         g.R.np = 32767;
         g.R.ep = 5;
+        // g.dstore = [];
     }
 
-    function reset(pcode_text) {
-        G.istore = instruction_array_from_pcode(G, pcode_text);
+    function reset_visual_elements(g) {
+        clear_children(g.form.istore);
+        clear_children(g.form.dstore);
+        clear_children(g.form.labels);
+        clear_children(g.form.constants);
+        g.form.stdout.value = '';
+    }
+
+    function render_static_visual_elements(g) {
+        render_labels(g);
+        render_static_istore_elements(g);
+        render_constants(g);
+        // render_static_dstore_elements(g);
+    }
+
+    function render_dynamic_visual_elements(g) {
+        render_registers(g);
+        render_dynamic_istore_elements(g);
+        render_dynamic_dstore_elements(g);
+    }
+
+    function reset() {
         G.dstore = [];
+        G.constants = [];
+
+        G.istore = instruction_array_from_pcode(G.form.pcode.value.split('\n'));
+
         initialize_registers(G);
-        G.running = true;
+
+        reset_visual_elements(G);
+        render_static_visual_elements(G);
+        render_dynamic_visual_elements(G);
+
+        G.form.step.disabled = false;
     }
 
     function copy_dstore_cell(cell) {
@@ -415,11 +634,22 @@ var pmachine = (function () {
 
         insn = G.istore[G.R.pc];
 
+        console.log("Executing " + JSON.stringify(insn));
         G.opcode_dispatch[insn.opcode](G, insn);
+
+        render_dynamic_visual_elements(G);
     }
 
-    return { 'init': init, 'reset': reset, 'step': step };
-}());
+    function new_program() {
+        G.form.pcode.value = document.getElementById('installed_programs').value;
+    }
 
-exports.pmachine = pmachine;
+    function bodyload() {
+        document.getElementById('installed_programs').children[0].selected = 'selected';
+        init();
+        new_program();
+    }
+
+    return { 'bodyload': bodyload, 'init': init, 'reset': reset, 'step': step, 'new_program': new_program };
+}());
 
