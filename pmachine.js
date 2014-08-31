@@ -99,7 +99,15 @@ var pmachine = (function () {
 
             "ent": function (g, insn) {
                 if (insn.op1 === "sp") {
-                    g.R.sp = g.R.mp + int_from_label(insn.op2);
+                    var new_space;
+
+                    new_space = g.R.mp + int_from_label(insn.op2);
+
+                    while ( g.R.sp < new_space ) {
+                        datastore_push("ent", "", 0);
+                    }
+                    // probably should like actually allocate this space lol?
+                    // g.R.sp = g.R.mp + int_from_label(insn.op2);
                 } else if (insn.op1 === "ep") {
                     g.R.ep = g.R.sp + int_from_label(insn.op2);
                 }
