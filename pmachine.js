@@ -59,14 +59,14 @@ var pmachine = (function () {
     }
 
     function write_to_stdout(g, item) {
-        g.stdout.append(item.toString());
+        g.stdout.push(item.toString());
     }
 
-    function init(stdin, stdout) {
+    function init() {
         G = {};
 
-        G.stdin = stdin;
-        G.stdout = stdout;
+        G.stdin = [];
+        G.stdout = [];
 
         G.implicit_label_matcher = /^(L\d+)/;
         G.explicit_label_matcher = /^#define[ \t]+(L\d+)[ \t]+(\d+)/;
@@ -153,7 +153,7 @@ var pmachine = (function () {
                     write_to_stdout(g, datastore_pop(g).value);
                     break;
                 default:
-                    break;
+                    throw ("Unimplemented instruction " + insn.op1);
                 }
 
                 g.R.pc += 1;
@@ -452,7 +452,6 @@ var pmachine = (function () {
         // preserve_old_state(G);
 
         insn = G.istore[G.R.pc];
-        console.log(insn);
 
         G.opcode_dispatch[insn.opcode](G, insn);
     }
@@ -469,7 +468,15 @@ var pmachine = (function () {
         return "halted";
     }
 
-    return { 'init': init, 'reset': reset, 'step': step, 'state': state };
+    function stdin() {
+        return G.stdin;
+    }
+
+    function stdout() {
+        return G.stdout;
+    }
+
+    return { 'init': init, 'reset': reset, 'step': step, 'state': state, 'stdin': stdin, 'stdout': stdout };
 }());
 
 exports.pmachine = pmachine;
