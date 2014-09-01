@@ -4,16 +4,16 @@ var pmachine = (function () {
 
     var G;
 
-    function datastore_push(id, type, value) {
-        G.dstore.push({id: id, type: type, value: value});
+    function datastore_push(g, id, type, value) {
+        g.dstore.push({id: id, type: type, value: value});
         // G.R.sp = G.dstore.length - 1;
-        G.R.sp += 1;
+        g.R.sp += 1;
     }
 
-    function datastore_pop() {
-        var popee = G.dstore[G.dstore.length - 1];
-        G.dstore.pop();
-        G.R.sp -= 1;
+    function datastore_pop(g) {
+        var popee = g.dstore[g.dstore.length - 1];
+        g.dstore.pop();
+        g.R.sp -= 1;
         return popee;
     }
 
@@ -29,33 +29,33 @@ var pmachine = (function () {
         return mp + offset_map[v];
     }
 
-    function get_frame_element(mp, v) {
-        return G.dstore[get_frame_pointer(mp, v)];
+    function get_frame_element(g, mp, v) {
+        return g.dstore[get_frame_pointer(mp, v)];
     }
 
-    function set_frame_element(mp, elt, value) {
-        G.dstore[get_frame_pointer(mp, elt)].value = value;
+    function set_frame_element(g, mp, elt, value) {
+        g.dstore[get_frame_pointer(mp, elt)].value = value;
     }
 
     // try to resolve l into a label or assume it's an address
-    function int_from_label(l) {
-        if (G.line_labels.hasOwnProperty(l)) {
+    function int_from_label(g, l) {
+        if (g.line_labels.hasOwnProperty(l)) {
             return parseInt(G.line_labels[l], 10);
         }
 
-        if (G.data_labels.hasOwnProperty(l)) {
+        if (g.data_labels.hasOwnProperty(l)) {
             return parseInt(G.data_labels[l], 10);
         }
 
         return parseInt(l, 10);
     }
 
-    function follow_link(level, mp, frame_element) {
+    function follow_link(g, level, mp, frame_element) {
         if (level === 0) {
             return mp;
         }
 
-        return follow_link(level - 1, G.dstore[get_frame_pointer(mp, frame_element)].value, frame_element);
+        return follow_link(g, level - 1, g.dstore[get_frame_pointer(mp, frame_element)].value, frame_element);
     }
 
     function write_to_stdout(g, item) {
@@ -74,11 +74,11 @@ var pmachine = (function () {
 
         G.opcode_dispatch = {
             "mst": function (g, insn) {
-                datastore_push("rv", "i", 0);
-                datastore_push("sl", "i", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl"));
-                datastore_push("dl", "i", g.R.mp); // the dynamic link points to the callee's stack frame
-                datastore_push("ep", "i", g.R.ep);
-                datastore_push("ra", "a", "");
+                datastore_push(g, "rv", "i", 0);
+                datastore_push(g, "sl", "i", follow_link(g, parseInt(insn.op1, 10), g.R.mp, "dl"));
+                datastore_push(g, "dl", "i", g.R.mp); // the dynamic link points to the callee's stack frame
+                datastore_push(g, "ep", "i", g.R.ep);
+                datastore_push(g, "ra", "a", "");
 
                 // these pushes had the effect of incrementing 5 times
 
@@ -88,9 +88,9 @@ var pmachine = (function () {
             "cup": function (g, insn) {
                 g.R.mp = g.R.sp - (parseInt(insn.op1, 10) + 4);
 
-                set_frame_element(g.R.mp, "ra", g.R.pc + 1);
+                set_frame_element(g, g.R.mp, "ra", g.R.pc + 1);
 
-                g.R.pc = int_from_label(insn.op2);
+                g.R.pc = int_from_label(g, insn.op2);
             },
 
             "stp": function (g, insn) {
@@ -101,15 +101,15 @@ var pmachine = (function () {
                 if (insn.op1 === "sp") {
                     var new_space;
 
-                    new_space = g.R.mp + int_from_label(insn.op2);
+                    new_space = g.R.mp + int_from_label(g, insn.op2);
 
                     while (g.R.sp < new_space) {
-                        datastore_push("ent", "", 0);
+                        datastore_push(g, "ent", "", 0);
                     }
                     // probably should like actually allocate this space lol?
                     // g.R.sp = g.R.mp + int_from_label(insn.op2);
                 } else if (insn.op1 === "ep") {
-                    g.R.ep = g.R.sp + int_from_label(insn.op2);
+                    g.R.ep = g.R.sp + int_from_label(g, insn.op2);
                 }
 
                 g.R.pc += 1;
@@ -118,27 +118,27 @@ var pmachine = (function () {
             "rtn": function (g, insn) {
                 var old_mp = g.R.mp;
 
-                g.R.pc = get_frame_element(g.R.mp, "ra").value;
-                g.R.ep = get_frame_element(g.R.mp, "ep").value;
-                g.R.mp = get_frame_element(g.R.mp, "dl").value;
+                g.R.pc = get_frame_element(g, g.R.mp, "ra").value;
+                g.R.ep = get_frame_element(g, g.R.mp, "ep").value;
+                g.R.mp = get_frame_element(g, g.R.mp, "dl").value;
 
                 while (g.R.sp > old_mp) {
-                    datastore_pop();
+                    datastore_pop(g);
                 }
             },
 
             "lda": function (g, insn) {
                 // possibly overwrites parts of the stack frame!
-                datastore_push("", "a", follow_link(parseInt(insn.op1, 10), g.R.mp, "dl") + parseInt(insn.op2, 10));
+                datastore_push(g, "", "a", follow_link(g, parseInt(insn.op1, 10), g.R.mp, "dl") + parseInt(insn.op2, 10));
 
                 g.R.pc += 1;
             },
 
             "ldc": function (g, insn) {
                 if (insn.op1 === "c" || insn.op1 === "b") {
-                    datastore_push("", insn.op1, insn.op2);
+                    datastore_push(g, "", insn.op1, insn.op2);
                 } else {
-                    datastore_push("", insn.op1, g.constants[insn.op2].value);
+                    datastore_push(g, "", insn.op1, g.constants[insn.op2].value);
                 }
 
                 g.R.pc += 1;
@@ -150,7 +150,7 @@ var pmachine = (function () {
                 case "wri":
                     // no typechecking is done LOL
                     // TODO strip off the enclosing quotes
-                    write_to_stdout(datastore_pop().value);
+                    write_to_stdout(g, datastore_pop(g).value);
                     break;
                 default:
                     break;
@@ -162,8 +162,8 @@ var pmachine = (function () {
             "sti": function (g, insn) {
                 var value, address;
 
-                value = datastore_pop();
-                address = datastore_pop();
+                value = datastore_pop(g);
+                address = datastore_pop(g);
 
                 g.dstore[address.value] = value;
 
@@ -173,9 +173,9 @@ var pmachine = (function () {
             "lvi": function (g, insn) {
                 var offset;
 
-                offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
+                offset = follow_link(g, parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
 
-                datastore_push("", "i", g.dstore[offset].value);
+                datastore_push(g, "", "i", g.dstore[offset].value);
 
                 g.R.pc += 1;
             },
@@ -183,17 +183,17 @@ var pmachine = (function () {
             "equ": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "b", a.type === b.type && a.value === b.value);
+                datastore_push(g, "", "b", a.type === b.type && a.value === b.value);
 
                 g.R.pc += 1;
             },
 
             "fjp": function (g, insn) {
-                if (datastore_pop().value === false) {
-                    g.R.pc = int_from_label(insn.op1);
+                if (datastore_pop(g).value === false) {
+                    g.R.pc = int_from_label(g, insn.op1);
                 } else {
                     g.R.pc += 1;
                 }
@@ -202,24 +202,24 @@ var pmachine = (function () {
             "mod": function (g, insn) {
                 var a, b;
 
-                a = parseInt(datastore_pop().value, 10);
-                b = parseInt(datastore_pop().value, 10);
+                a = parseInt(datastore_pop(g).value, 10);
+                b = parseInt(datastore_pop(g).value, 10);
 
-                datastore_push("", "i", (b % a).toString());
+                datastore_push(g, "", "i", (b % a).toString());
 
                 g.R.pc += 1;
             },
 
             "ujp": function (g, insn) {
-                g.R.pc = int_from_label(insn.op1);
+                g.R.pc = int_from_label(g, insn.op1);
             },
 
             "lvr": function (g, insn) {
                 var offset;
 
-                offset = follow_link(parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
+                offset = follow_link(g, parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
 
-                datastore_push("", "r", g.dstore[offset].value);
+                datastore_push(g, "", "r", g.dstore[offset].value);
 
                 g.R.pc += 1;
             },
@@ -227,10 +227,10 @@ var pmachine = (function () {
             "les": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "b", b.value < a.value);
+                datastore_push(g, "", "b", b.value < a.value);
 
                 g.R.pc += 1;
             },
@@ -238,10 +238,10 @@ var pmachine = (function () {
             "neq": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "b", b.value !== a.value);
+                datastore_push(g, "", "b", b.value !== a.value);
 
                 g.R.pc += 1;
             },
@@ -249,10 +249,10 @@ var pmachine = (function () {
             "grt": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "b", b.value > a.value);
+                datastore_push(g, "", "b", b.value > a.value);
 
                 g.R.pc += 1;
             },
@@ -260,10 +260,10 @@ var pmachine = (function () {
             "leq": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "b", b.value <= a.value);
+                datastore_push(g, "", "b", b.value <= a.value);
 
                 g.R.pc += 1;
             },
@@ -271,10 +271,10 @@ var pmachine = (function () {
             "geq": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "b", b.value >= a.value);
+                datastore_push(g, "", "b", b.value >= a.value);
 
                 g.R.pc += 1;
             },
@@ -282,10 +282,10 @@ var pmachine = (function () {
             "mpi": function (g, insn) {
                 var a, b;
 
-                a = datastore_pop();
-                b = datastore_pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "i", b.value * a.value);
+                datastore_push(g, "", "i", b.value * a.value);
 
                 g.R.pc += 1;
             },
@@ -293,20 +293,20 @@ var pmachine = (function () {
             "inc": function (g, insn) {
                 var val;
 
-                val = datastore_pop();
+                val = datastore_pop(g);
 
-                datastore_push("", val.type, val.value + 1);
- 
+                datastore_push(g, "", val.type, val.value + 1);
+
                 g.R.pc += 1;
             },
 
             "dvr": function (g, insn) {
                 var a, b;
 
-                a = datastore.pop();
-                b = datastore.pop();
+                a = datastore_pop(g);
+                b = datastore_pop(g);
 
-                datastore_push("", "r", b/a);
+                datastore_push(g, "", "r", b / a);
             }
         };
     }
@@ -368,13 +368,13 @@ var pmachine = (function () {
         actual_line_number = 0;
         for (line in pcode) {
             if (pcode.hasOwnProperty(line)) {
-                if (defines_explicit_label(pcode[line])) {
-                    insert_explicit_label(pcode[line]);
+                if (defines_explicit_label(g, pcode[line])) {
+                    insert_explicit_label(g, pcode[line]);
                 } else {
-                    insn = scan_instruction(actual_line_number, pcode[line]);
+                    insn = scan_instruction(g, actual_line_number, pcode[line]);
 
                     if (insn.label !== undefined) {
-                        insert_code_label(actual_line_number, insn);
+                        insert_code_label(g, actual_line_number, insn);
                     }
 
                     if (insn.opcode !== undefined) {
@@ -449,7 +449,7 @@ var pmachine = (function () {
     function step() {
         var insn;
 
-        preserve_old_state(G);
+        // preserve_old_state(G);
 
         insn = G.istore[G.R.pc];
 

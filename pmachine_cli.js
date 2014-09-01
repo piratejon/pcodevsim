@@ -4,14 +4,10 @@ var pmachine = require('./pmachine.js').pmachine;
 
 var stdout = [];
 var program_text = fs.readFileSync(process.argv[2], "utf8");
-console.log(program_text);
 
-/*
-pmachine.init(stdout.push);
+pmachine.init(null, stdout.push);
 
-
-
-pmachine.reset(program_text);
+pmachine.reset(program_text.split('\n'));
 
 while (pmachine.state() === "running") {
     pmachine.step();
@@ -21,4 +17,3 @@ while (pmachine.state() === "running") {
     }
 }
 
-*/
