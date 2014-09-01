@@ -124,7 +124,7 @@ var pmachine = (function () {
 
                     new_space = g.R.mp + int_from_label(insn.op2);
 
-                    while ( g.R.sp < new_space ) {
+                    while (g.R.sp < new_space) {
                         datastore_push("ent", "", 0);
                     }
                     // probably should like actually allocate this space lol?
@@ -305,6 +305,35 @@ var pmachine = (function () {
                 g.R.pc += 1;
             },
 
+            "mpi": function (g, insn) {
+                var a, b;
+
+                a = datastore_pop();
+                b = datastore_pop();
+
+                datastore_push("", "i", b.value * a.value);
+
+                g.R.pc += 1;
+            },
+
+            "inc": function (g, insn) {
+                var val;
+
+                val = datastore_pop();
+
+                datastore_push("", val.type, val.value + 1);
+ 
+                g.R.pc += 1;
+            },
+
+            "dvr": function (g, insn) {
+                var a, b;
+
+                a = datastore.pop();
+                b = datastore.pop();
+
+                datastore_push("", "r", b/a);
+            }
         };
     }
 
