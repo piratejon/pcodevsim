@@ -103,7 +103,7 @@ var pmachine = (function () {
 
                     new_space = g.R.mp + int_from_label(insn.op2);
 
-                    while ( g.R.sp < new_space ) {
+                    while (g.R.sp < new_space) {
                         datastore_push("ent", "", 0);
                     }
                     // probably should like actually allocate this space lol?
@@ -426,7 +426,19 @@ var pmachine = (function () {
         G.opcode_dispatch[insn.opcode](G, insn);
     }
 
-    return { 'init': init, 'reset': reset, 'step': step };
+    function state() {
+        if (G === undefined) {
+            return "uninitialized";
+        }
+
+        if (G.running === true) {
+            return "running";
+        }
+
+        return "halted";
+    }
+
+    return { 'init': init, 'reset': reset, 'step': step, 'state': state };
 }());
 
 exports.pmachine = pmachine;

@@ -650,6 +650,6 @@ var pmachine_gui = (function () {
         new_program();
     }
 
-    return { 'bodyload': bodyload, 'init': init, 'reset': reset, 'step': step, 'new_program': new_program };
+    return { 'bodyload': bodyload, 'init': init, 'reset': reset, 'step': step, 'new_program': new_program, 'status': state };
 }());
 
