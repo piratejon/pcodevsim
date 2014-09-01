@@ -452,6 +452,7 @@ var pmachine = (function () {
         // preserve_old_state(G);
 
         insn = G.istore[G.R.pc];
+        console.log(insn);
 
         G.opcode_dispatch[insn.opcode](G, insn);
     }
