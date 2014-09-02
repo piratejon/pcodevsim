@@ -62,6 +62,9 @@ var pmachine = (function () {
         g.stdout.push(item.toString());
     }
 
+    function read_from_stdin(g) {
+    }
+
     function init() {
         G = {};
 
@@ -146,12 +149,17 @@ var pmachine = (function () {
 
             "csp": function (g, insn) {
                 switch (insn.op1) {
-                case "wrs":
-                case "wri":
-                    // no typechecking is done LOL
+                case "wrs": // write string
+                case "wri": // write integer
+
                     // TODO strip off the enclosing quotes
                     write_to_stdout(g, datastore_pop(g).value);
                     break;
+
+                case "rdi": // read integer
+                    datastore_push(g, "", insn.op1, read_from_stdin(g));
+                    break;
+
                 default:
                     throw ("Unimplemented instruction " + insn.op1);
                 }
@@ -476,7 +484,7 @@ var pmachine = (function () {
         return G.stdout;
     }
 
-    return { 'init': init, 'reset': reset, 'step': step, 'state': state, 'stdin': stdin, 'stdout': stdout };
+    return { 'init': init, 'reset': reset, 'step': step, 'state': state, 'stdin': stdin, 'stdout_buffer': stdout };
 }());
 
 exports.pmachine = pmachine;
