@@ -484,7 +484,11 @@ var pmachine = (function () {
         return G.stdout;
     }
 
-    return { 'init': init, 'reset': reset, 'step': step, 'state': state, 'stdin': stdin, 'stdout_buffer': stdout };
+    function set_stdin_callback(arg) {
+        G.stdin_callback = arg;
+    }
+
+    return { 'init': init, 'reset': reset, 'step': step, 'state': state, 'set_stdin_callback': set_stdin_callback, 'stdout_buffer': stdout };
 }());
 
 exports.pmachine = pmachine;
