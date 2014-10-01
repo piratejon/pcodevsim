@@ -63,6 +63,7 @@ var pmachine = (function () {
     }
 
     function read_from_stdin(g) {
+        return g.stdin_callback();
     }
 
     function init() {
