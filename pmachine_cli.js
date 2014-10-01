@@ -9,15 +9,12 @@ pmachine.init();
 pmachine.reset(program_text.split('\n'));
 
 var pmachine_stdout = pmachine.stdout_buffer();
+var readlineSync = require('readline-sync');
 pmachine.set_stdin_callback(function () {
-    var len, buffer;
-    len = 100;
-    buffer = new Buffer(len);
-    fs.readSync(process.stdin.fd, buffer, 0, len);
-    return buffer;
+    return readlineSync.question('stdin: ');
 });
 
-process.stdin.resume();
+// process.stdin.resume();
 
 while (pmachine.state() === "running") {
     pmachine.step();
@@ -30,5 +27,5 @@ while (pmachine.state() === "running") {
 
 process.stdout.write("Program terminated.");
 
-process.stdin.pause();
+// process.stdin.pause();
 
