@@ -1,0 +1,42 @@
+
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       b         1         
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          equ       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          neq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          les       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          leq       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          grt       i                   
+          sti       b                   
+          lda       0         5         
+          lvi       0         6         
+          lvi       0         7         
+          geq       i                   
+          sti       b                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    10                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           

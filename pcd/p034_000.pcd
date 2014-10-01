@@ -1,0 +1,31 @@
+
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         10        
+          sti       i                   
+L00004                                  
+          lvi       0         5         
+          ldc       i         0         
+          geq       i                   
+          fjp                 L00005    
+          lvi       0         5         
+          csp                 wri       
+          ldc       s         ', '      
+          csp                 wrs       
+          lda       0         5         
+          lvi       0         5         
+          ldc       i         1         
+          sbi                           
+          sti       i                   
+          ujp                 L00004    
+L00005                                  
+          ldc       s         'Blast off!'
+          csp                 wrs       
+          csp                 wln       
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    8                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           

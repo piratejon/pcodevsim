@@ -1,0 +1,46 @@
+
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         5         
+          lvi       0         6         
+          grt       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          lvi       0         6         
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    8                   
+L00009    ent       sp        L00010    
+          ent       ep        L00011    
+          ldc       s         'The maximum of '
+          lvi       0         5         
+          ldc       s         ' and '   
+          lvi       0         6         
+          ldc       s         ' is '    
+          mst       1                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          csp                 wln       
+          rtn       p                   
+#define   L00010    6                   
+#define   L00011    18                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          mst       0                   
+          ldc       i         2         
+          ldc       i         3         
+          cup       2         L00009    
+          rtn       p                   
+#define   L00002    4                   
+#define   L00003    11                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           

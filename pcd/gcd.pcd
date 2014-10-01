@@ -1,0 +1,42 @@
+
+L00004    ent       sp        L00005    
+          ent       ep        L00006    
+          lvi       0         6         
+          ldc       i         0         
+          equ       i                   
+          fjp                 L00007    
+          lda       0         0         
+          lvi       0         5         
+          sti       i                   
+          ujp                 L00008    
+L00007                                  
+          lda       0         0         
+          mst       1                   
+          lvi       0         6         
+          lvi       0         5         
+          lvi       0         6         
+          mod                           
+          cup       2         L00004    
+          sti       i                   
+L00008                                  
+          rtn       i                   
+#define   L00005    6                   
+#define   L00006    15                  
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lvi       0         5         
+          csp                 rdi       
+          lvi       0         6         
+          csp                 rdi       
+          mst       0                   
+          lvi       0         5         
+          lvi       0         6         
+          cup       2         L00004    
+          ldc       i         5         
+          csp                 wri       
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    14                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           

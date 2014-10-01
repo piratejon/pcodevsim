@@ -1,0 +1,33 @@
+
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          ldc       s         'How much cash do you have? '
+          csp                 wrs       
+          lvr       0         5         
+          csp                 rdr       
+          csp                 rln       
+          lvr       0         5         
+          ldc       r         100.0     
+          les       r                   
+          fjp                 L00004    
+          ldc       s         'You wicked and slothful person.'
+          csp                 wrs       
+          csp                 wln       
+          ldc       s         'I''d never go out with you.'
+          csp                 wrs       
+          csp                 wln       
+          ujp                 L00005    
+L00004                                  
+          ldc       s         'Come on, honey, let''s have a good time tonight!'
+          csp                 wrs       
+          csp                 wln       
+L00005                                  
+          ldc       s         'See you later!'
+          csp                 wrs       
+          csp                 wln       
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           

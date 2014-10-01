@@ -1,0 +1,9 @@
+
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          rtn       p                   
+#define   L00002    6                   
+#define   L00003    6                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           

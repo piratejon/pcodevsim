@@ -1,0 +1,21 @@
+
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          lvb       0         6         
+          sti       b                   
+          lda       0         7         
+          lvc       0         8         
+          sti       c                   
+          lda       0         9         
+          lvi       0         10        
+          sti       i                   
+          lda       0         11        
+          lvr       0         12        
+          sti       r                   
+          rtn       p                   
+#define   L00002    12                  
+#define   L00003    14                  
+          mst       0                   
+          cup       0         L00001    
+          stp                           

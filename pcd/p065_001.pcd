@@ -1,0 +1,58 @@
+
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lda       0         5         
+          ldc       i         2         
+          sti       i                   
+          lda       0         5         
+          lvi       0         5         
+          inc                           
+          sti       i                   
+          lda       0         5         
+          lvi       0         5         
+          dec                           
+          sti       i                   
+          lda       0         6         
+          ldc       r         3.14159   
+          sti       r                   
+          lda       0         5         
+          lvr       0         6         
+          rnd                           
+          sti       i                   
+          lda       0         7         
+          ldc       c         'b'       
+          sti       c                   
+          lda       0         6         
+          lvr       0         6         
+          sqt                           
+          sti       r                   
+          lda       0         6         
+          lvi       0         5         
+          sqt                           
+          sti       r                   
+          lda       0         6         
+          lvr       0         6         
+          abr                           
+          sti       r                   
+          lda       0         5         
+          lvi       0         5         
+          abi                           
+          sti       i                   
+          lda       0         5         
+          lvr       0         6         
+          trc                           
+          sti       i                   
+          lda       0         7         
+          ldc       i         97        
+          chr                           
+          sti       c                   
+          lda       0         5         
+          ldc       c         'b'       
+          ord                           
+          sti       i                   
+          rtn       p                   
+#define   L00002    7                   
+#define   L00003    9                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           
