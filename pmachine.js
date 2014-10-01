@@ -158,7 +158,7 @@ var pmachine = (function () {
                     break;
 
                 case "rdi": // read integer
-                    datastore_push(g, "", insn.op1, read_from_stdin(g));
+                    datastore_push(g, "", "i", parseInt(read_from_stdin(g), 10));
                     break;
 
                 default:
@@ -195,6 +195,8 @@ var pmachine = (function () {
                 a = datastore_pop(g);
                 b = datastore_pop(g);
 
+                console.log("equ: " + a.value + ":" + a.type + ", " + b.value + ":" + b.type);
+                
                 datastore_push(g, "", "b", a.type === b.type && a.value === b.value);
 
                 g.R.pc += 1;
@@ -463,6 +465,7 @@ var pmachine = (function () {
         insn = G.istore[G.R.pc];
 
         G.opcode_dispatch[insn.opcode](G, insn);
+        console.log(G.R.pc + " " + insn.opcode + " " + insn.op1 + " " + insn.op2);
     }
 
     function state() {
