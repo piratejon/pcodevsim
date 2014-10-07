@@ -4,8 +4,13 @@ var pmachine = (function () {
 
     var G;
 
+    function new_value(id, type, value) {
+        return {id: id, type: type, value: value};
+    }
+
     function datastore_push(g, id, type, value) {
-        g.dstore.push({id: id, type: type, value: value});
+        // g.dstore.push({id: id, type: type, value: value});
+        g.dstore.push(new_value(id, type, value));
         // G.R.sp = G.dstore.length - 1;
         g.R.sp += 1;
     }
@@ -158,7 +163,9 @@ var pmachine = (function () {
                     break;
 
                 case "rdi": // read integer
-                    datastore_push(g, "", "i", parseInt(read_from_stdin(g), 10));
+                    var address = datastore_pop(g);
+                    console.log("Popped value: " + address.id + "," + address.type + "," + address.value);
+                    g.dstore[address.value] = new_value("", "i", read_from_stdin(g));
                     break;
 
                 default:
@@ -184,7 +191,7 @@ var pmachine = (function () {
 
                 offset = follow_link(g, parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
 
-                datastore_push(g, "", "i", g.dstore[offset].value);
+                datastore_push(g, "lvi", "i", g.dstore[offset].value);
 
                 g.R.pc += 1;
             },
@@ -195,8 +202,6 @@ var pmachine = (function () {
                 a = datastore_pop(g);
                 b = datastore_pop(g);
 
-                console.log("equ: " + a.value + ":" + a.type + ", " + b.value + ":" + b.type);
-                
                 datastore_push(g, "", "b", a.type === b.type && a.value === b.value);
 
                 g.R.pc += 1;
