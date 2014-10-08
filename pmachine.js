@@ -4,9 +4,12 @@ var pmachine = (function () {
 
     var G;
 
+    function new_value(id, type, value) {
+        return {id: id, type: type, value: value};
+    }
+
     function datastore_push(g, id, type, value) {
-        g.dstore.push({id: id, type: type, value: value});
-        // G.R.sp = G.dstore.length - 1;
+        g.dstore.push(new_value(id, type, value));
         g.R.sp += 1;
     }
 
@@ -63,13 +66,12 @@ var pmachine = (function () {
     }
 
     function read_from_stdin(g) {
-        return g.stdin_callback();
+        return new_value("stdin", "", g.stdin_callback());
     }
 
     function init() {
         G = {};
 
-        G.stdin = [];
         G.stdout = [];
 
         G.implicit_label_matcher = /^(L\d+)/;
@@ -158,7 +160,15 @@ var pmachine = (function () {
                     break;
 
                 case "rdi": // read integer
-                    datastore_push(g, "", "i", parseInt(read_from_stdin(g), 10));
+                    var value, address;
+
+                    address = datastore_pop(g);
+                    value = read_from_stdin(g);
+
+                    value.type = "i";
+                    value.label = "rdi";
+
+                    g.dstore[address.value] = value;
                     break;
 
                 default:
@@ -195,8 +205,6 @@ var pmachine = (function () {
                 a = datastore_pop(g);
                 b = datastore_pop(g);
 
-                console.log("equ: " + a.value + ":" + a.type + ", " + b.value + ":" + b.type);
-                
                 datastore_push(g, "", "b", a.type === b.type && a.value === b.value);
 
                 g.R.pc += 1;
@@ -465,7 +473,6 @@ var pmachine = (function () {
         insn = G.istore[G.R.pc];
 
         G.opcode_dispatch[insn.opcode](G, insn);
-        console.log(G.R.pc + " " + insn.opcode + " " + insn.op1 + " " + insn.op2);
     }
 
     function state() {
@@ -478,10 +485,6 @@ var pmachine = (function () {
         }
 
         return "halted";
-    }
-
-    function stdin() {
-        return G.stdin;
     }
 
     function stdout() {

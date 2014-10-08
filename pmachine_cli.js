@@ -14,8 +14,6 @@ pmachine.set_stdin_callback(function () {
     return readlineSync.question('stdin: ');
 });
 
-// process.stdin.resume();
-
 while (pmachine.state() === "running") {
     pmachine.step();
 
@@ -26,6 +24,4 @@ while (pmachine.state() === "running") {
 }
 
 process.stdout.write("Program terminated.");
-
-// process.stdin.pause();
 
