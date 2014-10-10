@@ -1,5 +1,5 @@
 
-(function (exports) {
+var export_me = function (exports) {
     "use strict";
 
     exports.pmachine = (function () {
@@ -328,6 +328,15 @@
                     b = datastore_pop(g);
 
                     datastore_push(g, "", "r", b / a);
+                },
+
+                "adi": function(g, insn) {
+                    var a, b;
+
+                    a = datastore_pop(g);
+                    b = datastore_pop(g);
+
+                    datastore_push(g, "", "i", a + b);
                 }
             };
         }
@@ -499,5 +508,12 @@
 
         return { 'init': init, 'reset': reset, 'step': step, 'state': state, 'set_stdin_callback': set_stdin_callback, 'stdout_buffer': stdout };
     }());
-}(exports === undefined ? this.pmachine : exports));
+};
+
+if (typeof exports === "undefined") {
+    this.pmachine = {};
+    export_me(this.pmachine);
+} else {
+    export_me(exports);
+}
 
