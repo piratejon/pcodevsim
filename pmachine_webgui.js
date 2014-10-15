@@ -13,17 +13,19 @@ var pmachine_webgui = (function () {
 
     function reset() {
         pm.reset(document.getElementById('pcode').value.split('\n'));
+        // now put the lime in the coconut
+        // i mean put the pmachine instructions in the instruction array table
     }
 
     function pmachine_loaded() {
         pm = pmachine.pmachine;
         if (this !== undefined && this.readyState === 4 && this.status === 200) {
-            console.log("WINRAR! readyState: " + this.readyState + ", status: " + this.status);
+            // console.log("WINRAR! readyState: " + this.readyState + ", status: " + this.status);
         } else {
             if (this !== undefined) {
-                console.log("readyState: " + this.readyState + ", status: " + this.status);
+                // console.log("readyState: " + this.readyState + ", status: " + this.status);
             } else {
-                console.log("this undefined");
+                // console.log("this undefined");
             }
         }
     }
