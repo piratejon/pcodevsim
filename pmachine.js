@@ -330,7 +330,7 @@ var export_me = function (exports) {
                     datastore_push(g, "", "r", b / a);
                 },
 
-                "adi": function(g, insn) {
+                "adi": function (g, insn) {
                     var a, b;
 
                     a = datastore_pop(g);
