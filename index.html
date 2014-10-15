@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <link rel="stylesheet" type="text/css" href="style.css" />
     <title>pcode virtual machine simulator</title>
-    <script src="pmachine.js"></script>
+    <script src="pmachine_webgui.js"></script>
   </head>
-  <body id="body" onload="pmachine.bodyload(); return 0;">
+  <body id="body" onload="pmachine_webgui.bodyload(); return 0;">
     <p id="about">This browser app simulates the execution of p-code in a visual way meant to illustrate the inner workings and state changes of one possible p-machine for demonstrative or educational purposes.
     <div id="input">
       <div>
         <p>Pick a program:
-        <p><select id="installed_programs" onchange="pmachine.new_program(); return 0;">
+        <p><select id="installed_programs" onchange="pmachine_webgui.new_program(); return 0;">
 <option value="
 L00004    ent       sp        L00005    
           ent       ep        L00006    
@@ -2856,8 +2856,8 @@ L00001    ent       sp        L00002
           <tr class="register_values"><td id="val_pc"><td id="val_sp"><td id="val_mp"><td id="val_np"><td id="val_ep">
         </table>
         <ul id="control">
-          <li><input type="button" onclick="pmachine.reset(); return 0;" value="Reset" />
-          <li><input type="button" onclick="pmachine.step(); return 0;" id="step" value="Step" />
+          <li><input type="button" onclick="pmachine_webgui.reset(); return 0;" value="Reset" />
+          <li><input type="button" onclick="pmachine_webgui.step(); return 0;" id="step" value="Step" />
           <!--<li><input type="button" onclick="pmachine.go(); return 0;" value="Go" />-->
         </ul>
       </div>

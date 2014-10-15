@@ -510,7 +510,8 @@ var export_me = function (exports) {
     }());
 };
 
-if (typeof exports === "undefined") {
+var exports;
+if (undefined === exports) {
     this.pmachine = {};
     export_me(this.pmachine);
 } else {
