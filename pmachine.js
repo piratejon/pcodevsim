@@ -445,6 +445,7 @@ var export_me = function (exports) {
         }
 
         function reset(pcode_text) {
+            init();
             G.istore = instruction_array_from_pcode(G, pcode_text);
             G.dstore = [];
             initialize_registers(G);

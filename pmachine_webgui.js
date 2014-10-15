@@ -7,13 +7,15 @@ var pmachine_webgui = (function () {
 
     function new_program() {
         if (pm !== undefined) {
-            pm.reset(document.getElementById('installed_programs').value);
+            document.getElementById('pcode').value = document.getElementById('installed_programs').value;
         }
     }
 
+    function reset() {
+        pm.reset(document.getElementById('pcode').value.split('\n'));
+    }
+
     function pmachine_loaded() {
-        // pmachine = {};
-        // new_program();
         pm = pmachine.pmachine;
         if (this !== undefined && this.readyState === 4 && this.status === 200) {
             console.log("WINRAR! readyState: " + this.readyState + ", status: " + this.status);
@@ -67,6 +69,6 @@ var pmachine_webgui = (function () {
         }
     }
 
-    return { 'bodyload': bodyload, 'step': step, 'new_program': new_program, 'status': status, 'reset': new_program };
+    return { 'bodyload': bodyload, 'step': step, 'new_program': new_program, 'status': status, 'reset': reset };
 }());
 
