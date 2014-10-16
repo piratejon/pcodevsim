@@ -452,17 +452,6 @@ var export_me = function (exports) {
             G.running = true;
         }
 
-        function copy_dstore_cell(cell) {
-            var c, r = {};
-            for (c in cell) {
-                if (cell.hasOwnProperty(c)) {
-                    r[c] = cell[c];
-                }
-            }
-
-            return r;
-        }
-
         function step() {
             var insn;
 
