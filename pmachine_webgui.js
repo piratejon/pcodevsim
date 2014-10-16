@@ -3,7 +3,7 @@
 var pmachine_webgui = (function () {
     "use strict";
 
-    var pm, gui;
+    var pm, gui, old_state;
 
     function clear_children(p) {
         while (p.hasChildNodes()) {
@@ -19,7 +19,7 @@ var pmachine_webgui = (function () {
         gui.stdout.value = '';
     }
 
-    function render_static_visual_elements(gui, global_state) {
+    function render_static_visual_elements(gui, machine_state) {
         var insn, insn_table_row;
 
         insn_table_row = function (insn) {
@@ -41,14 +41,20 @@ var pmachine_webgui = (function () {
             return tr;
         };
 
-        for (insn in global_state.istore) {
-            if (global_state.istore.hasOwnProperty(insn)) {
-                gui.istore.appendChild(insn_table_row(global_state.istore[insn]));
+        for (insn in machine_state.istore) {
+            if (machine_state.istore.hasOwnProperty(insn)) {
+                gui.istore.appendChild(insn_table_row(machine_state.istore[insn]));
             }
         }
     }
 
-    function render_dynamic_visual_elements(g, G) {
+    function render_dynamic_visual_elements(gui, machine_state) {
+        if (machine_state.R.pc !== -1) {
+            if (old_state !== undefined && old_state.R.pc !== -1) {
+                gui.istore.childNodes[old_state.R.pc].removeAttribute('id');
+            }
+            gui.istore.childNodes[machine_state.R.pc].id = 'pc_row';
+        }
     }
 
     function reset() {
@@ -92,7 +98,11 @@ var pmachine_webgui = (function () {
     }
 
     function preserve_old_state(g) {
-        var reg, i;
+        var reg, i, new_old_state;
+
+        new_old_state = {
+            'R': {}
+        };
 
         function copy_dstore_cell(cell) {
             var c, r = {};
@@ -107,27 +117,31 @@ var pmachine_webgui = (function () {
 
         for (reg in g.R) {
             if (g.R.hasOwnProperty(reg)) {
-                g.old_R[reg] = g.R[reg];
+                new_old_state.R[reg] = g.R[reg];
             }
         }
 
-        g.old_dstore = [];
+        new_old_state.dstore = [];
         for (i = 0; i < g.dstore.length; i += 1) {
-            g.old_dstore[i] = copy_dstore_cell(g.dstore[i]);
+            new_old_state.dstore[i] = copy_dstore_cell(g.dstore[i]);
         }
+
+        return new_old_state;
     }
 
     function step() {
-        var insn;
+        var insn, machine_state;
 
-        preserve_old_state(pm.G);
+        machine_state = pm.get_machine_state();
 
-        insn = pm.G.istore[pm.G.R.pc];
+        old_state = preserve_old_state(machine_state);
+
+        insn = machine_state.istore[machine_state.R.pc];
 
         console.log("Executing " + JSON.stringify(insn));
-        pm.G.opcode_dispatch[insn.opcode](pm.G, insn);
+        machine_state.opcode_dispatch[insn.opcode](machine_state, insn);
 
-        render_dynamic_visual_elements(pm.G);
+        render_dynamic_visual_elements(gui, machine_state);
     }
 
     function initialize_gui_bits() {
