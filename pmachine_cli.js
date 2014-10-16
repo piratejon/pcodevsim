@@ -14,7 +14,7 @@ pmachine.set_stdin_callback(function () {
     return readlineSync.question('stdin: ');
 });
 
-while (pmachine.state() === "running") {
+while (pmachine.get_vm_status() === "running") {
     pmachine.step();
 
     while (pmachine_stdout.length > 0) {

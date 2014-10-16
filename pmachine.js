@@ -463,31 +463,15 @@ var export_me = function (exports) {
             return r;
         }
 
-        function preserve_old_state(g) {
-            var reg, i;
-            for (reg in g.R) {
-                if (g.R.hasOwnProperty(reg)) {
-                    g.old_R[reg] = g.R[reg];
-                }
-            }
-
-            g.old_dstore = [];
-            for (i = 0; i < g.dstore.length; i += 1) {
-                g.old_dstore[i] = copy_dstore_cell(g.dstore[i]);
-            }
-        }
-
         function step() {
             var insn;
-
-            // preserve_old_state(G);
 
             insn = G.istore[G.R.pc];
 
             G.opcode_dispatch[insn.opcode](G, insn);
         }
 
-        function state() {
+        function get_vm_status() {
             if (G === undefined) {
                 return "uninitialized";
             }
@@ -499,6 +483,10 @@ var export_me = function (exports) {
             return "halted";
         }
 
+        function get_machine_state() {
+            return G;
+        }
+
         function stdout() {
             return G.stdout;
         }
@@ -507,7 +495,15 @@ var export_me = function (exports) {
             G.stdin_callback = arg;
         }
 
-        return { 'init': init, 'reset': reset, 'step': step, 'state': state, 'set_stdin_callback': set_stdin_callback, 'stdout_buffer': stdout };
+        return {
+            'init': init,
+            'step': step,
+            'reset': reset,
+            'stdout_buffer': stdout,
+            'get_vm_status': get_vm_status,
+            'get_machine_state': get_machine_state,
+            'set_stdin_callback': set_stdin_callback,
+        };
     }());
 };
 
