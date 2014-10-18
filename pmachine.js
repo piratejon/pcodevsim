@@ -353,6 +353,18 @@ var export_me = function (exports) {
 
                     g.R.pc += 1;
                 },
+
+                "ixa": function (g, insn) {
+                    var a, i, q;
+
+                    a = datastore_pop(g).value;
+                    i = datastore_pop(g).value;
+                    q = parseInt(insn.op1, 10);
+
+                    datastore_push(g, "", "i", (q*i) + a);
+
+                    g.R.pc += 1;
+                },
             };
         }
 
