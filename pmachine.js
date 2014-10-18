@@ -303,10 +303,10 @@ var export_me = function (exports) {
                 "mpi": function (g, insn) {
                     var a, b;
 
-                    a = datastore_pop(g);
-                    b = datastore_pop(g);
+                    a = datastore_pop(g).value;
+                    b = datastore_pop(g).value;
 
-                    datastore_push(g, "", "i", b.value * a.value);
+                    datastore_push(g, "", "i", b * a);
 
                     g.R.pc += 1;
                 },
@@ -324,20 +324,35 @@ var export_me = function (exports) {
                 "dvr": function (g, insn) {
                     var a, b;
 
-                    a = datastore_pop(g);
-                    b = datastore_pop(g);
+                    a = datastore_pop(g).value;
+                    b = datastore_pop(g).value;
 
                     datastore_push(g, "", "r", b / a);
+
+                    g.R.pc += 1;
                 },
 
                 "adi": function (g, insn) {
                     var a, b;
 
-                    a = datastore_pop(g);
-                    b = datastore_pop(g);
+                    a = datastore_pop(g).value;
+                    b = datastore_pop(g).value;
 
-                    datastore_push(g, "", "i", a + b);
-                }
+                    datastore_push(g, "", "i", b + a);
+
+                    g.R.pc += 1;
+                },
+
+                "sbi": function (g, insn) {
+                    var a, b;
+
+                    a = datastore_pop(g).value;
+                    b = datastore_pop(g).value;
+
+                    datastore_push(g, "", "i", b - a);
+
+                    g.R.pc += 1;
+                },
             };
         }
 
