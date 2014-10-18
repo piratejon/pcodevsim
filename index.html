@@ -2856,9 +2856,9 @@ L00001    ent       sp        L00002
           <tr class="register_values"><td id="val_pc"><td id="val_sp"><td id="val_mp"><td id="val_np"><td id="val_ep">
         </table>
         <ul id="control">
+          <li>VM state: <span id="vm_state"></span>
           <li><input type="button" onclick="pmachine_webgui.reset(); return 0;" value="Reset" />
           <li><input type="button" onclick="pmachine_webgui.step(); return 0;" id="step" value="Step" />
-          <!--<li><input type="button" onclick="pmachine.go(); return 0;" value="Go" />-->
         </ul>
       </div>
       <div id="instruction_div">
@@ -2877,7 +2877,15 @@ L00001    ent       sp        L00002
           <tbody id="dstore_body">
         </table>
       </div>
-      <p>stdout: <textarea id="stdout"></textarea>
+      <div id="stdio_div">
+        <p>stdout: <textarea id="stdout"></textarea>
+        <p>stdin: <textarea id="stdin_buffer"></textarea>
+        <table id="stdin_history">
+          <thead>
+            <tr><th>stdin history
+          <tbody id="stdin_body">
+        </table>
+      </div>
     </div>
   </body>
 </html>

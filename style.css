@@ -14,12 +14,7 @@
   display: inline-block;
 }
 
-#instruction_div {
-  float: left;
-  display: inline-block;
-}
-
-#stack-div {
+#instruction_div, #dstore_div, #stdio_div {
   float: left;
   display: inline-block;
 }

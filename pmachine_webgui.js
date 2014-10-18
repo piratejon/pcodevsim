@@ -195,7 +195,7 @@ var pmachine_webgui = (function () {
     }
 
     function append_stdout(gui, stdout) {
-        console.log("Appending stdout; length: " + stdout.length);
+        // console.log("Appending stdout; length: " + stdout.length);
         while (stdout.length > 0) {
             gui.stdout.value += stdout[0];
             stdout.shift();
@@ -207,6 +207,8 @@ var pmachine_webgui = (function () {
         render_dynamic_istore_elements(gui, machine_state);
         render_dynamic_dstore_elements(gui, machine_state, old_state);
         append_stdout(gui, pm.get_stdout_buffer());
+        gui.vm_state.innerHTML = pm.get_vm_status();
+        gui.step.disabled = (pm.get_vm_status() !== "running");
     }
 
     function reset() {
@@ -285,16 +287,18 @@ var pmachine_webgui = (function () {
     function step() {
         var insn, machine_state;
 
-        machine_state = pm.get_machine_state();
+        if (pm.get_vm_status() === "running") {
+            machine_state = pm.get_machine_state();
 
-        old_state = preserve_old_state(machine_state);
+            old_state = preserve_old_state(machine_state);
 
-        insn = machine_state.istore[machine_state.R.pc];
+            insn = machine_state.istore[machine_state.R.pc];
 
-        console.log("Executing " + JSON.stringify(insn));
-        machine_state.opcode_dispatch[insn.opcode](machine_state, insn);
+            // console.log("Executing " + JSON.stringify(insn));
+            machine_state.opcode_dispatch[insn.opcode](machine_state, insn);
 
-        render_dynamic_visual_elements(gui, machine_state, old_state);
+            render_dynamic_visual_elements(gui, machine_state, old_state);
+        }
     }
 
     function initialize_gui_bits() {
@@ -302,6 +306,7 @@ var pmachine_webgui = (function () {
         new_gui = {
             program_text: document.getElementById('pcode'),
             constants: document.getElementById('constants_body'),
+            vm_state: document.getElementById('vm_state'),
             stdout: document.getElementById('stdout'),
             labels: document.getElementById('label_body'),
             istore: document.getElementById('istore_body'),
@@ -317,6 +322,8 @@ var pmachine_webgui = (function () {
                 'ep': document.getElementById('val_ep'),
             },
         };
+
+        new_gui.step.disabled = true;
         return new_gui;
     }
 
