@@ -14,7 +14,7 @@
   display: inline-block;
 }
 
-#instruction_div, #dstore_div, #stdio_div {
+#instruction_div, #dstore_div, #stdio_div, #label_table, #constants_table {
   float: left;
   display: inline-block;
 }

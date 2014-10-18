@@ -2832,7 +2832,7 @@ L00001    ent       sp        L00002
           stp                           ">p070_002.pcd</option>
         </select>
         <p>Or type your own:
-        <p><textarea id="pcode" cols=40 rows=40></textarea>
+        <p><textarea id="pcode" cols=40 rows=30></textarea>
       </div>
       <div id="labels">
         <table id="label_table">
@@ -2855,8 +2855,8 @@ L00001    ent       sp        L00002
           <tr class="register_labels"><th id="reg_pc">PC<th id="reg_sp">SP<th id="reg_mp">MP<th id="reg_np">NP<th id="reg_ep">EP
           <tr class="register_values"><td id="val_pc"><td id="val_sp"><td id="val_mp"><td id="val_np"><td id="val_ep">
         </table>
+        <p>VM state: <span id="vm_state"></span>
         <ul id="control">
-          <li>VM state: <span id="vm_state"></span>
           <li><input type="button" onclick="pmachine_webgui.reset(); return 0;" value="Reset" />
           <li><input type="button" onclick="pmachine_webgui.step(); return 0;" id="step" value="Step" />
         </ul>
@@ -2878,8 +2878,8 @@ L00001    ent       sp        L00002
         </table>
       </div>
       <div id="stdio_div">
-        <p>stdout: <textarea id="stdout"></textarea>
-        <p>stdin: <textarea id="stdin_buffer"></textarea>
+        <p>stdout: <p><textarea id="stdout"></textarea>
+        <p>stdin: <p><textarea id="stdin_buffer"></textarea>
         <table id="stdin_history">
           <thead>
             <tr><th>stdin history

@@ -202,13 +202,17 @@ var pmachine_webgui = (function () {
         }
     }
 
+    function update_vm_state(gui, vm_state) {
+        gui.vm_state.innerHTML = vm_state;
+        gui.step.disabled = vm_state;
+    }
+
     function render_dynamic_visual_elements(gui, machine_state, old_state) {
         render_registers(gui, machine_state);
         render_dynamic_istore_elements(gui, machine_state);
         render_dynamic_dstore_elements(gui, machine_state, old_state);
         append_stdout(gui, pm.get_stdout_buffer());
-        gui.vm_state.innerHTML = pm.get_vm_status();
-        gui.step.disabled = (pm.get_vm_status() !== "running");
+        update_vm_state(gui, pm.get_vm_state());
     }
 
     function reset() {
@@ -218,6 +222,40 @@ var pmachine_webgui = (function () {
         reset_visual_elements(gui);
         render_static_visual_elements(gui, pm.get_machine_state());
         render_dynamic_visual_elements(gui, pm.get_machine_state(), old_state);
+    }
+
+    function initialize_gui_bits() {
+        var new_gui;
+        new_gui = {
+            program_text: document.getElementById('pcode'),
+            constants: document.getElementById('constants_body'),
+            vm_state: document.getElementById('vm_state'),
+            stdout: document.getElementById('stdout'),
+            labels: document.getElementById('label_body'),
+            istore: document.getElementById('istore_body'),
+            dstore: document.getElementById('dstore_body'),
+            pcode: document.getElementById('pcode'),
+            step: document.getElementById('step'),
+
+            registers: {
+                'pc': document.getElementById('val_pc'),
+                'sp': document.getElementById('val_sp'),
+                'mp': document.getElementById('val_mp'),
+                'np': document.getElementById('val_np'),
+                'ep': document.getElementById('val_ep'),
+            },
+        };
+
+        new_gui.step.disabled = true;
+        return new_gui;
+    }
+
+    function new_program(g) {
+        if (g === undefined) {
+            g = gui = initialize_gui_bits();
+        }
+        g.program_text.value = document.getElementById('installed_programs').value;
+        update_vm_state(g, pm.get_vm_state());
     }
 
     function pmachine_loaded() {
@@ -301,39 +339,6 @@ var pmachine_webgui = (function () {
         }
     }
 
-    function initialize_gui_bits() {
-        var new_gui;
-        new_gui = {
-            program_text: document.getElementById('pcode'),
-            constants: document.getElementById('constants_body'),
-            vm_state: document.getElementById('vm_state'),
-            stdout: document.getElementById('stdout'),
-            labels: document.getElementById('label_body'),
-            istore: document.getElementById('istore_body'),
-            dstore: document.getElementById('dstore_body'),
-            pcode: document.getElementById('pcode'),
-            step: document.getElementById('step'),
-
-            registers: {
-                'pc': document.getElementById('val_pc'),
-                'sp': document.getElementById('val_sp'),
-                'mp': document.getElementById('val_mp'),
-                'np': document.getElementById('val_np'),
-                'ep': document.getElementById('val_ep'),
-            },
-        };
-
-        new_gui.step.disabled = true;
-        return new_gui;
-    }
-
-    function new_program(g) {
-        if (g === undefined) {
-            g = gui = initialize_gui_bits();
-        }
-        g.program_text.value = document.getElementById('installed_programs').value;
-    }
-
     function bodyload() {
         document.getElementById('installed_programs').children[0].selected = 'selected';
         gui = initialize_gui_bits();
@@ -341,16 +346,9 @@ var pmachine_webgui = (function () {
         load_pmachine();
     }
 
-    function status() {
-        if (pm !== undefined) {
-            return pm.state();
-        }
-    }
-
     return {
         'new_program': new_program,
         'bodyload': bodyload,
-        'status': status,
         'reset': reset,
         'step': step,
     };
