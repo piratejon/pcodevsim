@@ -5,6 +5,15 @@ var pmachine_webgui = (function () {
 
     var pm, gui, old_state;
 
+    function initialize_old_state() {
+        return {
+            'dstore': [],
+            'R': {
+                'pc': -1,
+            },
+        };
+    }
+
     function clear_children(p) {
         while (p.hasChildNodes()) {
             p.removeChild(p.lastChild);
@@ -128,11 +137,11 @@ var pmachine_webgui = (function () {
 
         clear_children(gui.dstore);
 
-        wrap = function (machine_state, address) {
+        wrap = function (machine_state, address, os) {
             var tr, wrap2, c, o;
 
             c = machine_state.dstore[address];
-            o = old_state.dstore[address] || {};
+            o = os.dstore[address] || {};
 
             wrap2 = function (d, old) {
                 var td = document.createElement('td');
@@ -165,7 +174,7 @@ var pmachine_webgui = (function () {
         };
 
         for (cell = machine_state.dstore.length - 1; cell >= 0; cell -= 1) {
-            gui.dstore.appendChild(wrap(machine_state, cell));
+            gui.dstore.appendChild(wrap(machine_state, cell, old_state));
         }
     }
 
@@ -185,11 +194,11 @@ var pmachine_webgui = (function () {
         }
     }
 
-    function append_stdout(gui, machine_state) {
-        var pmachine_stdout = machine_state.stdout_buffer;
-        while (pmachine_stdout.length > 0) {
-            gui.stdout.value += pmachine_stdout[0];
-            pmachine_stdout.shift();
+    function append_stdout(gui, stdout) {
+        console.log("Appending stdout; length: " + stdout.length);
+        while (stdout.length > 0) {
+            gui.stdout.value += stdout[0];
+            stdout.shift();
         }
     }
 
@@ -197,16 +206,16 @@ var pmachine_webgui = (function () {
         render_registers(gui, machine_state);
         render_dynamic_istore_elements(gui, machine_state);
         render_dynamic_dstore_elements(gui, machine_state, old_state);
-        append_stdout(gui, machine_state);
+        append_stdout(gui, pm.get_stdout_buffer());
     }
 
     function reset() {
-        var machine_state = pm.get_machine_state();
         pm.init();
         pm.reset(gui.program_text.value.split('\n'));
+        old_state = initialize_old_state();
         reset_visual_elements(gui);
-        render_static_visual_elements(gui, machine_state);
-        render_dynamic_visual_elements(gui, machine_state, old_state);
+        render_static_visual_elements(gui, pm.get_machine_state());
+        render_dynamic_visual_elements(gui, pm.get_machine_state(), old_state);
     }
 
     function pmachine_loaded() {
@@ -285,7 +294,7 @@ var pmachine_webgui = (function () {
         console.log("Executing " + JSON.stringify(insn));
         machine_state.opcode_dispatch[insn.opcode](machine_state, insn);
 
-        render_dynamic_visual_elements(gui, machine_state);
+        render_dynamic_visual_elements(gui, machine_state, old_state);
     }
 
     function initialize_gui_bits() {
@@ -316,15 +325,6 @@ var pmachine_webgui = (function () {
             g = gui = initialize_gui_bits();
         }
         g.program_text.value = document.getElementById('installed_programs').value;
-    }
-
-    function initialize_old_state() {
-        return {
-            'dstore': [],
-            'R': {
-                'pc': -1,
-            },
-        };
     }
 
     function bodyload() {

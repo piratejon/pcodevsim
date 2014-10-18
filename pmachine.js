@@ -476,7 +476,7 @@ var export_me = function (exports) {
             return G;
         }
 
-        function stdout() {
+        function get_stdout_buffer() {
             return G.stdout;
         }
 
@@ -488,8 +488,8 @@ var export_me = function (exports) {
             'init': init,
             'step': step,
             'reset': reset,
-            'stdout_buffer': stdout,
             'get_vm_status': get_vm_status,
+            'get_stdout_buffer': get_stdout_buffer,
             'get_machine_state': get_machine_state,
             'set_stdin_callback': set_stdin_callback,
         };
