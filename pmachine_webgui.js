@@ -202,9 +202,9 @@ var pmachine_webgui = (function () {
         }
     }
 
-    function update_vm_state(gui, vm_state) {
-        gui.vm_state.innerHTML = vm_state;
-        gui.step.disabled = vm_state;
+    function update_vm_state(gui, vm_status) {
+        gui.vm_state.innerHTML = vm_status;
+        gui.step.disabled = (vm_status !== "running");
     }
 
     function render_dynamic_visual_elements(gui, machine_state, old_state) {
@@ -212,7 +212,7 @@ var pmachine_webgui = (function () {
         render_dynamic_istore_elements(gui, machine_state);
         render_dynamic_dstore_elements(gui, machine_state, old_state);
         append_stdout(gui, pm.get_stdout_buffer());
-        update_vm_state(gui, pm.get_vm_state());
+        update_vm_state(gui, pm.get_vm_status());
     }
 
     function reset() {
@@ -255,7 +255,7 @@ var pmachine_webgui = (function () {
             g = gui = initialize_gui_bits();
         }
         g.program_text.value = document.getElementById('installed_programs').value;
-        update_vm_state(g, pm.get_vm_state());
+        update_vm_state(g, pm.get_vm_status());
     }
 
     function pmachine_loaded() {
