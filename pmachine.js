@@ -154,6 +154,10 @@ var export_me = function (exports) {
 
                 "csp": function (g, insn) {
                     switch (insn.op1) {
+                    case "wln": // write line
+                        write_to_stdout(g, datastore_pop(g).value + '\n');
+                        break;
+
                     case "wrs": // write string
                     case "wri": // write integer
 
@@ -361,7 +365,17 @@ var export_me = function (exports) {
                     i = datastore_pop(g).value;
                     q = parseInt(insn.op1, 10);
 
-                    datastore_push(g, "", "i", (q*i) + a);
+                    datastore_push(g, "", "i", (q * i) + a);
+
+                    g.R.pc += 1;
+                },
+
+                "not": function (g, insn) {
+                    var b;
+
+                    b = datastore_pop(g).value;
+
+                    datastore_push(g, "", "b", !b);
 
                     g.R.pc += 1;
                 },
