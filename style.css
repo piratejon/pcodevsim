@@ -17,14 +17,22 @@
 #instruction_div, #dstore_div, #stdio_div, #label_table, #constants_table {
   float: left;
   display: inline-block;
+  border: 1px solid black;
+  margin-left: 1em;
+}
+
+#dstore_annotations {
+  float: left;
+  display: inline-block;
 }
 
 #pc_row > td {
   background-color: #fff79a;
 }
 
-#label_body > tr > td, .register_values > td, #istore_body > tr > td, #dstore_body > tr > td {
+#label_body > tr > td, .register_values > td, #istore_body > tr > td, #dstore_body > tr > td, #constants_body > tr > td {
   font-family: monospace;
+  border: 1px solid black;
 }
 
 #control {
@@ -59,5 +67,10 @@
 .just_changed {
   color: red;
   font-weight: bold;
+}
+
+#stdio_list {
+  display: block;
+  list-style-type: none;
 }
 
