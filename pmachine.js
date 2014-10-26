@@ -68,6 +68,8 @@ var export_me = function (exports) {
         }
 
         function read_from_stdin(g) {
+            console.log(typeof(g.stdin_callback));
+            console.log(g.stdin_callback);
             return new_value("stdin", "", g.stdin_callback());
         }
 
@@ -201,6 +203,7 @@ var export_me = function (exports) {
                     offset = follow_link(g, parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
 
                     datastore_push(g, "", "i", g.dstore[offset].value);
+                    // datastore_push(g, "", "i", offset);
 
                     g.R.pc += 1;
                 },
@@ -522,6 +525,7 @@ var export_me = function (exports) {
         }
 
         function set_stdin_callback(arg) {
+            console.log(arg);
             G.stdin_callback = arg;
         }
 
