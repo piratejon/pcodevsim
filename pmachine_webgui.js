@@ -227,6 +227,7 @@ var pmachine_webgui = (function () {
     function initialize_gui_bits() {
         var new_gui;
         new_gui = {
+            stdin_history: document.getElementById('stdin_history'),
             program_text: document.getElementById('pcode'),
             constants: document.getElementById('constants_body'),
             vm_state: document.getElementById('vm_state'),
@@ -234,6 +235,7 @@ var pmachine_webgui = (function () {
             labels: document.getElementById('label_body'),
             istore: document.getElementById('istore_body'),
             dstore: document.getElementById('dstore_body'),
+            stdin: document.getElementById('stdin_buffer'),
             pcode: document.getElementById('pcode'),
             step: document.getElementById('step'),
 
@@ -258,8 +260,22 @@ var pmachine_webgui = (function () {
         update_vm_state(g, pm.get_vm_status());
     }
 
+    function gui_append_stdin_history(gui, value) {
+        var td = document.createElement('td');
+        td.innerHTML = value;
+        gui.stdin_history.appendChild(td);
+    }
+
     function pmachine_loaded() {
         pm = pmachine.pmachine;
+
+        pm.set_stdin_callback(function () {
+            var current_stdin = gui.stdin.value;
+            gui_append_stdin_history(gui, current_stdin);
+            gui.stdin.value = "";
+            return current_stdin;
+        });
+
         if (this !== undefined && this.readyState === 4 && this.status === 200) {
             // console.log("WINRAR! readyState: " + this.readyState + ", status: " + this.status);
         } else {
