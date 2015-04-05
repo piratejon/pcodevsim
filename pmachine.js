@@ -532,7 +532,7 @@ var export_me = function (exports) {
         }
 
         function set_stdin_callback(arg) {
-            console.log(arg);
+            // console.log(arg);
             G.stdin_callback = arg;
         }
 
