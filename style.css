@@ -92,12 +92,13 @@
 
 div.arrows {
   position: relative;
+  border: 1px solid red;
   display: inline-block;
   height: 100%;
   width: 100px;
 }
 
-div.arrows > * {
+div.arrows > div.arrowbox {
   position: absolute;
 }
 
