@@ -14,11 +14,18 @@
   display: inline-block;
 }
 
-#instruction_div, #dstore_div, #stdio_div, #label_table, #constants_table {
+#instruction_div, #dstore_div, #label_table, #constants_table {
   float: left;
   display: inline-block;
   border: 1px solid black;
   margin-left: 1em;
+}
+
+#stdio_div {
+  margin-left: 100px;
+  float: left;
+  display: inline-block;
+  border: 1px solid black;
 }
 
 #dstore_annotations {
@@ -72,5 +79,31 @@
 #stdio_list {
   display: block;
   list-style-type: none;
+}
+
+#dstore_div {
+  overflow: hidden;
+  width: auto;
+}
+
+#dstore {
+  display: inline-block;
+}
+
+div.arrows {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  width: 100px;
+}
+
+div.arrows > * {
+  position: absolute;
+}
+
+svg {
+  position: absolute;
+  height: 100%;
+  width: 100px;
 }
 

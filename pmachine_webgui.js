@@ -15,7 +15,7 @@ var pmachine_webgui = (function () {
     }
 
     function clear_children(p) {
-        while (p.hasChildNodes()) {
+        while (p && p.hasChildNodes()) {
             p.removeChild(p.lastChild);
         }
     }
@@ -24,6 +24,8 @@ var pmachine_webgui = (function () {
         clear_children(gui.istore);
         clear_children(gui.dstore);
         clear_children(gui.labels);
+        // clear_children(gui.arrows.dynamic_link);
+        // clear_children(gui.arrows.static_link);
         clear_children(gui.constants);
         gui.stdout.value = '';
     }
@@ -132,10 +134,104 @@ var pmachine_webgui = (function () {
         render_constants(gui, machine_state);
     }
 
+    function svgdot(first_cell_index, last_cell_index) {
+        var svgns, svg, defs, marker, path, fy, ly, first, last, children, i;
+
+        console.log("Drawing arrow from " + first_cell_index + " to " + last_cell_index);
+
+        children = document.getElementById('dstore_body').childNodes;
+        if (children && children.length) {
+            console.log("Children: " + children.length);
+            for (i = 0; i < children.length; i += 1) {
+                console.log("Child " + i);
+                console.log(children[i]);
+            }
+        }
+
+        return;
+
+        first = document.getElementById('dstore_body').children[first_cell_index];
+        last = document.getElementById('dstore_body').children[last_cell_index];
+
+        if (first === undefined) {
+            console.log("first undefined");
+            return;
+        }
+        if (last === undefined) {
+            console.log("last undefined");
+            return;
+        }
+
+        fy = (first.clientHeight() / 2) + first.offsettop;
+        ly = (last.clientHeight() / 2) + last.offsettop;
+
+        svgns = "http://www.w3.org/2000/svg";
+        svg = document.createElementNS(svgns, "svg");
+        // svg.setAttributeNS(null, "width", "3em");
+        // svg.setAttributeNS(null, "height", "10em");
+        // svg.setAttributeNS(null, "viewBox", "0 0 100 100");
+        defs = document.createElementNS(svgns, "defs");
+        marker = document.createElementNS(svgns, "marker");
+        path = document.createElementNS(svgns, "path");
+        path.setAttributeNS(null, "d", "M0,0 V4 L2,2 Z");
+        path.setAttributeNS(null, "fill", "red");
+        marker.appendChild(path);
+        marker.setAttributeNS(null, "id", "head");
+        marker.setAttributeNS(null, "orient", "auto");
+        marker.setAttributeNS(null, "markerWidth", "2");
+        marker.setAttributeNS(null, "markerHeight", "4");
+        marker.setAttributeNS(null, "refX", "0.1");
+        marker.setAttributeNS(null, "refY", "2");
+        defs.appendChild(marker);
+        path = document.createElementNS(svgns, "path");
+        path.setAttributeNS(null, "marker-end", "url(#head)");
+        path.setAttributeNS(null, "stroke-width", "3");
+        path.setAttributeNS(null, "fill", "none");
+        path.setAttributeNS(null, "stroke", "black");
+        path.setAttributeNS(null, "d", "M1," + fy + " S2," + ((fy + ly) / 2) + " 1," + ly);
+        svg.appendChild(defs);
+        svg.appendChild(path);
+
+        console.log("svg tag dimensions: " + svg.offsetleft + "," + svg.offsettop);
+
+        // svg.setAttributeNS(null, "stroke", "none");
+        return svg;
+    }
+
+    function consolechildren(element_id) {
+        var kids, i;
+        kids = document.getElementById(element_id).childNodes;
+        for (i = 0; i < kids.length; i += 1) {
+            console.log(kids[i]);
+        }
+    }
+
+    function getPosition(element) {
+        // <http://www.kirupa.com/html5/get_element_position_using_javascript.htm>
+        var xPosition = 0, yPosition = 0, width = 0, height = 0, marginBottom;
+
+        if (element) {
+            width = element.offsetWidth;
+            height = element.offsetHeight;
+            marginBottom = window.getComputedStyle(element).marginBottom;
+        }
+
+        while (element) {
+            console.log(element);
+            xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+            yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+            element = element.offsetParent;
+        }
+
+        return { x: xPosition, y: yPosition, w: width, h: height, mb: marginBottom };
+    }
+
     function render_dynamic_dstore_elements(gui, machine_state, old_state) {
         var cell, wrap;
 
         clear_children(gui.dstore);
+        clear_children(gui.arrows.dynamic_link);
+        clear_children(gui.arrows.static_link);
 
         wrap = function (machine_state, address, os) {
             var tr, wrap2, c, o;
@@ -178,6 +274,32 @@ var pmachine_webgui = (function () {
         }
     }
 
+    function render_dynamic_link_arrows(gui, machine_state) {
+        var cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos;
+
+        for (cell = machine_state.dstore.length - 1; cell >= 0; cell -= 1) {
+            if (machine_state.dstore[cell].id === "dl") {
+                if (cell !== 2) {
+                    first_cell_index = cell;
+                    last_cell_index = machine_state.dstore[cell].value;
+
+                    first_cell = gui.dstore.childNodes[first_cell_index];
+                    last_cell = gui.dstore.childNodes[last_cell_index];
+
+                    console.log("Need dynamic arrow from cell " + first_cell_index + " to " + last_cell_index);
+
+                    first_cell_pos = getPosition(first_cell);
+                    console.log(first_cell_pos);
+                    console.log(first_cell_index + " is " + first_cell_pos.x + "," + first_cell_pos.y);
+
+                    last_cell_pos = getPosition(last_cell);
+                    console.log(last_cell_pos);
+                    console.log(last_cell_index + " is " + last_cell_pos.x + "," + last_cell_pos.y);
+                }
+            }
+        }
+    }
+
     function render_registers(gui, machine_state) {
         var reg, elt;
         for (reg in machine_state.R) {
@@ -211,6 +333,8 @@ var pmachine_webgui = (function () {
         render_registers(gui, machine_state);
         render_dynamic_istore_elements(gui, machine_state);
         render_dynamic_dstore_elements(gui, machine_state, old_state);
+        render_dynamic_link_arrows(gui, machine_state);
+        // render_static_link_arrows(gui, machine_state);
         append_stdout(gui, pm.get_stdout_buffer());
         update_vm_state(gui, pm.get_vm_status());
     }
@@ -252,6 +376,10 @@ var pmachine_webgui = (function () {
             labels: document.getElementById('label_body'),
             istore: document.getElementById('istore_body'),
             dstore: document.getElementById('dstore_body'),
+            arrows: {
+                dynamic_link: document.getElementById('dynamic_arrows'),
+                static_link: document.getElementById('static_arrows')
+            },
             stdin: document.getElementById('stdin_buffer'),
             pcode: document.getElementById('pcode'),
             step: document.getElementById('step'),
