@@ -24,8 +24,8 @@ var pmachine_webgui = (function () {
         clear_children(gui.istore);
         clear_children(gui.dstore);
         clear_children(gui.labels);
-        // clear_children(gui.arrows.dynamic_link);
-        // clear_children(gui.arrows.static_link);
+        clear_children(gui.arrows.dynamic_link);
+        clear_children(gui.arrows.static_link);
         clear_children(gui.constants);
         gui.stdout.value = '';
     }
@@ -212,14 +212,20 @@ var pmachine_webgui = (function () {
         end_pos = getPosition(gui.dstore.childNodes[child_count - end_cell - 1]);
 
         box = document.createElement('div');
-        box.style.right = '0px';
         box.style.width = width + 'px';
         box.style.height = (end_pos.top - start_pos.top) + 'px';
         box.style.top = (start_pos.top - (start_pos.height / 2) - bottom_reference) + 'px';
 
         arrow_end = document.createElement('div');
         box.appendChild(arrow_end);
-        gui.arrows.dynamic_link.appendChild(box);
+
+        if (side === 'left') {
+            box.style.right = '0px';
+            gui.arrows.dynamic_link.appendChild(box);
+        } else if (side === 'right') {
+            box.style.left = '0px';
+            gui.arrows.static_link.appendChild(box);
+        }
     }
 
     function render_dynamic_link_arrows(gui, machine_state) {
@@ -241,29 +247,33 @@ var pmachine_webgui = (function () {
                 }
             }
         }
+    }
 
-        /*
-        // collect static link targets
+    function render_static_link_arrows(gui, machine_state) {
+        var sl_target, start_index, end_index, link_counter;
+
         sl_target = {};
-        for (cell = 0; cell < machine_state.dstore.length; cell += 1) {
-            if (machine_state.dstore[cell].id == "sl") {
-                if (cell !== 2) {
-                    if (!sl_target.hasOwnProperty(machine_state.dstore[cell].value)) {
-                        sl_target[machine_state.dstore[cell].value] = [];
+        for (start_index = 0; start_index < machine_state.dstore.length; start_index += 1) {
+            if (machine_state.dstore[start_index].id === "sl") {
+                if (start_index !== 1) {
+                    end_index = machine_state.dstore[start_index].value;
+                    if (!sl_target.hasOwnProperty(end_index)) {
+                        sl_target[end_index] = [];
                     }
-                    sl_target[machine_state.dstore[cell].value].push(cell);
+                    sl_target[end_index].push(start_index);
                 }
             }
         }
 
-        for(target in sl_target) {
-            if (sl_target.hasOwnProperty(target)) {
-                for (src = 0; src < sl_target[target].length; src += 1) {
-                      
+        link_counter = 1;
+        for (end_index in sl_target) {
+            if (sl_target.hasOwnProperty(end_index)) {
+                for (start_index = 0; start_index < sl_target[end_index].length; start_index += 1) {
+                    draw_dstore_arrow(gui, sl_target[end_index][start_index], end_index, link_counter * 10, 'right');
                 }
             }
+            link_counter += 1;
         }
-        */
     }
 
     function render_registers(gui, machine_state) {
@@ -300,7 +310,7 @@ var pmachine_webgui = (function () {
         render_dynamic_istore_elements(gui, machine_state);
         render_dynamic_dstore_elements(gui, machine_state, old_state);
         render_dynamic_link_arrows(gui, machine_state);
-        // render_static_link_arrows(gui, machine_state);
+        render_static_link_arrows(gui, machine_state);
         append_stdout(gui, pm.get_stdout_buffer());
         update_vm_state(gui, pm.get_vm_status());
     }
