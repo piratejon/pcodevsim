@@ -98,13 +98,9 @@ div.arrows {
   width: 100px;
 }
 
-div.arrows > div.arrowbox {
+div.arrows > div {
   position: absolute;
-}
-
-svg {
-  position: absolute;
-  height: 100%;
-  width: 100px;
+  border: 1px solid black;
+  background-color: yellow;
 }
 

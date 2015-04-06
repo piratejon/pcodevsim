@@ -136,6 +136,7 @@ var pmachine_webgui = (function () {
 
     function getPosition(element) {
         // <http://www.kirupa.com/html5/get_element_position_using_javascript.htm>
+        // with modifications for width, height, and marginBottom
         var xPosition = 0, yPosition = 0, width = 0, height = 0, marginBottom;
 
         if (element) {
@@ -203,7 +204,15 @@ var pmachine_webgui = (function () {
     }
 
     function render_dynamic_link_arrows(gui, machine_state) {
-        var cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos;
+        var table_pos, base_y, cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos, box;
+
+        table_pos = getPosition(gui.dstore.parentNode);
+        console.log("table pos");
+        console.log(table_pos);
+        base_y = table_pos.y;
+
+        console.log(getPosition(gui.dstore.childNodes[0]));
+        console.log(getPosition(gui.dstore.childNodes[gui.dstore.childNodes.length - 1]));
 
         for (cell = machine_state.dstore.length - 1; cell >= 0; cell -= 1) {
             if (machine_state.dstore[cell].id === "dl") {
@@ -223,6 +232,17 @@ var pmachine_webgui = (function () {
                     last_cell_pos = getPosition(last_cell);
                     console.log(last_cell_pos);
                     console.log(last_cell_index + " is " + last_cell_pos.x + "," + last_cell_pos.y);
+
+                    console.log("need an arrow from " + first_cell_pos.y + " to " + last_cell_pos.y);
+
+                    // left side, positioning right: 0, width: alternating
+                    box = document.createElement('div');
+                    box.style.right = '0px';
+                    box.style.width = '50px';
+                    box.style.border = '1px solid black;';
+                    box.style.height = (first_cell_pos.y - last_cell_pos.y) + 'px';
+                    box.style.bottom = base_y + 'px';
+                    gui.arrows.dynamic_link.appendChild(box);
                 }
             }
         }
