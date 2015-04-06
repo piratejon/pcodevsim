@@ -204,15 +204,11 @@ var pmachine_webgui = (function () {
     }
 
     function render_dynamic_link_arrows(gui, machine_state) {
-        var arrow_end, bottom_position, bottom_reference, link_counter, child_count, table_pos, cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos, box;
+        var arrow_end, bottom_position, bottom_reference, link_counter, child_count, cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos, box;
 
         child_count = gui.dstore.childNodes.length;
-        bottom_position = getPosition(gui.dstore.childNodes[child_count-1]);
+        bottom_position = getPosition(gui.dstore.childNodes[child_count - 1]);
         bottom_reference = bottom_position.t;
-
-        table_pos = getPosition(gui.dstore.parentNode);
-        console.log("table pos");
-        console.log(table_pos);
 
         for (cell = 0, link_counter = false; cell < machine_state.dstore.length; cell += 1) {
             if (machine_state.dstore[cell].id === "dl") {
@@ -223,21 +219,10 @@ var pmachine_webgui = (function () {
                     first_cell = gui.dstore.childNodes[first_cell_index];
                     last_cell = gui.dstore.childNodes[last_cell_index];
 
-                    console.log("Need dynamic arrow from cell " + cell + " to " + machine_state.dstore[cell].value);
-
                     first_cell_pos = getPosition(first_cell);
-                    console.log(first_cell_pos);
-                    console.log(first_cell_index + "(" + cell + ") is " + first_cell_pos.l + "," + first_cell_pos.t);
 
                     last_cell_pos = getPosition(last_cell);
-                    console.log(last_cell_pos);
-                    console.log(last_cell_index + "(" + machine_state.dstore[cell].value + ") is " + last_cell_pos.l + "," + last_cell_pos.t);
 
-                    console.log("need an arrow from " + first_cell_pos.t + " to " + last_cell_pos.t);
-
-                    console.log("top of thing is " + table_pos.t);
-
-                    // left side, positioning right: 0, width: alternating
                     box = document.createElement('div');
                     box.style.right = '0px';
                     if (link_counter) {
@@ -246,9 +231,7 @@ var pmachine_webgui = (function () {
                         box.style.width = '25px';
                     }
                     box.style.height = (last_cell_pos.t - first_cell_pos.t) + 'px';
-                    console.log("setting top to: " + (last_cell_pos.t + (last_cell_pos.h / 2) - table_pos.t));
-                    // box.style.top = (0 - (last_cell_pos.t + (last_cell_pos.h / 2) - table_pos.t)) + 'px';
-                    box.style.top = (first_cell_pos.t - (first_cell_pos.h/2) - bottom_reference) + 'px';
+                    box.style.top = (first_cell_pos.t - (first_cell_pos.h / 2) - bottom_reference) + 'px';
 
                     arrow_end = document.createElement('div');
                     box.appendChild(arrow_end);
