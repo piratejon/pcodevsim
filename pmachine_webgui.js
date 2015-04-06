@@ -137,22 +137,22 @@ var pmachine_webgui = (function () {
     function getPosition(element) {
         // <http://www.kirupa.com/html5/get_element_position_using_javascript.htm>
         // with modifications for width, height, and marginBottom
-        var xPosition = 0, yPosition = 0, width = 0, height = 0, marginBottom;
+        var l = 0, t = 0, w = 0, h = 0, mb = 0;
 
         if (element) {
-            width = element.offsetWidth;
-            height = element.offsetHeight;
-            marginBottom = window.getComputedStyle(element).marginBottom;
+            w = element.offsetWidth;
+            h = element.offsetHeight;
+            mb = window.getComputedStyle(element).marginBottom;
         }
 
+        console.log(element);
         while (element) {
-            console.log(element);
-            xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-            yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+            l += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+            t += (element.offsetTop - element.scrollTop + element.clientTop);
             element = element.offsetParent;
         }
 
-        return { x: xPosition, y: yPosition, w: width, h: height, mb: marginBottom };
+        return { l: l, t: t, w: w, h: h, mb: mb };
     }
 
     function render_dynamic_dstore_elements(gui, machine_state, old_state) {
@@ -204,45 +204,57 @@ var pmachine_webgui = (function () {
     }
 
     function render_dynamic_link_arrows(gui, machine_state) {
-        var table_pos, base_y, cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos, box;
+        var arrow_end, bottom_position, bottom_reference, link_counter, child_count, table_pos, cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos, box;
+
+        child_count = gui.dstore.childNodes.length;
+        bottom_position = getPosition(gui.dstore.childNodes[child_count-1]);
+        bottom_reference = bottom_position.t;
 
         table_pos = getPosition(gui.dstore.parentNode);
         console.log("table pos");
         console.log(table_pos);
-        base_y = table_pos.y;
 
-        console.log(getPosition(gui.dstore.childNodes[0]));
-        console.log(getPosition(gui.dstore.childNodes[gui.dstore.childNodes.length - 1]));
-
-        for (cell = machine_state.dstore.length - 1; cell >= 0; cell -= 1) {
+        for (cell = 0, link_counter = false; cell < machine_state.dstore.length; cell += 1) {
             if (machine_state.dstore[cell].id === "dl") {
                 if (cell !== 2) {
-                    first_cell_index = cell;
-                    last_cell_index = machine_state.dstore[cell].value;
+                    first_cell_index = child_count - cell - 1;
+                    last_cell_index = child_count - machine_state.dstore[cell].value - 1;
 
                     first_cell = gui.dstore.childNodes[first_cell_index];
                     last_cell = gui.dstore.childNodes[last_cell_index];
 
-                    console.log("Need dynamic arrow from cell " + first_cell_index + " to " + last_cell_index);
+                    console.log("Need dynamic arrow from cell " + cell + " to " + machine_state.dstore[cell].value);
 
                     first_cell_pos = getPosition(first_cell);
                     console.log(first_cell_pos);
-                    console.log(first_cell_index + " is " + first_cell_pos.x + "," + first_cell_pos.y);
+                    console.log(first_cell_index + "(" + cell + ") is " + first_cell_pos.l + "," + first_cell_pos.t);
 
                     last_cell_pos = getPosition(last_cell);
                     console.log(last_cell_pos);
-                    console.log(last_cell_index + " is " + last_cell_pos.x + "," + last_cell_pos.y);
+                    console.log(last_cell_index + "(" + machine_state.dstore[cell].value + ") is " + last_cell_pos.l + "," + last_cell_pos.t);
 
-                    console.log("need an arrow from " + first_cell_pos.y + " to " + last_cell_pos.y);
+                    console.log("need an arrow from " + first_cell_pos.t + " to " + last_cell_pos.t);
+
+                    console.log("top of thing is " + table_pos.t);
 
                     // left side, positioning right: 0, width: alternating
                     box = document.createElement('div');
                     box.style.right = '0px';
-                    box.style.width = '50px';
-                    box.style.border = '1px solid black;';
-                    box.style.height = (first_cell_pos.y - last_cell_pos.y) + 'px';
-                    box.style.bottom = base_y + 'px';
+                    if (link_counter) {
+                        box.style.width = '50px';
+                    } else {
+                        box.style.width = '25px';
+                    }
+                    box.style.height = (last_cell_pos.t - first_cell_pos.t) + 'px';
+                    console.log("setting top to: " + (last_cell_pos.t + (last_cell_pos.h / 2) - table_pos.t));
+                    // box.style.top = (0 - (last_cell_pos.t + (last_cell_pos.h / 2) - table_pos.t)) + 'px';
+                    box.style.top = (first_cell_pos.t - (first_cell_pos.h/2) - bottom_reference) + 'px';
+
+                    arrow_end = document.createElement('div');
+                    box.appendChild(arrow_end);
                     gui.arrows.dynamic_link.appendChild(box);
+
+                    link_counter = !link_counter;
                 }
             }
         }
