@@ -145,14 +145,13 @@ var pmachine_webgui = (function () {
             mb = window.getComputedStyle(element).marginBottom;
         }
 
-        console.log(element);
         while (element) {
             l += (element.offsetLeft - element.scrollLeft + element.clientLeft);
             t += (element.offsetTop - element.scrollTop + element.clientTop);
             element = element.offsetParent;
         }
 
-        return { l: l, t: t, w: w, h: h, mb: mb };
+        return { left: l, top: t, width: w, height: h, marginBottom: mb };
     }
 
     function render_dynamic_dstore_elements(gui, machine_state, old_state) {
@@ -203,44 +202,68 @@ var pmachine_webgui = (function () {
         }
     }
 
-    function render_dynamic_link_arrows(gui, machine_state) {
-        var arrow_end, bottom_position, bottom_reference, link_counter, child_count, cell, first_cell_index, last_cell_index, first_cell, last_cell, first_cell_pos, last_cell_pos, box;
+    function draw_dstore_arrow(gui, start_cell, end_cell, width, side) {
+        var child_count, bottom_reference, start_pos, end_pos, box, arrow_end;
 
         child_count = gui.dstore.childNodes.length;
-        bottom_position = getPosition(gui.dstore.childNodes[child_count - 1]);
-        bottom_reference = bottom_position.t;
+        bottom_reference = getPosition(gui.dstore.childNodes[child_count - 1]).top;
+
+        start_pos = getPosition(gui.dstore.childNodes[child_count - start_cell - 1]);
+        end_pos = getPosition(gui.dstore.childNodes[child_count - end_cell - 1]);
+
+        box = document.createElement('div');
+        box.style.right = '0px';
+        box.style.width = width + 'px';
+        box.style.height = (end_pos.top - start_pos.top) + 'px';
+        box.style.top = (start_pos.top - (start_pos.height / 2) - bottom_reference) + 'px';
+
+        arrow_end = document.createElement('div');
+        box.appendChild(arrow_end);
+        gui.arrows.dynamic_link.appendChild(box);
+    }
+
+    function render_dynamic_link_arrows(gui, machine_state) {
+        var link_counter, cell, first_cell_index, last_cell_index;
 
         for (cell = 0, link_counter = false; cell < machine_state.dstore.length; cell += 1) {
             if (machine_state.dstore[cell].id === "dl") {
                 if (cell !== 2) {
-                    first_cell_index = child_count - cell - 1;
-                    last_cell_index = child_count - machine_state.dstore[cell].value - 1;
+                    first_cell_index = cell;
+                    last_cell_index = machine_state.dstore[cell].value;
 
-                    first_cell = gui.dstore.childNodes[first_cell_index];
-                    last_cell = gui.dstore.childNodes[last_cell_index];
-
-                    first_cell_pos = getPosition(first_cell);
-
-                    last_cell_pos = getPosition(last_cell);
-
-                    box = document.createElement('div');
-                    box.style.right = '0px';
                     if (link_counter) {
-                        box.style.width = '50px';
+                        draw_dstore_arrow(gui, first_cell_index, last_cell_index, 50, 'left');
                     } else {
-                        box.style.width = '25px';
+                        draw_dstore_arrow(gui, first_cell_index, last_cell_index, 25, 'left');
                     }
-                    box.style.height = (last_cell_pos.t - first_cell_pos.t) + 'px';
-                    box.style.top = (first_cell_pos.t - (first_cell_pos.h / 2) - bottom_reference) + 'px';
-
-                    arrow_end = document.createElement('div');
-                    box.appendChild(arrow_end);
-                    gui.arrows.dynamic_link.appendChild(box);
 
                     link_counter = !link_counter;
                 }
             }
         }
+
+        /*
+        // collect static link targets
+        sl_target = {};
+        for (cell = 0; cell < machine_state.dstore.length; cell += 1) {
+            if (machine_state.dstore[cell].id == "sl") {
+                if (cell !== 2) {
+                    if (!sl_target.hasOwnProperty(machine_state.dstore[cell].value)) {
+                        sl_target[machine_state.dstore[cell].value] = [];
+                    }
+                    sl_target[machine_state.dstore[cell].value].push(cell);
+                }
+            }
+        }
+
+        for(target in sl_target) {
+            if (sl_target.hasOwnProperty(target)) {
+                for (src = 0; src < sl_target[target].length; src += 1) {
+                      
+                }
+            }
+        }
+        */
     }
 
     function render_registers(gui, machine_state) {
