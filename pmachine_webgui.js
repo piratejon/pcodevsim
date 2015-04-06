@@ -238,9 +238,9 @@ var pmachine_webgui = (function () {
                     last_cell_index = machine_state.dstore[cell].value;
 
                     if (link_counter) {
-                        draw_dstore_arrow(gui, first_cell_index, last_cell_index, 50, 'left');
+                        draw_dstore_arrow(gui, first_cell_index, last_cell_index, 20, 'left');
                     } else {
-                        draw_dstore_arrow(gui, first_cell_index, last_cell_index, 25, 'left');
+                        draw_dstore_arrow(gui, first_cell_index, last_cell_index, 10, 'left');
                     }
 
                     link_counter = !link_counter;
