@@ -173,6 +173,7 @@ var export_me = function (exports) {
 
                         value.type = "i";
                         value.label = "rdi";
+                        value.value = parseInt(value.value, 10);
 
                         g.dstore[address.value] = value;
                         break;
@@ -388,7 +389,7 @@ var export_me = function (exports) {
                     datastore_push(g, "ind", insn.type, g.dstore[a].value);
 
                     g.R.pc += 1;
-                },
+                }
             };
         }
 
@@ -542,7 +543,7 @@ var export_me = function (exports) {
             'get_vm_status': get_vm_status,
             'get_stdout_buffer': get_stdout_buffer,
             'get_machine_state': get_machine_state,
-            'set_stdin_callback': set_stdin_callback,
+            'set_stdin_callback': set_stdin_callback
         };
     }());
 };
