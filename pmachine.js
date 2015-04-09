@@ -202,7 +202,6 @@ var export_me = function (exports) {
                     offset = follow_link(g, parseInt(insn.op1, 10), g.R.mp, "sl") + parseInt(insn.op2, 10);
 
                     datastore_push(g, "", "i", g.dstore[offset].value);
-                    // datastore_push(g, "", "i", offset);
 
                     g.R.pc += 1;
                 },
@@ -341,10 +340,10 @@ var export_me = function (exports) {
                 "adi": function (g, insn) {
                     var a, b;
 
-                    a = datastore_pop(g).value;
-                    b = datastore_pop(g).value;
+                    a = parseInt(datastore_pop(g).value, 10);
+                    b = parseInt(datastore_pop(g).value, 10);
 
-                    datastore_push(g, "", "i", b + a);
+                    datastore_push(g, "", "i", (b + a).toString());
 
                     g.R.pc += 1;
                 },
