@@ -1,7 +1,7 @@
 
 L00001    ent       sp        L00002    
           ent       ep        L00003    
-          lvi       0         5         
+          lda       0         5         
           csp                 rdi       
           lvi       0         5         
           ldc       i         1         
