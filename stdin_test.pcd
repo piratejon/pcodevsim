@@ -1,0 +1,15 @@
+
+L00001    ent       sp        L00002    
+          ent       ep        L00003    
+          lvi       0         5         
+          csp                 rdi       
+          lvi       0         5         
+          ldc       i         1         
+          adi                           
+          csp                 wri       
+          rtn       p                   
+#define   L00002    5                   
+#define   L00003    7                   
+          mst       0                   
+          cup       0         L00001    
+          stp                           
