@@ -388,6 +388,86 @@ var export_me = function (exports) {
                     datastore_push(g, "ind", insn.type, g.dstore[a].value);
 
                     g.R.pc += 1;
+                },
+
+                "dec": function (g, insn) {
+                    var a, v;
+
+                    v = datastore_pop(g);
+                    a = parseInt(v.value, 10);
+                    datastore_push(g, "", v.type, a - 1);
+
+                    g.R.pc += 1;
+                },
+
+                "rnd": function (g, insn) {
+                    var a, v;
+
+                    v = datastore_pop(g);
+                    a = parseFloat(v.value);
+                    datastore_push(g, "", "i", Math.round(a));
+
+                    g.R.pc += 1;
+                },
+
+                "sqt": function (g, insn) {
+                    var a, v;
+                    v = datastore_pop(g);
+                    a = parseFloat(v.value);
+                    datastore_push(g, "", v.type, Math.sqrt(a));
+
+                    g.R.pc += 1;
+                },
+
+                "abr": function (g, insn) {
+                    var a, v;
+                    v = datastore_pop(g);
+                    a = parseFloat(v.value);
+                    datastore_push(g, "", v.type, Math.abs(a));
+
+                    g.R.pc += 1;
+                },
+
+                "abi": function (g, insn) {
+                    var a, v;
+                    v = datastore_pop(g);
+                    a = parseFloat(v.value);
+                    datastore_push(g, "", v.type, Math.abs(a));
+
+                    g.R.pc += 1;
+                },
+
+                "trc": function (g, insn) {
+                    var a, v;
+                    v = datastore_pop(g);
+                    a = parseFloat(v.value);
+                    if (a > 0) {
+                        datastore_push(g, "", "i", Math.floor(a));
+                    } else {
+                        datastore_push(g, "", "i", Math.ceil(a));
+                    }
+
+                    g.R.pc += 1;
+                },
+
+                "chr": function (g, insn) {
+                    var a, v;
+
+                    v = datastore_pop(g);
+                    a = parseInt(v.value, 10);
+                    datastore_push(g, "", "c", String.fromCharCode(a));
+
+                    g.R.pc += 1;
+                },
+
+                "ord": function (g, insn) {
+                    var a, v;
+
+                    v = datastore_pop(g);
+                    a = v.value;
+                    datastore_push(g, "", "i", a.charCodeAt(0));
+
+                    g.R.pc += 1;
                 }
             };
         }
