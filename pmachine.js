@@ -165,6 +165,19 @@ var export_me = function (exports) {
                         write_to_stdout(g, datastore_pop(g).value);
                         break;
 
+                    case "rdr": // read integer
+                        var value, address;
+
+                        address = datastore_pop(g);
+                        value = read_from_stdin(g);
+
+                        value.type = "r";
+                        value.label = "rdr";
+                        value.value = parseFloat(value.value);
+
+                        g.dstore[address.value] = value;
+                        break;
+
                     case "rdi": // read integer
                         var value, address;
 
@@ -176,6 +189,9 @@ var export_me = function (exports) {
                         value.value = parseInt(value.value, 10);
 
                         g.dstore[address.value] = value;
+                        break;
+
+                    case "rln":
                         break;
 
                     default:
@@ -494,6 +510,11 @@ var export_me = function (exports) {
             return l.toString();
         }
 
+        function process_quotes(str) {
+            // replace '' with ', and remove before-and-after quotes
+            return str.replace("''", "'").replace(/^'/, "").replace(/'$/, "");
+        }
+
         function scan_instruction(g, i, line) {
             var insn, scan;
 
@@ -504,7 +525,7 @@ var export_me = function (exports) {
                 label: scan[1],
                 opcode: scan[2],
                 op1: scan[3],
-                op2: scan[4].trim()
+                op2: process_quotes(scan[4].trim()).trim()
             };
 
             // check for and insert any constants found
